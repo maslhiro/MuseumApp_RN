@@ -1,4 +1,4 @@
-package com.museumapp;
+package com.twoamteam.museumapp;
 
 import android.app.Application;
 
