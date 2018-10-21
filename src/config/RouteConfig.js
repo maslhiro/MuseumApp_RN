@@ -1,8 +1,8 @@
 import HomeScreen from '../navigations/HomeSreen'
 import FavoScreen from '../navigations/FavoScreen'
-import {createMaterialTopTabNavigator} from 'react-navigation'
+import {createStackNavigator} from 'react-navigation'
 
-export default RootStack = createMaterialTopTabNavigator(
+export default RootStack = createStackNavigator(
     {
         Home :HomeScreen,
         Favo:FavoScreen

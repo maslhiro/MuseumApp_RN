@@ -4,9 +4,8 @@ import {
   Text,
   View
 } from 'react-native';
-
 import RootStack from './src/config/RouteConfig'
-  
+
 export default class App extends Component {
   render() {
     return (
