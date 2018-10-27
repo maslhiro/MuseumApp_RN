@@ -5,11 +5,14 @@ buildscript {
         buildToolsVersion = "27.0.3"
         minSdkVersion = 16
         compileSdkVersion = 27
-        targetSdkVersion = 26
+        targetSdkVersion = 27
         supportLibVersion = "27.1.1"
     }
     repositories {
         google()
+        maven { 
+            url 'http://jcenter.bintray.com' 
+        }
         jcenter()
     }
     dependencies {
@@ -24,8 +27,8 @@ buildscript {
 allprojects {
     repositories {
         mavenLocal()
-        jcenter()
         google()
+        jcenter()
         maven {
             // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
             url "$rootDir/../node_modules/react-native/android"
