@@ -72,6 +72,7 @@ export default class SignScreen extends Component {
               <TextInput
                 keyboardType='default'
                 placeholder='Enter your password'
+                autoCapitalize='none'
                 secureTextEntry={true}
                 onChangeText={
                     (text) => {
@@ -100,6 +101,7 @@ export default class SignScreen extends Component {
               <TextInput
                 keyboardType='default'
                 placeholder='Enter your password'
+                autoCapitalize='none'
                 secureTextEntry={true}
                 onChangeText={
                     (text) => {

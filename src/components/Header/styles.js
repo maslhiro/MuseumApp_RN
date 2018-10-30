@@ -1,17 +1,6 @@
-import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Platform} from 'react-native';
 
-class Header extends Component{
-  render(){
-    return(
-      <View style={styles.headerView}>
-        <Text style={styles.headerText}> {this.props.title} </Text>
-      </View>
-    )
-  }
-}
-
-const styles = StyleSheet.create({
+export default styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FAFAFA',
@@ -38,7 +27,6 @@ const styles = StyleSheet.create({
         marginTop: 0
       }
     })
-  },
-});
+  }
 
-export default Header
+});
