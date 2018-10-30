@@ -51,7 +51,7 @@ export default class HomeScreen extends Component {
           <Button 
             title='Test Authentication'
             onPress = {() =>{
-              this.props.navigation.push('Sign');
+              this.props.navigation.push('SignIn');
             }}
             />
         </View>
