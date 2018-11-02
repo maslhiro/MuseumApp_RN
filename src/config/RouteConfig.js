@@ -1,15 +1,17 @@
 import HomeScreen from '../navigations/HomeScreen'
 import FavoScreen from '../navigations/FavoScreen'
-import SignScreen from '../navigations/SignScreen'
 import InfoScreen from '../navigations/InfoScreen'
+import SignInScreen from '../navigations/SignInScreen'
+import SignUpScreen from '../navigations/SignUpScreen'
 import {createStackNavigator} from 'react-navigation'
 
 export default RootStack = createStackNavigator(
     {
         Home: HomeScreen,
         Favo: FavoScreen,
-        Sign: SignScreen,
-        Info: InfoScreen
+        Info: InfoScreen,
+        SignIn: SignInScreen,
+        SignUp: SignUpScreen
 
     },
     {

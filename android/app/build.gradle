@@ -137,6 +137,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-vector-icons')
 
     implementation project(':react-native-fast-image')
     implementation project(':react-native-firebase')
@@ -145,10 +146,10 @@ dependencies {
     implementation "com.facebook.react:react-native:+"  // From node_modules
 
     implementation project(':react-native-firebase')
-    implementation "com.google.android.gms:play-services-base:15.0.1"
+    implementation "com.google.android.gms:play-services-base:16.0.1"
     implementation "com.google.firebase:firebase-core:16.0.4"
-    implementation "com.google.firebase:firebase-database:16.0.3"
-    implementation "com.google.firebase:firebase-auth:16.0.3"
+    implementation "com.google.firebase:firebase-database:16.0.4"
+    implementation "com.google.firebase:firebase-auth:16.0.5"
 
     /*
     implementation project(':react-native-fast-image')
@@ -173,4 +174,4 @@ task copyDownloadableDepsToLibs(type: Copy) {
 }
 
 apply plugin: 'com.google.gms.google-services'
-com.google.gms.googleservices.GoogleServicesPlugin.config.disableVersionCheck = true
+//com.google.gms.googleservices.GoogleServicesPlugin.config.disableVersionCheck = true

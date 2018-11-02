@@ -11,6 +11,7 @@ import Header from '../../components/Header';
 import firebase, { firestore } from 'react-native-firebase';
 import { rootRef, testRef } from './../../config/FirebaseConfig';
 import SignScreen from '../SignScreen';
+import Object from '../../components/Models/Object'
 
 export default class HomeScreen extends Component {
   constructor(props){
@@ -33,25 +34,28 @@ export default class HomeScreen extends Component {
           <Button
             title='Push'
             onPress={() => { 
-              var id = testRef.push().key;
-              testRef.child(id).set({
-                id : id,
-                name : 'mrD',
-                description : 'dep trai vo dichhhhhhh !!'
-              }, function(error){
-                if (error){
-                  alert('error');
-                } else {
-                  alert('successful for ' + id);
-                }
-              })
+              var idObject = rootRef.child('Objects').push().id;
+              rootRef.child('Objects').child(idObject)
+                .set(Object(idObject, 
+                            'msu_001',
+                            'Bình cổ', 
+                            'type_001', 
+                            'Thời nhà trần, bảo vật của vua Trần Vinh Tông', 
+                            'http://vlxx.tv')
+                ,function(error){
+                  if (error){
+                    alert('failed')
+                  } else {
+                    alert(`add object ${idObject} successfully` );
+                  }
+                })
             }}
           />
           <View style={{marginBottom:50}}></View>
           <Button 
             title='Test Authentication'
             onPress = {() =>{
-              this.props.navigation.push('Sign');
+              this.props.navigation.push('SignIn');
             }}
             />
         </View>
