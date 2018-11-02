@@ -1,7 +1,5 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
-  Platform,
-  StyleSheet,
   Text,
   View,
   ImageBackground,
@@ -11,125 +9,174 @@ import {
   Alert
 } from 'react-native';
 import styles from './styles';
-import bgSignIn from '../../assets/SignIn/bg_signin.jpg';
-import lgMuseum from '../../assets/SignIn/museum-burned-1600x1600.png';
-import Icon, { Button } from 'react-native-vector-icons/Ionicons';
-import firebase from 'react-native-firebase';
+import bg_SignIn from '../../assets/SignIn/bg_SignIn.jpg';
+import ic_MuseumBurned from '../../assets/SignIn/ic_MuseumBurned.png';
 
-export default class SignUpScreen extends Component {
-  constructor(props){
+import Icon from 'react-native-vector-icons/Ionicons';
+import { FirebaseAuth } from '../../config/FirebaseConfig'
+
+class SignUpScreen extends Component {
+
+  constructor(props) {
     super(props);
     this.state = {
-      isAuthenticated : false,
-      txtEmail : '',
-      txtPassword : '',
-      user : null,
+      isAuthenticated: false,
+      isLoading: false, // bien de spiner xoay xoay khi fetch du lieu
+      hidePass: true,
+      txtEmail: '',
+      txtPassword: '',
+
+      errEmail: false,
+      errPassword: false,
+
+      user: null,
     };
   }
 
-  onSignUp = () => {
-    if (this.state.txtEmailSignUp == '' || this.state.txtPasswordSignUp == ''){
-      alert('Nhap ko chinh xac');
-      return;
+  onChangeText_Pass = (text) => {
+    this.setState(
+      {
+        txtPassword: text
+      });
+  }
+
+  onChangeText_Email = (text) => {
+    this.setState(
+      {
+        txtEmail: text
+      });
+  }
+
+
+  onPress_Hide_Pass = () => {
+    this.setState(
+      {
+        hidePass: !this.state.hidePass
+      }
+    )
+  }
+
+  checkData = () => {
+    if (
+      this.state.txtEmail ||
+      this.state.txtPassword) {
+      this.setState(
+        {
+          isLoading: true
+        }, () => this.onSignUp())
     }
-    firebase.auth().createUserWithEmailAndPassword(this.state.txtEmail, this.state.txtPassword)
-            .then(() => {
-              Alert.alert(
-                'Sign Up Successfully',
-                'Chúc mừng bạn đã tạo tài khoản  thành công',
-                [
-                  {text: 'OK', onPress: () => {
+    else {
+      Alert.alert("Thông Báo", " Nhâp Đầy Đủ THông TIn")
+    }
+  }
+
+  onSignUp = () => {
+    FirebaseAuth.createUserWithEmailAndPassword(this.state.txtEmail, this.state.txtPassword)
+      .then(() => {
+        this.setState({
+          isLoading: false
+        }, () =>
+            Alert.alert(
+              'Sign Up Successfully',
+              'Chúc mừng bạn đã tạo tài khoản  thành công',
+              [
+                {
+                  text: 'OK', onPress: () => {
                     this.props.navigation.push('SignIn')
-                  }},
-                ],
-                { cancelable: false }
-              )
-            }).catch((error) => {
-                console.log(`Register fail with error: ${error}`);
-                alert(`Register fail with error: ${error}`)
-            });
+                  }
+                },
+              ],
+              { cancelable: false }
+            ))
+      }).catch((error) => {
+        this.setState({
+          isLoading: false
+        })
+        console.log(`Register fail `, error);
+        alert(`Register fail with error: ${error}`)
+      });
+  }
+
+  onPress_Open_Sign_In_Screen = () => {
+    this.props.navigation.push('SignIn');
   }
 
   render() {
     return (
-
-      <ImageBackground source = {bgSignIn} style = {styles.BackgroundContainer}>
+      <ImageBackground
+        source={bg_SignIn}
+        style={styles.BackgroundContainer}>
         <View style={styles.logoContainer}>
-          <Image source = {lgMuseum} style = {styles.logoStyle}/>
+          <Image source={ic_MuseumBurned} style={styles.logoStyle} />
           <Text style={styles.logoText}>Sign Up</Text>
           <Text style={styles.logoText}>VINDI MUSEUM</Text>
+          {this.state.isLoading ? <Text style={styles.logoText}>Đang Tải .....</Text> : null}
         </View>
 
-        <View style = {styles.inputContainer}>
-          <Icon 
-            name = {'ios-mail'}
-            size = {28}
-            color = {`rgba(255, 255, 255, 0.7)`}  
-            style = {styles.inputIcon}
+        <View style={styles.inputContainer}>
+          <Icon
+            name={'ios-mail'}
+            size={28}
+            color={`rgba(255, 255, 255, 0.7)`}
+            style={styles.inputIcon}
           />
           <TextInput
-            style = {styles.inputText}
+            style={styles.inputText}
             keyboardType='email-address'
-            placeholder = {'E-mail'}
+            placeholder={'E-mail'}
             autoCapitalize='none'
-            secureTextEntry={true}
-            placeholderTextColor = {`rgba(255, 255, 255, 0.7)`}
-            underlineColorAndroid = 'transparent'
-            onChangeText={
-              (text) => {
-                  this.setState({ txtEmail: text });
-              }}
+            placeholderTextColor={`rgba(255, 255, 255, 0.7)`}
+            underlineColorAndroid='transparent'
+            onChangeText={(text) => this.onChangeText_Email(text)}
           />
         </View>
 
-        <View style = {styles.inputContainer}>
-          <Icon 
-            name = {'ios-lock'}
-            size = {28}
-            color = {`rgba(255, 255, 255, 0.7)`}  
-            style = {styles.inputIcon}
+        <View style={styles.inputContainer}>
+          <Icon
+            name={'ios-lock'}
+            size={28}
+            color={`rgba(255, 255, 255, 0.7)`}
+            style={styles.inputIcon}
           />
           <TextInput
-            style = {styles.inputText}
+            style={styles.inputText}
             keyboardType='default'
-            placeholder = {'Password'}
+            placeholder={'Password'}
             autoCapitalize='none'
-            secureTextEntry={true}
-            placeholderTextColor = {`rgba(255, 255, 255, 0.7)`}
-            underlineColorAndroid = 'transparent'
-            onChangeText={
-              (text) => {
-                  this.setState({ txtPassword: text });
-              }}
+            secureTextEntry={this.state.hidePass}
+            placeholderTextColor={`rgba(255, 255, 255, 0.7)`}
+            underlineColorAndroid='transparent'
+            onChangeText={(text) => this.onChangeText_Pass(text)}
+
           />
-          <TouchableOpacity style={styles.btnEye}>
-            <Icon 
-              name = {'ios-eye'}
-              size = {26}
-              color = {`rgba(255, 255, 255, 0.7)`}  
+          <TouchableOpacity
+            style={styles.btnEye}
+            onPress={() => { this.onPress_Hide_Pass() }}>
+            <Icon
+              name={this.state.hidePass ? 'ios-eye-off' : 'ios-eye'}
+              size={26}
+              color={`rgba(255, 255, 255, 0.7)`}
             />
           </TouchableOpacity>
         </View>
 
-        <TouchableOpacity style={styles.btnSignUp}
-          onPress = {() => {
-            this.onSignUp();
-          }}
-        >
-          <Text style = {styles.txtSignUp}> Sign Up</Text>
+        <TouchableOpacity
+          style={styles.btnSignUp}
+          onPress={() => this.checkData()}>
+          <Text style={styles.txtSignUp}> Sign Up</Text>
         </TouchableOpacity>
 
-        <View style = {styles.textContainer}>
-          <TouchableOpacity >
-            <Text style = {styles.textStyle}
-               onPress = {() => {
-                this.props.navigation.push('SignIn');
-              }}
-            >Back</Text>
+        <View style={styles.textContainer}>
+          <TouchableOpacity
+            onPress={() => this.onPress_Open_Sign_In_Screen()}>
+            <Text style={styles.textStyle}>Back</Text>
           </TouchableOpacity>
         </View>
-          
+
       </ImageBackground>
     );
   }
 }
+
+
+export default SignUpScreen
