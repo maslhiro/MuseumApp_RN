@@ -8,9 +8,9 @@ import {
 } from 'react-native';
 import styles from './styles';
 import Header from '../../components/Header';
-import firebase, { firestore } from 'react-native-firebase';
 import { rootRef, testRef } from './../../config/FirebaseConfig';
 import Object from '../../components/Models/Object'
+import ImageProgress from '../../components/ImageProgress'
 
 export default class HomeScreen extends Component {
   constructor(props){
@@ -29,6 +29,16 @@ export default class HomeScreen extends Component {
               alignItems: 'center',
               justifyContent: 'center'
             }}>
+
+            <ImageProgress
+              style={{ 
+                  height: 100,
+                  width:100
+              }}
+              source={{
+                uri: 'https://unsplash.it/400/400?image=1'
+              }}/>
+
 
           <Button
             title='Push'
