@@ -1,27 +1,89 @@
 {
   "project_info": {
-    "project_number": "1000015078398",
-    "firebase_url": "https://testmuseumapp.firebaseio.com",
-    "project_id": "testmuseumapp",
-    "storage_bucket": "testmuseumapp.appspot.com"
+    "project_number": "398198628618",
+    "firebase_url": "https://testfb02-e7af9.firebaseio.com",
+    "project_id": "testfb02-e7af9",
+    "storage_bucket": "testfb02-e7af9.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1000015078398:android:d3130dfb77e64a53",
+        "mobilesdk_app_id": "1:398198628618:android:a85ca261c4c1d2c8",
+        "android_client_info": {
+          "package_name": "com.testrnf01"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "398198628618-of6go2iv6357h8d523eifhq45lp44dmp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAKY3bGzasn6wrgUTKTPmHb2qdXbwGF3TI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:398198628618:android:572799b2ec6f3e35",
+        "android_client_info": {
+          "package_name": "com.testrnfirebase02"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "398198628618-of6go2iv6357h8d523eifhq45lp44dmp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAKY3bGzasn6wrgUTKTPmHb2qdXbwGF3TI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:398198628618:android:d3130dfb77e64a53",
         "android_client_info": {
           "package_name": "com.twoamteam.museumapp"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1000015078398-k9fec2c0a8ttdmmd7ndnm19b5vc261ff.apps.googleusercontent.com",
+          "client_id": "398198628618-of6go2iv6357h8d523eifhq45lp44dmp.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDIiZoHRsHz4gcNg4-GQKCPbPeNEWNu6Ts"
+          "current_key": "AIzaSyAKY3bGzasn6wrgUTKTPmHb2qdXbwGF3TI"
         }
       ],
       "services": {

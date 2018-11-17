@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {
   StyleSheet,
-  Text,
+  StatusBar,
   View
 } from 'react-native';
 import RootStack from './src/config/RouteConfig'
@@ -10,8 +10,8 @@ export default class App extends Component {
   render() {
     return (
       <View style={styles.container}>
+        <StatusBar backgroundColor="black"/>
         <RootStack/>
-       
       </View>
     );
   }
