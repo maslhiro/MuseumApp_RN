@@ -10,60 +10,58 @@ import { rootRef, objectsRef } from './../../config/FirebaseConfig';
 import ImageProgress from '../../components/ImageProgress'
 
 class HomeScreen extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
-      data : []
+      data: []
     }
   }
 
-  render() {
+  renderItem = (item) => {
     return (
-      <View style={styles.container}>   
-        <View
-          style={
-            {
-              flex: 1,
-              backgroundColor: '#EAEAEA',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}>
-          <FlatList
-            style={{flex:1}}
-            keyExtractor={(item)=>item.key}
-            data={this.state.data}
-            r
-            />
-      
+      <View style={{flex:1,margin:5,backgroundColor:"yellow",padding:5}}>
+        <Text>{item.data.name}</Text>
+        <Text>{item.data.description}</Text>
+        <ImageProgress
+              style={{ 
+                  height: 100,
+                  width:100
+              }}
+              source={{
+                uri: item.data.linkImg
+              }}/>
+      </View>
+    )
 
-        
-          <View style={{marginBottom:50}}></View>
-          <Button 
-            title='Test Authentication'
-            onPress = {() =>{
-              this.props.navigation.push('SignIn');
-            }}
-            />
-        </View>
+  }
+
+  render() {
+    const {data} = this.state
+    return (
+      <View style={styles.container}>
+        <FlatList
+         data={data}
+         numColumns={1}
+         style={{flex:1}}
+         keyExtractor={(item)=>item.key}
+         renderItem={({item})=>this.renderItem(item)}/>
       </View>
     );
   }
 
-  componentDidMount()
-  {
-    objectsRef.on('value',(child)=>
-    {
+  componentDidMount() {
+    objectsRef.on('value', (child) => {
       let arr = []
-      child.forEach((item)=>{
+      child.forEach((item) => {
         arr.push({
           key: item.key,
-          data:item.toJSON()
+          data: item.toJSON()
         })
       })
       this.setState(
         {
-          data:arr
-        }
+          data: arr
+        },()=>console.log("OK",this.state.data)
       )
     })
   }
