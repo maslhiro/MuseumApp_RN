@@ -12,7 +12,7 @@ import {
 import styles from './styles'
 import firebase, { firestore } from 'react-native-firebase';
 import { rootRef, objectsRef } from './../../config/FirebaseConfig';
-import lgMuseum from '../../assets/SignIn/img_MuseumBurned.png';
+import lgMuseum from '../../assets/SignIn/img_Museum.png';
 import Icon from 'react-native-vector-icons/Ionicons';
 import SmallCheckbox from './../../components/SmallCheckBox/index';
 import ImageProgress from '../../components/ImageProgress'
