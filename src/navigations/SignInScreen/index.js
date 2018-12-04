@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import styles from './styles';
 import bg_SignIn from '../../assets/SignIn/bg_SignIn.jpg';
-import ic_MuseumBurned from '../../assets/SignIn/ic_MuseumBurned.png';
+import ic_MuseumBurned from '../../assets/SignIn/img_MuseumBurned.png';
 import { FirebaseAuth } from '../../config/FirebaseConfig'
 
 import Icon from 'react-native-vector-icons/Ionicons';

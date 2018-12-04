@@ -1,13 +1,17 @@
 import {StyleSheet, Dimensions} from 'react-native';
 
-const {width : WIDTH}   = Dimensions.get('window');
+const {width : WIDTH}  = Dimensions.get('window');
 const {height : HEIGHT}   = Dimensions.get('window');
 
 export default styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fefefe',
+    justifyContent: 'space-between',
+    height: HEIGHT
   },
+
+
 
   postContainer: {
     flex: 1,
@@ -96,7 +100,14 @@ export default styles = StyleSheet.create({
     backgroundColor: '#fefefe',
     justifyContent: 'center',
     alignItems: 'center',
+    marginBottom: 20,
   },
 
+  featureSide:{
+    flex: 1,
+    backgroundColor: '#fefefe',
+    alignContent: 'flex-end',
+    
+  }
   
 });
