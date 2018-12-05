@@ -35,8 +35,10 @@ const museumApp = firebase.initializeApp(
   );
 
 export const rootRef = museumApp.database().ref()
-export const testRef = rootRef.child("test")
 export const objectsRef = rootRef.child('Objects')
-export const profileRef = rootRef.child('Profile')
+export const profileRef = rootRef.child('Profiles')
 export const FirebaseAuth = museumApp.auth()
+export const FirebaseStorage = museumApp.storage()
+export const rootRefStorage = FirebaseStorage.ref()
+export const AvatarsRefStorage = rootRefStorage.child('Avatars')
 

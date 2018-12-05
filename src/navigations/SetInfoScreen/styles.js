@@ -30,6 +30,7 @@ export default (styles = StyleSheet.create({
   },
 
   logoText: {
+    flex: 1,
     color: "#ffffff",
     fontSize: 20,
     fontWeight: "500",
@@ -70,23 +71,31 @@ export default (styles = StyleSheet.create({
     width: 140,
     height: 30,
     borderRadius: 25,
-    backgroundColor : `rgba(0, 0, 0, 0.1)`,
+    backgroundColor: `rgba(0, 0, 0, 0.1)`,
     alignItems: "center",
     justifyContent: "center",
     marginHorizontal: 25,
     marginTop: 20
   },
 
-  chooseAvtText:{
+  chooseAvtText: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "center"
   },
 
-  chooseAvtContainer:{
-    flex:1,
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    marginVertical: 30,
+  chooseAvtContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "flex-start",
+    marginVertical: 30
+  },
+
+  finishText: {
+    color: "#ffffff",
+    fontSize: 12,
+    textAlign: "center",
+    marginRight: 10,
+    opacity: 0.8
   }
 }));
