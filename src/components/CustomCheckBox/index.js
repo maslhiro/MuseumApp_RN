@@ -9,7 +9,7 @@ class CustomCheckBox extends PureComponent {
 
     static propTypes = {
         checked:PropTypes.bool,
-        diameter: PropTypes.number,
+        width: PropTypes.number,
         text: PropTypes.string,
         image: PropTypes.number,
         opacity:PropTypes.number
@@ -17,7 +17,7 @@ class CustomCheckBox extends PureComponent {
     
     static defaultProps = {
         checked:false,
-        diameter: 150,
+        width: 150,
         text: "Text",
         image: img_History,
         opacity:0.7
@@ -31,7 +31,7 @@ class CustomCheckBox extends PureComponent {
 
     componentWillReceiveProps(nextProps)
     {
-        if( nextProps.diameter!==this.props.diameter ||
+        if( nextProps.width!==this.props.width ||
             nextProps.textStyle!==this.props.textStyle) 
         {
             this.setInstanceStyle(nextProps)
@@ -40,15 +40,12 @@ class CustomCheckBox extends PureComponent {
 
     setInstanceStyle = (props) => {
         this.touchOpacity_Style = Object.assign({}, styles.touchOpacity, {
-              height: props.diameter,
-              width: props.diameter,
-              borderRadius:props.diameter/2
+              width: props.width
             })
 
         this.imageStyle = Object.assign({}, styles.image, {
-            height: props.diameter,
-            width: props.diameter,
-            borderRadius:props.diameter/2
+            height: props.width,
+            width: props.width,
             })
         
         this.textStyle = Object.assign({}, styles.text, props.textStyle)

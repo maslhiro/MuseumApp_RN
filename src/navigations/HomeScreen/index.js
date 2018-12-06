@@ -3,7 +3,7 @@ import {
   Text,
   FlatList,
   View,
-  Button
+  Dimensions
 } from 'react-native';
 import styles from './styles';
 import { rootRef, objectsRef } from './../../config/FirebaseConfig';
@@ -16,35 +16,37 @@ class HomeScreen extends Component {
       data: []
     }
   }
-
   renderItem = (item) => {
     return (
-      <View style={{flex:1,margin:5,backgroundColor:"yellow",padding:5}}>
-        <Text>{item.data.name}</Text>
-        <Text>{item.data.description}</Text>
-        <ImageProgress
-              style={{ 
-                  height: 100,
-                  width:100
-              }}
-              source={{
-                uri: item.data.linkImg
-              }}/>
+      <View style={styles.viewObject}>
+        <View style={styles.viewImage}>
+          <ImageProgress
+            style={styles.image}
+            source={{
+              uri: item.data.linkImg
+            }}
+            resizeMode="cover"
+          />
+        </View>
+       
+        <Text style={styles.textObject}>{item.data.name}</Text>
       </View>
     )
-
   }
 
+
   render() {
-    const {data} = this.state
+    const { data } = this.state
     return (
       <View style={styles.container}>
         <FlatList
-         data={data}
-         numColumns={1}
-         style={{flex:1}}
-         keyExtractor={(item)=>item.key}
-         renderItem={({item})=>this.renderItem(item)}/>
+          removeClippedSubviews
+          disableVirtualization
+          data={data}
+          numColumns={2}
+          style={{ flex: 1, margin : 5 }}
+          keyExtractor={(item) => item.key}
+          renderItem={({ item }) => this.renderItem(item)} />
       </View>
     );
   }
@@ -61,7 +63,7 @@ class HomeScreen extends Component {
       this.setState(
         {
           data: arr
-        },()=>console.log("OK",this.state.data)
+        }, () => console.log("OK", this.state.data)
       )
     })
   }
