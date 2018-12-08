@@ -1,102 +1,76 @@
-import {StyleSheet, Dimensions} from 'react-native';
+import { StyleSheet, Dimensions } from "react-native";
 
-const {width : WIDTH}   = Dimensions.get('window');
-const {height : HEIGHT}   = Dimensions.get('window');
+const { width, height } = Dimensions.get("window");
 
 export default styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fefefe',
+    padding:5
   },
-
-  postContainer: {
+  headerContainer: {
+    backgroundColor: "black",
+    alignItems: "center",
+    flexDirection: "row",
+    paddingHorizontal: 10,
+    justifyContent: 'space-between',
+    padding:5,
+    height: 55
+  },
+  infoContainer: {
     flex: 1,
-    backgroundColor: '#fefefe',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "red",
+    alignItems: "center",
+    padding:5,
+    justifyContent: "center"
   },
-
-  logoContainer:{
+  overlayContainer : {
+    width: (width * 80) / 100,
+    height: (height * 80) / 100,
+    // backgroundColor: 'white',
+    justifyContent: 'center',
+  },
+  touchPhotoContainer : {
+    height: 60,
+    width: 60,
+    backgroundColor: 'transparent',
+    position: 'absolute',
+    alignSelf: "flex-end",
+    right: 10
+  },
+  touchPhoto: {
     flex: 1,
-    justifyContent: 'center',
+    borderRadius: 30,
+    backgroundColor: 'green',
     alignItems: 'center',
-    flexDirection: 'row',
+    justifyContent: 'center'
   },
-
-  headerContainer:{
-    backgroundColor: '#1c9be4',
+  pickerContainer: {
+    padding: 5,
+    flexDirection: 'row',
     alignItems: 'center',
-    flexDirection: 'row',
-    width: WIDTH,
-    height: 65
+    justifyContent: 'center'
   },
-
-  logoStyle: {
-    width: 56,
-    height: 56,
+  text: {
+    fontSize: 15,
+    color: '#679186'
   },
-
-  logoText: {
-    color: '#ffffff',
-    fontSize: 20,
-    fontWeight: '500',
-    marginLeft: 10,
-  },
-
   titleInputText: {
-    width: WIDTH - 15,
-    height: 45,
     fontSize: 20,
-    paddingLeft: 15,
-    color: '#373737',
     marginHorizontal: 25,
-    marginTop: 20,
+    margin: 20,
+    fontWeight:'bold',
+    color: "#679186",
+    // backgroundColor:'red'
   },
-
   descriptionInputText:{
-    width: WIDTH - 15,
-    height: 150,
     fontSize: 16,
-    paddingLeft: 15,
+    margin: 20,
     marginHorizontal: 25,
-    
+    color : "#679186",
+    // backgroundColor:'yellow'
   },
-
-  featuresView:{
-    width: WIDTH - 30,
-    height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection:'row'
+  textHeader: {
+    fontSize: 16,
+    color: 'white'
   },
-
-  featuresButton: {
-    width: 120,
-    height: 40,
-    borderRadius: 25,
-    backgroundColor: `rgba(245, 245, 245, 1)`,
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection:'row',
-    marginHorizontal: 5,
-  },
-
-  featuresIcon:{
-    width: 20,
-    height: 20
-  },
-
-  featuresText:{
-    color: '#000000',
-    fontSize:  14,
-    marginLeft: 10
-  },
-
-  featureContainer:{
-    backgroundColor: '#fefefe',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-
-  
 });

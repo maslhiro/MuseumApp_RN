@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import styles from './styles';
 import bg_SignIn from '../../assets/SignIn/bg_SignIn.jpg';
-import ic_MuseumBurned from '../../assets/SignIn/ic_MuseumBurned.png';
+import ic_MuseumBurned from '../../assets/SignIn/img_MuseumBurned.png';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 import { FirebaseAuth } from '../../config/FirebaseConfig'
@@ -82,7 +82,7 @@ class SignUpScreen extends Component {
               [
                 {
                   text: 'OK', onPress: () => {
-                    this.props.navigation.push('SignIn')
+                    this.props.navigation.goBack()
                   }
                 },
               ],
@@ -98,7 +98,7 @@ class SignUpScreen extends Component {
   }
 
   onPress_Open_Sign_In_Screen = () => {
-    this.props.navigation.push('SignIn');
+    this.props.navigation.goBack()
   }
 
   render() {

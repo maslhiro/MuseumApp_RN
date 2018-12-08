@@ -1,155 +1,222 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import {
-  Platform,
-  StyleSheet,
   Text,
   View,
-  Button,
+  Picker,
   TextInput,
   TouchableOpacity,
-  Image,
   ScrollView,
-  KeyboardAvoidingView
-} from 'react-native';
-import styles from './styles.js'
-import Header from '../../components/Header';
-import { rootRef, testRef } from './../../config/FirebaseConfig';
-import Icon from 'react-native-vector-icons/Ionicons';
-import lgMuseum from '../../assets/SignIn/museum_white.png';
-import ic_image from '../../assets/ic_image.png';
-import ic_checkin from '../../assets/ic_checkin.png';
-import ic_label from '../../assets/ic_label.png'
+  ImageBackground
+} from "react-native";
+import styles from "./styles.js";
+import Header from "../../components/Header";
+import FastImage from 'react-native-fast-image'
+import { rootRef, testRef } from "./../../config/FirebaseConfig";
+import Icon from 'react-native-vector-icons/Ionicons'
+import ic_image from "../../assets/ic_image.png";
+import ic_checkin from "../../assets/ic_checkin.png";
+import ic_label from "../../assets/ic_label.png";
 
-export default class PostScreen extends Component {
-  constructor(props){
+// Du Lieu Test
+const Type = [
+  {
+    key: "T000",
+    des: "Mục Khác"
+  },
+  {
+    key: "T001",
+    des: "Tranh ảnh"
+  },
+  {
+    key: "T002",
+    des: "Thủ công mỹ nghệ"
+  },
+  {
+    key: "T003",
+    des: "Chiến tranh"
+  },
+]
+
+const Museum = [
+  {
+    key: "BH01",
+    des: "Bảo Tàng TP Hồ Chí Minh"
+  },
+  {
+    key: "BH02",
+    des: "Bảo Tàng Nhựt Vinh"
+  },
+  {
+    key: "BH03",
+    des: "Bảo Tàng Mỹ Thuật"
+  }
+]
+
+class PostScreen extends Component {
+
+  constructor(props) {
     super(props);
     this.state = {
-      txtTitle: '',
-      txtDescription: '',
-      linkImg: '',
-      idtype: '',
-      idMuseum: '',
-      feature: '0'
-    }
+      txtTitle: "",
+      txtDescription: "",
+      linkImg: "",
+      idType: "T001",
+      idMuseum: "",
+      feature: "0"
+    };
   }
 
-  changeFeature = (_feature) => {
-    this.setState({feature:_feature})
-  }
+  changeFeature = _feature => {
+    this.setState({ feature: _feature });
+  };
 
-  renderFeature = () =>{
+  renderFeature = () => {
     switch (this.state.feature) {
-      case '0':
-        return(
-          <View style={{flex:1, backgroundColor:'white'}}>
+      case "0":
+        return <View style={{ flex: 1, backgroundColor: "white" }} />;
 
-          </View>
-        );
-        
-    
-      case '1':
-        return(
-          <View style={{flex:1, backgroundColor:'red'}}>
-
-          </View>
-        );
+      case "1":
+        return <View style={{ flex: 1, backgroundColor: "red" }} />;
         break;
-      case '2':
-        return(
-          <View style={{flex:1, backgroundColor:'blue'}}>
-
-          </View>
-        );
+      case "2":
+        return <View style={{ flex: 1, backgroundColor: "blue" }} />;
         break;
-      case '3':
-        return(
-          <View style={{flex:1, backgroundColor:'yellow'}}>
-
-          </View>
-        );
+      case "3":
+        return <View style={{ flex: 1, backgroundColor: "yellow" }} />;
         break;
-      }
+    }
+  };
+
+  onChangeText_Title = (text) => {
+    this.setState({ txtTitle: text });
+  }
+
+  onChangeText_Description = (text) => {
+    this.setState({
+      txtDescription: text
+    });
+  }
+
+  onValueChange_Type = (value) => {
+    this.setState({
+      idType: value
+    })
+  }
+
+  onValueChange_Museum = (value) => {
+    this.setState({
+      idMuseum: value
+    })
+  }
+
+  goBack = () => {
+    this.props.navigation.goBack()
+  }
+
+  onPost = () => {
+    alert("Dang Post")
   }
 
   render() {
-    return (
-      <View style={styles.container}>
-        <View style={styles.headerContainer}>
-          <Icon 
-            name = {'ios-arrow-round-back'}
-            size = {56}
-            color = '#ffffff'
-            style = {{marginLeft:10}}
-            onPress = {() =>{
-              this.props.navigation.goBack();
-            }}
-          />
-          <View style={styles.logoContainer}>
-            <Image source = {lgMuseum} style = {styles.logoStyle}/>
-            <Text style={styles.logoText}>VINDI MUSEUM</Text>
-          </View>
-          <TouchableOpacity style={{marginRight:10}}>
-            <Text style={{color:'#ffffff', fontSize: 14, textAlign: 'center',}}
-              onPress={()=>{
-                infoPost = 'Title: ' + this.state.txtTitle + '\nDescription: ' + this.state.txtDescription
-                          + '\nType: ' +this.state.idtype + '\nMuseum: ' + this.state.idMuseum + '\nLink Image: ' + this.state.linkImg
-                          + '\nFeature:' + this.state.feature;
-                alert(infoPost)
-              }}
-            >Chia sẽ</Text>
-          </TouchableOpacity>
-        </View>
-        
-        <View style={styles.postContainer}>
-          <TextInput
-            style = {styles.titleInputText}
-            keyboardType='default'
-            placeholder = {'Tiêu đề'}
-            autoCapitalize='none'
-            placeholderTextColor = {`rgba(8, 8, 8, 0.6)`}
-            underlineColorAndroid = 'transparent'
-            onChangeText={
-              (text) => {
-                  this.setState({ txtTitle: text });
-              }}
-          />
-          <TextInput  
-            style = {styles.descriptionInputText}
-            keyboardType='default'
-            placeholder = {'Nội dung miêu tả'}
-            autoCapitalize='none'
-            multiline={true}
-            placeholderTextColor = {`rgba(110, 110, 110, 0.6)`}
-            underlineColorAndroid = 'transparent'
-            onChangeText={
-              (text) => {
-                  this.setState({ txtDescription: text });
-              }}
-          />
-        </View>
-          <View style={styles.featureContainer}>
-          <View style={styles.featuresView}>
-            <TouchableOpacity style = {styles.featuresButton} onPress={()=>{this.changeFeature('1')}}>
-              <Image source={ic_image} style={styles.featuresIcon}/>
-              <Text style={styles.featuresText}>Thêm ảnh</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style = {styles.featuresButton} onPress={()=>{this.changeFeature('2')}}>
-              <Image source={ic_label} style={styles.featuresIcon}/>
-              <Text style={styles.featuresText}>Loại hiện vật</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style = {styles.featuresButton} onPress={()=>{this.changeFeature('3')}}>
-              <Image source={ic_checkin} style={styles.featuresIcon}/>
-              <Text style={styles.featuresText}>Bảo tàng</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+    let rightIcon_Header = <Icon name="md-checkmark" size={30} color="white" onPress={() => {this.onPost}} />
 
-        <View style={styles.container}>
-          {this.renderFeature()}
-        </View>
+    return (
+
+      <View style={styles.container}>
+        <Header
+          title="Đăng Hiện Vât"
+          onPressLeftIcon={() => this.goBack()}
+          showLeftIcon={true}
+          rightIcon={rightIcon_Header} />
+
+        <ImageBackground
+          source={{ uri: 'https://i.pinimg.com/564x/e2/72/ba/e272baea3f1fada020360a80ce924989.jpg' }}
+          style={styles.infoContainer}>
+          <View style={styles.overlayContainer}>
+            <View style={{ flex: 1, backgroundColor: 'green' }}>
+                <FastImage
+                  style={{flex:1}}
+                  source={{uri:"https://snack-code-uploads.s3.us-west-1.amazonaws.com/~asset/3c4456be614c1710b655baf00b1e14c0"}}
+                  resizeMode={FastImage.resizeMode.cover}
+                  />
+              
+            </View>
+            <ScrollView style={{ flex: 1, backgroundColor: 'white' }}>
+              <View style={{ flex: 1, backgroundColor: 'white', justifyContent: 'center' }}>
+                <TextInput
+                  style={styles.titleInputText}
+                  placeholder={"Tên Hiện Vật"}
+                  autoCorrect={false}
+                  placeholderTextColor="#679186"
+                  underlineColorAndroid="#679186"
+                  onChangeText={text => this.onChangeText_Title(text)}
+                />
+                <TextInput
+                  style={styles.descriptionInputText}
+                  placeholder={"Nội dung miêu tả"}
+                  autoCorrect={false}
+                  multiline={true}
+                  placeholderTextColor="#679186"
+                  underlineColorAndroid="#679186"
+                  onChangeText={text => this.onChangeText_Description(text)}
+                />
+
+                <View style={styles.pickerContainer}>
+                  <Text style={{fontSize:15}}> Loại : </Text>
+                  <Picker
+                    mode='dialog'
+                    selectedValue={this.state.idType}
+                    style={{ height: 50, width: 150, alignSelf: 'center' }}
+                    onValueChange={(itemValue, itemIndex) => this.onValueChange_Type(itemValue)}>
+                    {
+                      Type.map(item => {
+                        return (
+                          <Picker.Item
+                            key={item.key}
+                            label={item.des}
+                            value={item.key} />
+                        )
+                      })
+                    }
+
+                  </Picker>
+                </View>
+
+                <View style={styles.pickerContainer}>
+                  <Text style={styles.text}> Bảo Tàng : </Text>
+                  <Picker
+                    mode='dialog'
+                    selectedValue={this.state.idMuseum}
+                    style={{ height: 50, width: 180, alignSelf: 'center' }}
+                    onValueChange={(itemValue, itemIndex) => this.onValueChange_Type(itemValue)}>
+                    {
+                      Museum.map(item => {
+                        return (
+                          <Picker.Item
+                            key={item.key}
+                            label={item.des}
+                            value={item.key} />
+                        )
+                      })
+                    }
+                  </Picker>
+                </View>
+              </View>
+            </ScrollView>
+            
+            <View style={styles.touchPhotoContainer}>
+              <TouchableOpacity
+                style={styles.touchPhoto}
+                activeOpacity={0.8}>
+                <Icon name="md-add" size={30} color="white" onPress={() => { }} />
+              </TouchableOpacity>
+
+            </View>
+          </View>
+        </ImageBackground>
       </View>
     );
   }
 }
 
-
+export default PostScreen 

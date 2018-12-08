@@ -1,39 +1,41 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import {
   Platform,
   StyleSheet,
   Text,
   View,
-  Button
-} from 'react-native';
-import styles from './styles';
-import Header from '../../components/Header';
-import firebase, { firestore } from 'react-native-firebase';
-import { rootRef, testRef } from './../../config/FirebaseConfig';
+  Button,
+  CameraRoll,
+  ScrollView
+} from "react-native";
+import styles from "./styles";
+import Header from "../../components/Header";
+import firebase, { firestore } from "react-native-firebase";
+import { rootRef, testRef } from "./../../config/FirebaseConfig";
 
 export default class HomeScreen extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
-   
+    this.state={
+      photos:[]
+    }
   }
+
+
   render() {
     return (
       <View style={styles.container}>
-        <Header title='Welcome' />
+        <Header title="Welcome" />
         <View
-          style={
-            {
-              flex: 1,
-              backgroundColor: '#EAEAEA',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}>
-          <Text>You Log In Successfull</Text>
-          
+          style={{
+            flex: 1,
+            backgroundColor: "#EAEAEA",
+            alignItems: "center",
+            justifyContent: "center"
+          }}
+        >
         </View>
       </View>
     );
   }
 }
-
-

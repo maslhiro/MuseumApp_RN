@@ -10,8 +10,9 @@ import {
 } from 'react-native';
 import styles from './styles';
 import bg_SignIn from '../../assets/SignIn/bg_SignIn.jpg';
-import ic_MuseumBurned from '../../assets/SignIn/ic_MuseumBurned.png';
-import { FirebaseAuth } from '../../config/FirebaseConfig'
+import ic_MuseumBurned from '../../assets/SignIn/img_MuseumBurned.png';
+import { FirebaseAuth, profileRef } from '../../config/FirebaseConfig';
+import AwesomeAlert from 'react-native-awesome-alerts';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 
@@ -24,10 +25,9 @@ class SignInScreen extends Component {
       hidePass: true,
       txtEmail: '',
       txtPassword: '',
-
       errEmail: false,
       errPassword: false,
-
+      showAlert: false,
       user: null,
     };
   }
@@ -39,7 +39,10 @@ class SignInScreen extends Component {
       this.setState(
         {
           isLoading: true
-        }, () => this.onSignIn())
+        }, () => {
+          this.setState({showAlert: true})
+          this.onSignIn();
+        })
     }
     else {
       Alert.alert("Thông Báo", " Nhâp Đầy Đủ THông TIn")
@@ -63,19 +66,16 @@ class SignInScreen extends Component {
   onSignIn = () => {
     FirebaseAuth.signInWithEmailAndPassword(this.state.txtEmail, this.state.txtPassword)
       .then(() => {
-        this.setState(
-          {
-            isLoading: false,
-            isAuthenticated: true
-          });
-        console.log(`Login successfully`);
-        this.props.navigation.push('Info');
-      }).catch((error) => {
-        this.setState(
-          {
-            isLoading: false,
-
-          });
+        uid = FirebaseAuth.currentUser.uid;
+        profileRef.on('value', (child)=>{
+          if (!child.hasChild(uid)){
+            console.log(`Login successfully`);
+            this.props.navigation.push('SetInfo');
+          } else{
+            this.props.navigation.push('Home')
+          }
+        })}).catch((error) => {
+        this.setState({showAlert:false})
         console.log('Login failed', error);
         alert('Log in failed');
       })
@@ -179,6 +179,17 @@ class SignInScreen extends Component {
             <Text style={styles.textStyle}> Bạn chưa có tài khoản?</Text>
           </TouchableOpacity>
         </View>
+
+        <AwesomeAlert
+          show={this.state.showAlert}
+          showProgress={true}
+          title="Đang xử lý"
+          message="Vui lòng đợi..."
+          closeOnTouchOutside={false}
+          closeOnHardwareBackPress={false}
+          showCancelButton={false}
+          showConfirmButton={false}
+        />
 
       </ImageBackground>
     );
