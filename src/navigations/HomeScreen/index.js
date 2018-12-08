@@ -1,76 +1,73 @@
 import React, { Component } from 'react';
 import {
-  Platform,
-  StyleSheet,
   Text,
+  FlatList,
   View,
-  Button
+  Dimensions
 } from 'react-native';
 import styles from './styles';
-import Header from '../../components/Header';
-import { rootRef, testRef } from './../../config/FirebaseConfig';
-import Object from '../../components/Models/Object'
+import { rootRef, objectsRef } from './../../config/FirebaseConfig';
 import ImageProgress from '../../components/ImageProgress'
 
-export default class HomeScreen extends Component {
-  constructor(props){
+class HomeScreen extends Component {
+  constructor(props) {
     super(props);
-   
+    this.state = {
+      data: []
+    }
   }
+  renderItem = (item) => {
+    return (
+      <View style={styles.viewObject}>
+        <View style={styles.viewImage}>
+          <ImageProgress
+            style={styles.image}
+            source={{
+              uri: item.data.linkImg
+            }}
+            resizeMode="cover"
+          />
+        </View>
+       
+        <Text style={styles.textObject}>{item.data.name}</Text>
+      </View>
+    )
+  }
+
+
   render() {
+    const { data } = this.state
     return (
       <View style={styles.container}>
-        <Header title='hello' />
-        <View
-          style={
-            {
-              flex: 1,
-              backgroundColor: '#EAEAEA',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}>
-
-            <ImageProgress
-              style={{ 
-                  height: 100,
-                  width:100
-              }}
-              source={{
-                uri: 'https://unsplash.it/400/400?image=1'
-              }}/>
-
-
-          <Button
-            title='Push'
-            onPress={() => { 
-              var idObject = rootRef.child('Objects').push().id;
-              rootRef.child('Objects').child(idObject)
-                .set(Object(idObject, 
-                            'msu_001',
-                            'Bình cổ', 
-                            'type_001', 
-                            'Thời nhà trần, bảo vật của vua Trần Vinh Tông', 
-                            'http://vlxx.tv')
-                ,function(error){
-                  if (error){
-                    alert('failed')
-                  } else {
-                    alert(`add object ${idObject} successfully` );
-                  }
-                })
-            }}
-          />
-          <View style={{marginBottom:50}}></View>
-          <Button 
-            title='Test Authentication'
-            onPress = {() =>{
-              this.props.navigation.push('SignIn');
-            }}
-            />
-        </View>
+        <FlatList
+          removeClippedSubviews
+          disableVirtualization
+          data={data}
+          numColumns={2}
+          style={{ flex: 1, margin : 5 }}
+          keyExtractor={(item) => item.key}
+          renderItem={({ item }) => this.renderItem(item)} />
       </View>
     );
   }
-}
 
+  componentDidMount() {
+    objectsRef.on('value', (child) => {
+      let arr = []
+      child.forEach((item) => {
+        arr.push({
+          key: item.key,
+          data: item.toJSON()
+        })
+      })
+      this.setState(
+        {
+          data: arr
+        }, () => console.log("OK", this.state.data)
+      )
+    })
+  }
+
+}
+export default HomeScreen
 

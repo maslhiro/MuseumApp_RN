@@ -3,20 +3,19 @@ let {width,height} = Dimensions.get('screen')
 
 const styles = {
     touchOpacity: {
-        height:150,
         width:150,
-        borderRadius:75,
-        backgroundColor:'white',
+        backgroundColor:'red',
         paddingHorizontal:20,
         paddingVertical:10,
         alignItems:'center',
-        justifyContent:'center'
+        justifyContent:'center',
+        borderRadius:50,
+
+        overflow: 'hidden'
     },
     image:{
         position:'absolute',
-        height:150,
-        width:150,
-        borderRadius:75
+        flex :1
     },
     text:{
         color:'white',
@@ -30,7 +29,8 @@ const styles = {
     imageView:{
         flex:1,
         alignItems:'center',
-        justifyContent:'center'
+        justifyContent:'center',
+        margin : 5,
     }
 }
 
