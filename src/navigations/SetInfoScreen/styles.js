@@ -1,101 +1,83 @@
 import { StyleSheet, Dimensions } from "react-native";
 
-const { width: WIDTH } = Dimensions.get("window");
-const { height: HEIGHT } = Dimensions.get("window");
+const { width, height } = Dimensions.get("window");
 
-export default (styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fefefe"
+    padding:5,
+    backgroundColor: "white"
   },
-
-  logoContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    flexDirection: "row"
-  },
-
   headerContainer: {
-    backgroundColor: "#1c9be4",
+    backgroundColor: "black",
     alignItems: "center",
     flexDirection: "row",
-    width: WIDTH,
-    height: 65
+    paddingHorizontal: 10,
+    justifyContent: 'space-between',
+    padding:5,
+    height: 55
   },
-
-  logoStyle: {
-    width: 56,
-    height: 56
+  overlayContainer : {
+    width: (width * 80) / 100,
+    height: (height * 55) / 100,
+    backgroundColor: 'white',
+    justifyContent: 'space-evenly',
   },
-
-  logoText: {
+  overlayContainer_01 : {
+    padding: 2,
+    backgroundColor: 'white',
+    justifyContent: 'space-evenly',
+    flex: 1
+  },
+  chooseAvtContainer: {
+    flexDirection: 'row',
+    padding:5,
+    // alignItems: 'center',
+    justifyContent: 'space-evenly',
+  },
+  infoContainer: {
     flex: 1,
-    color: "#ffffff",
-    fontSize: 20,
-    fontWeight: "500",
-    marginLeft: 10
-  },
-
-  setInfoView: {
-    flex: 1,
-    backgroundColor: "#fefefe",
+    backgroundColor: "red",
     alignItems: "center",
-    justifyContent: "space-between"
-  },
-
-  textContainer: {
-    justifyContent: "center",
-    marginTop: 40,
-    width: WIDTH - 40,
-    marginHorizontal: 10
-  },
-
-  textView: {
-    alignItems: "flex-start",
-    justifyContent: "flex-start",
-    flexDirection: "row"
-  },
-
-  getNameTest: {
-    color: `rgba(0,0,0,0.6)`,
-    fontSize: 14,
-    fontWeight: "500"
-  },
-
-  getNameInputText: {
-    fontSize: 24
-  },
-
-  chooseAvtTextView: {
-    width: 140,
-    height: 30,
-    borderRadius: 25,
-    backgroundColor: `rgba(0, 0, 0, 0.1)`,
-    alignItems: "center",
-    justifyContent: "center",
-    marginHorizontal: 25,
-    marginTop: 20
-  },
-
-  chooseAvtText: {
-    flexDirection: "row",
-    alignItems: "center",
+    padding:5,
     justifyContent: "center"
   },
-
-  chooseAvtContainer: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "flex-start",
-    marginVertical: 30
+  touchView: {
+    height: 60,
+    backgroundColor: '#f79f24',
+    alignItems: 'center',
+    justifyContent: 'center'
   },
-
-  finishText: {
-    color: "#ffffff",
-    fontSize: 12,
-    textAlign: "center",
-    marginRight: 10,
-    opacity: 0.8
+  touchChoosePhotoView: {
+    borderRadius: 25,
+    backgroundColor: '#f79f24',
+    margin:10,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  text: {
+    fontSize: 13,
+//    color: '#679186'
+    color:'black'
+},
+  textHeader: {
+    fontSize: 16,
+    color: 'white'
+  },
+  textInputNameUser:
+  {
+    backgroundColor: 'white',
+    color:'#679186',
+    alignSelf:'center',
+    width: (width * 70) / 100,
+    padding: 5
+  },
+  textTouch: {
+    fontWeight: 'bold',
+    color: 'black',
+    fontSize: 14
   }
-}));
+
+})
+
+export default styles

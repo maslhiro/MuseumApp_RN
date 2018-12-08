@@ -10,7 +10,6 @@ import styles from './styles';
 import Header from '../../components/Header';
 import firebase, { firestore } from 'react-native-firebase';
 import { rootRef, testRef } from './../../config/FirebaseConfig';
-import Object from '../../components/Models/Object'
 
 export default class HomeScreen extends Component {
   constructor(props) {

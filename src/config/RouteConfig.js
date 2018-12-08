@@ -6,6 +6,8 @@ import SignUpScreen from '../navigations/SignUpScreen'
 import SearchScreen from '../navigations/SearchSreen'
 import PostScreen from '../navigations/PostScreen'
 import SetInfoScreen from '../navigations/SetInfoScreen'
+import TestScreen from '../navigations/TestScreen';
+
 import {createStackNavigator} from 'react-navigation'
 
 export default RootStack = createStackNavigator(
@@ -17,11 +19,12 @@ export default RootStack = createStackNavigator(
         SignUp: SignUpScreen,
         Search: SearchScreen,
         Post: PostScreen,
-        SetInfo: SetInfoScreen
+        SetInfo: SetInfoScreen,
+        Test: TestScreen
 
     },
     {
-        initialRouteName: 'Home',
+        initialRouteName: 'Test',
         navigationOptions:
         {
             header:null

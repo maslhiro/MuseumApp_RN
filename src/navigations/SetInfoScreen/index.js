@@ -1,29 +1,29 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import {
-  Platform,
-  StyleSheet,
   Text,
   View,
   TextInput,
   TouchableOpacity,
-  Image,
+  ImageBackground,
   Alert
 } from "react-native";
 import styles from "./styles";
-import Header from "../../components/Header";
-import firebase, { firestore } from "react-native-firebase";
+
 import {
   FirebaseAuth,
   profileRef,
   rootRefStorage,
   AvatarsRefStorage
 } from "./../../config/FirebaseConfig";
+
+import Header from '../../components/Header'
 import Icon from "react-native-vector-icons/Ionicons";
 import avtSample from "../../assets/SignIn/img_MuseumBurned.png";
 import ImagePicker from "react-native-image-picker";
 import AwesomeAlert from "react-native-awesome-alerts";
+import FastImage from 'react-native-fast-image'
 
-export default class SetInfoScreen extends Component {
+class SetInfoScreen extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -32,9 +32,9 @@ export default class SetInfoScreen extends Component {
       sourceAvt: avtSample,
       uriAvt: "",
       linkAvt: "",
-      uid: FirebaseAuth.currentUser.uid
+      uid: "FirebaseAuth.currentUser.uid"
     };
-  }
+  } 
 
   goBack = () => {
     FirebaseAuth.signOut();
@@ -58,8 +58,8 @@ export default class SetInfoScreen extends Component {
       } else if (response.customButton) {
         console.log("User tapped custom button: ", response.customButton);
       } else {
-        const source = { uri: response.uri };
-        const uri = response.uri;
+        let source = { uri: response.uri };
+        let uri = response.uri;
         this.setState({ sourceAvt: source, uriAvt: uri });
       }
     });
@@ -69,8 +69,8 @@ export default class SetInfoScreen extends Component {
     if (this.checkCompleted()) {
       let fileUpload = AvatarsRefStorage.child(this.state.uid + ".jpg");
       fileUpload.putFile(this.state.uriAvt).then(snapshot => {
-        this.setState({ linkAvt: snapshot.downloadURL });
-        this.setupInfoUser();
+        this.setState({ linkAvt: snapshot.downloadURL, showAlert: true }, () =>
+          this.setupInfoUser())
       });
     }
   };
@@ -82,7 +82,7 @@ export default class SetInfoScreen extends Component {
         name: this.state.txtName,
         urlAvatar: this.state.linkAvt
       },
-      (error) =>{
+      (error) => {
         if (error) {
           console.log("failed to setup");
         } else {
@@ -115,80 +115,69 @@ export default class SetInfoScreen extends Component {
     return true;
   };
 
+  onChangeText_Name = (text) => {
+    this.setState({ txtName: text });
+  }
+
   render() {
     return (
       <View style={styles.container}>
-        <View style={styles.headerContainer}>
-          <Icon
-            name={"ios-arrow-round-back"}
-            size={56}
-            color="#ffffff"
-            style={{ marginLeft: 10 }}
-            onPress={() => {
-              this.goBack();
-            }}
+        <Header 
+          title="Cập Nhật Thông Tin"
+          onPressLeftIcon={()=>this.goBack()}
           />
-          <Text style={styles.logoText}>Thiết lập thông tin</Text>
-          <Text
-            style={styles.finishText}
-            onPress={() => {
-              this.setState({ showAlert: true });
-              this.onFinish();
-            }}
-          >
-            HOÀN THÀNH
-          </Text>
-        </View>
-        <View style={styles.setInfoView}>
-          <View style={styles.textContainer}>
-            <View style={styles.textView}>
-              <Text style={styles.getNameText}>Vui lòng nhập tên của bạn:</Text>
+
+        <ImageBackground
+          source={{ uri: 'https://i.pinimg.com/originals/e2/72/ba/e272baea3f1fada020360a80ce924989.jpg' }}
+          style={styles.infoContainer}>
+          <View style={styles.overlayContainer}>
+            <View style={styles.overlayContainer_01}>
+              <View style={styles.chooseAvtContainer}>
+                <FastImage
+                  source={{uri:"https://snack-code-uploads.s3.us-west-1.amazonaws.com/~asset/3c4456be614c1710b655baf00b1e14c0"}}
+                  style={{ width: 100, height: 100 }}
+                  resizeMode={FastImage.resizeMode.cover}
+                />
+                <View>
+                <TouchableOpacity  onPress={()=>this.onChoosePhoto()}>
+                  <Text style={{fontSize:15,color:'black'}}> Upload Ảnh </Text>
+                  <View style={{height:1,backgroundColor:'#679186'}}/>
+                </TouchableOpacity>
+                </View>
+              
+              </View>
+              <View style={{padding:5, margin :5}}>              
+                <Text style={styles.text}>Nhâp Tên Bạn :</Text>
+                <TextInput 
+                    style={styles.textInputNameUser}   
+                    placeholder="..."
+                    autoCorrect={false}
+                    placeholderTextColor='black'
+                    underlineColorAndroid='black'
+                    onChangeText={(text)=>this.onChangeText_Name(text)}
+                />
+
+              </View>
             </View>
-            <TextInput
-              style={styles.getNameInputText}
-              keyboardType="default"
-              placeholder={"Tên tôi là..."}
-              autoCapitalize="none"
-              multiline={false}
-              placeholderTextColor={`rgba(110, 110, 110, 0.6)`}
-              underlineColorAndroid="transparent"
-              onChangeText={text => {
-                this.setState({ txtName: text });
-              }}
-            />
-          </View>
-          <View style={styles.chooseAvtContainer}>
-            <Image
-              source={this.state.sourceAvt}
-              style={{ width: 150, height: 150 }}
-            />
-            <TouchableOpacity
-              style={styles.chooseAvtTextView}
-              onPress={this.onChoosePhoto}
-            >
-              <Text
-                style={{
-                  color: `rgba(0,0,0,0.8)`,
-                  fontSize: 14,
-                  fontWeight: "400"
-                }}
-              >
-                Chọn ảnh đại diện
-              </Text>
+
+            <TouchableOpacity 
+              style={styles.touchView}
+              onPress={()=>this.onFinish()}>
+              <Text style={styles.textTouch}> Hoàn Thành </Text>
             </TouchableOpacity>
+            <AwesomeAlert
+              show={this.state.showAlert}
+              showProgress={true}
+              title="Đang xử lý"
+              message="Vui lòng đợi..."
+              closeOnTouchOutside={false}
+              closeOnHardwareBackPress={false}
+            />
           </View>
-          <AwesomeAlert
-            show={this.state.showAlert}
-            showProgress={true}
-            title="Đang xử lý"
-            message="Vui lòng đợi..."
-            closeOnTouchOutside={false}
-            closeOnHardwareBackPress={false}
-            showCancelButton={false}
-            showConfirmButton={false}
-          />
-        </View>
+        </ImageBackground>
       </View>
     );
   }
 }
+
+export default SetInfoScreen 

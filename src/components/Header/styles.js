@@ -1,32 +1,20 @@
-import {StyleSheet, Platform} from 'react-native';
+import {StyleSheet,} from 'react-native';
 
-export default styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#FAFAFA',
+const styles = StyleSheet.create({
+  headerContainer: {
+    backgroundColor: "black",
+    alignItems: "center",
+    flexDirection: "row",
+    paddingHorizontal: 10,
+    justifyContent: 'space-between',
+    padding:5,
+    height: 55
   },
-
-  headerView:{
-    backgroundColor : '#ECEFF1',
-    height : 65,
-    alignItems : 'center',
-    justifyContent: 'center',
-    shadowColor: 'gray',
-    shadowOffset : {weight:0, height:3},
-    shadowOpacity: 0.3,
-    elevation: 2
-  },
-
-  headerText:{
+  textHeader: {
     fontSize: 16,
-    ...Platform.select({
-      ios:{
-        marginTop: 15
-      },
-      android:{
-        marginTop: 0
-      }
-    })
-  }
+    color: 'white'
+  },
 
 });
+
+export default styles

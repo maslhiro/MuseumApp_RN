@@ -12,7 +12,7 @@
     "react-native": "0.57.1",
     "react-native-awesome-alerts": "^1.2.0",
     "react-native-fast-image": "^5.0.10",
-    "react-native-firebase": "5.1.0",
+    "react-native-firebase": "^5.1.0",
     "react-native-image-picker": "^0.27.1",
     "react-native-image-progress": "^1.1.1",
     "react-native-vector-icons": "^6.0.2",
