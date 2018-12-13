@@ -38,8 +38,13 @@ export const rootRef = museumApp.database().ref()
 
 export const objectsRef = rootRef.child('Objects')
 export const profileRef = rootRef.child('Profiles')
+export const typesRef = rootRef.child('Types')
+export const museumsRef = rootRef.child('Museums')
 export const FirebaseAuth = museumApp.auth()
 export const FirebaseStorage = museumApp.storage()
 export const rootRefStorage = FirebaseStorage.ref()
 export const AvatarsRefStorage = rootRefStorage.child('Avatars')
+export const TempRefStorage = rootRefStorage.child('Temp')
+export const UserUpdateRefStorage = rootRefStorage.child('UserUpdate')
+
 

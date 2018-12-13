@@ -24,7 +24,7 @@ export default RootStack = createStackNavigator(
 
     },
     {
-        initialRouteName: 'Test',
+        initialRouteName: 'Home',
         navigationOptions:
         {
             header:null

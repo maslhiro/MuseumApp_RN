@@ -13,7 +13,7 @@ import {
   FirebaseAuth,
   profileRef,
   rootRefStorage,
-  AvatarsRefStorage
+  AvatarsRefStorage,
 } from "./../../config/FirebaseConfig";
 
 import Header from '../../components/Header'
@@ -69,7 +69,7 @@ class SetInfoScreen extends PureComponent {
     if (this.checkCompleted()) {
       let fileUpload = AvatarsRefStorage.child(this.state.uid + ".jpg");
       fileUpload.putFile(this.state.uriAvt).then(snapshot => {
-        this.setState({ linkAvt: snapshot.downloadURL, showAlert: true }, () =>
+        this.setState({ linkAvt: snapshot.downloadURL(), showAlert: true }, () =>
           this.setupInfoUser())
       });
     }

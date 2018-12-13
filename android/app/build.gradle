@@ -148,7 +148,6 @@ android {
 }
 
 dependencies {
-    
     implementation project(':react-native-image-picker')
     implementation project(':react-native-fast-image')
     implementation project(':react-native-firebase')
