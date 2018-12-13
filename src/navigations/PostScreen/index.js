@@ -35,10 +35,10 @@ class PostScreen extends Component {
       txtTitle: "",
       txtDescription: "",
       uriImg: "",
+      idObject: "",
       linkImg: "",
-      idType: "T001",
-      idMuseum: "",
-      feature: "0",
+      idType: "T000",
+      idMuseum: "M001",
       listType: [],
       listMuseum: [],
       isSignedIn: false,
@@ -73,25 +73,34 @@ class PostScreen extends Component {
     this.props.navigation.goBack();
   };
 
+  onPinish = () => {
+    let _idObject = objectsRef.push().key;
+    let photoUpdate = UserUpdateRefStorage.child(_idObject + ".jpg");
+    photoUpdate.putFile(this.state.uriImg).then(snapshot => {
+      console.log("linkImg: " + snapshot.downloadURL);
+      this.setState({ idObject: _idObject, linkImg: snapshot.downloadURL },()=> this.onPost());
+    })
+  }
+
   onPost = () => {
-    var idObject = objectsRef.push().id;
-    objectsRef.child(idObject).set(
+    objectsRef.child(this.state.idObject).set(
       {
-        idObject: idObject,
-        idMuseum: this.setState.idMuseum,
-        name: this.state.txtTitle,
+        idObject: this.state.idObject,
+        idMuseum: this.state.idMuseum,
         idType: this.state.idType,
+        name: this.state.txtTitle,
         description: this.state.txtDescription,
         linkImg: this.state.linkImg,
         isActivated: "false"
       },
-      function(error) {
+      (error) => {
         if (error) {
-          alert("Post bài thất bại. Vui lòng thử lại.")
+          //objectsRef.child(idObject).remove();
+          alert("Post bài thất bại. Vui lòng thử lại.");
           console.log("Post failed");
         } else {
-          alert("Thao tác thành công!")
-          console.log(`successful for object ${idObject}`);
+          alert("Thao tác thành công!");
+          console.log(`successful for object ${this.state.idObject}`);
           this.props.navigation.push("Home");
         }
       }
@@ -125,19 +134,15 @@ class PostScreen extends Component {
     });
   };
 
-  logIn = () => {
-    FirebaseAuth.signInWithEmailAndPassword("thuthoi@test.com", "123456")
-      .then(() => {
-        _uid = FirebaseAuth.currentUser.uid;
-        alert("login successfully for " + _uid);
-        this.setState({ isSignedIn: true, uid: _uid });
-      })
-      .catch(error => {
-        this.setState({ showAlert: false });
-        console.log("Login failed", error);
-        alert("Log in failed");
-      });
-  };
+  checkLogin = () => {
+    if (FirebaseAuth.currentUser.uid){
+      this.setState({uid: FirebaseAuth.currentUser.uid})
+    } else{
+      console.log("Chưa đăng nhập")
+      alert("Chưa đăng nhập !!!")
+      this.props.navigation.push("SignIn")
+    }
+  }
 
   getDataType = () => {
     typesRef.on("value", child => {
@@ -187,13 +192,11 @@ class PostScreen extends Component {
         size={30}
         color="white"
         onPress={() => {
-          this.onPost();
+          this.onPinish();
         }}
       />
     );
-    if (!this.state.isSignedIn) {
-      this.logIn();
-    }
+    this.checkLogin()
     console.log("ListMuseum " + this.setState.listMuseum);
     return (
       <View style={styles.container}>
@@ -276,7 +279,7 @@ class PostScreen extends Component {
                     selectedValue={this.state.idMuseum}
                     style={{ height: 50, width: 180, alignSelf: "center" }}
                     onValueChange={(itemValue, itemIndex) =>
-                      this.onValueChange_Type(itemValue)
+                      this.onValueChange_Museum(itemValue)
                     }
                   >
                     {this.state.listMuseum.map(item => {
