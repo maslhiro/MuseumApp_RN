@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {
   View,
-  Button
+  Text
 } from 'react-native';
 import styles from './styles';
 import Header from '../../components/Header'
@@ -16,17 +16,26 @@ class TestScreen extends Component {
     return (
       <View style={styles.container}>
         <Header/>
-        <View style={{flexDirection:'row',margin:10}}>
-          <CustomCheckBox/>
-        
-          <CustomCheckBox/>
 
-        </View>
-        <View style={{flexDirection:'row',marginStart:20,margin:10}}>
-          <CustomCheckBox text="Thủ Công Nghiệp" wight={250}/>
-        
+        <View style={{flexDirection:'row',marginStart:20,margin:10,flex:1,padding:5,flexWrap:'wrap'}}>
           <CustomCheckBox/>
+          
+      
 
+          <CustomCheckBox text="Thủ Công Nghiệp" checked={true}/>
+
+          <Text>VInVInVInVInVInVIn</Text>
+          
+          <Text>VIVInVInVInVInVInVInVInVInVInVInVInVInVInn</Text>
+          
+          <Text>VInVInVInVInVInVInVIn</Text>
+          
+          <Text>VInVInVIn</Text>
+          
+          <Text>VIVInVInn</Text>
+          
+          <Text>VIn</Text>
+      
         </View>
       
       

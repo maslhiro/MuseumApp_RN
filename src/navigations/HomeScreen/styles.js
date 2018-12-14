@@ -13,7 +13,8 @@ export default styles = StyleSheet.create({
     padding: 5, 
     justifyContent: 'center', 
     alignItems: 'center', 
-    backgroundColor: '#f3f6c8', 
+//    backgroundColor: '#f3f6c8', 
+    backgroundColor:'white',
     margin: 5 
   },
   image : {

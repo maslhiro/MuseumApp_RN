@@ -10,6 +10,7 @@ class Header extends PureComponent {
     onPressLeftIcon: PropTypes.func,
     title: PropTypes.string,
     showLeftIcon:PropTypes.bool,
+    leftIcon:PropTypes.object,
     rightIcon: PropTypes.object,
     color: PropTypes.string
   };
@@ -19,6 +20,7 @@ class Header extends PureComponent {
     title: "Title",
     showLeftIcon: true,
     rightIcon: null,
+    leftIcon:null,
     color: 'black'
   };
 
@@ -41,12 +43,24 @@ class Header extends PureComponent {
     })
   }
 
+  renderLeftIcon = () => {
+    if(this.props.leftIcon){
+      return this.props.leftIcon
+    }
+    else
+    {
+      if(this.props.showLeftIcon){
+        return <Icon name="md-arrow-dropleft" size={40} color="white" onPress={() => this.props.onPressLeftIcon()} />
+      }
+      else
+        return <Text/>
+    }
+  }
+
   render() {
     return (
       <View style={this.headerContainer}>
-        {this.props.showLeftIcon ?
-          <Icon name="md-arrow-dropleft" size={40} color="white" onPress={() => this.props.onPressLeftIcon()} /> : <Text />
-        }
+        {this.renderLeftIcon()}
         <Text style={styles.textHeader}> {this.props.title} </Text>
         {
           this.props.rightIcon ?

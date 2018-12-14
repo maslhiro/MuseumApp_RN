@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react'
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, ImageBackground } from 'react-native';
 import FastImage from 'react-native-fast-image'
 import img_History from '../../assets/CheckBox/img_History.jpg'
 import styles from './styles'
@@ -9,7 +9,6 @@ class CustomCheckBox extends PureComponent {
 
     static propTypes = {
         checked:PropTypes.bool,
-        width: PropTypes.number,
         text: PropTypes.string,
         image: PropTypes.number,
         opacity:PropTypes.number
@@ -17,7 +16,6 @@ class CustomCheckBox extends PureComponent {
     
     static defaultProps = {
         checked:false,
-        width: 150,
         text: "Text",
         image: img_History,
         opacity:0.7
@@ -39,14 +37,9 @@ class CustomCheckBox extends PureComponent {
     }
 
     setInstanceStyle = (props) => {
-        this.touchOpacity_Style = Object.assign({}, styles.touchOpacity, {
-              width: props.width
-            })
+        this.touchOpacity_Style = Object.assign({}, styles.touchOpacity,)
 
-        this.imageStyle = Object.assign({}, styles.image, {
-            height: props.width,
-            width: props.width,
-            })
+        this.imageStyle = Object.assign({}, styles.image,)
         
         this.textStyle = Object.assign({}, styles.text, props.textStyle)
     }
@@ -71,24 +64,17 @@ class CustomCheckBox extends PureComponent {
                 style={this.touchOpacity_Style}
                 onPress={this.onPress}>
                 {this.props.checked?
-                <View style={styles.imageView}>
                     <FastImage
-                    style={this.imageStyle}
-                    source={this.props.image}  
-                    resizeMode={FastImage.resizeMode.cover}
-                    />
-                    <Text style={this.textStyle}> {this.props.text} </Text>
-
-                </View>
-               :<View style={styles.imageView}>
-                    <FastImage
-                    style={{...this.imageStyle,opacity:this.props.opacity,}}
-                    source={this.props.image}  
-                    resizeMode={FastImage.resizeMode.cover}
-                    />
-                <Text style={this.textStyle}> {this.props.text} </Text>
-                </View>
+                        source={this.props.image} 
+                        resizeMode="cover" 
+                        style={{flexShrink:1}}/>
+               :    <FastImage
+                        source={this.props.image} 
+                        resizeMode="cover" 
+                        style={{height:200,width:200}}/>
                 }
+                <Text style={this.textStyle}> {this.props.text} </Text>
+
                 </TouchableOpacity>
             </View>
         )
