@@ -37,6 +37,7 @@ const museumApp = firebase.initializeApp(
 export const rootRef = museumApp.database().ref()
 
 export const objectsRef = rootRef.child('Objects')
+export const favoriteRef = rootRef.child('Favorite')
 export const profileRef = rootRef.child('Profiles')
 export const typesRef = rootRef.child('Types')
 export const museumsRef = rootRef.child('Museums')

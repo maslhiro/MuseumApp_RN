@@ -3,7 +3,7 @@ import {
   Text,
   FlatList,
   View,
-  Dimensions
+  TouchableOpacity
 } from 'react-native';
 import styles from './styles';
 import { rootRef, objectsRef } from './../../config/FirebaseConfig';
@@ -18,7 +18,7 @@ class HomeScreen extends Component {
   }
   renderItem = (item) => {
     return (
-      <View style={styles.viewObject}>
+      <TouchableOpacity style={styles.viewObject} onPress = {() => {this.toDetail(item)}} >
         <View style={styles.viewImage}>
           <ImageProgress
             style={styles.image}
@@ -30,10 +30,13 @@ class HomeScreen extends Component {
         </View>
        
         <Text style={styles.textObject}>{item.data.name}</Text>
-      </View>
+      </TouchableOpacity>
     )
   }
 
+  toDetail = (item) => {
+    this.props.navigation.push("Detail", {idObject : item.data.idObject})
+  }
 
   render() {
     const { data } = this.state

@@ -6,11 +6,22 @@ import SignUpScreen from '../navigations/SignUpScreen'
 import SearchScreen from '../navigations/SearchSreen'
 import PostScreen from '../navigations/PostScreen'
 import SetInfoScreen from '../navigations/SetInfoScreen'
+import DetailScreen from '../navigations/DetailScreen';
+import CommentScreen from './../navigations/CommentScreen';
 import TestScreen from '../navigations/TestScreen';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import {createStackNavigator, createBottomTabNavigator} from 'react-navigation';
 
-import {createStackNavigator} from 'react-navigation'
 
-export default RootStack = createStackNavigator(
+export const DetailTab = createBottomTabNavigator(
+    {
+        Detail: DetailScreen,
+        Comments: CommentScreen,
+    },
+    
+);
+
+export const RootStack = createStackNavigator(
     {
         Home: HomeScreen,
         Favo: FavoScreen,
@@ -20,8 +31,8 @@ export default RootStack = createStackNavigator(
         Search: SearchScreen,
         Post: PostScreen,
         SetInfo: SetInfoScreen,
+        Detail: DetailTab,
         Test: TestScreen
-
     },
     {
         initialRouteName: 'Home',
@@ -31,6 +42,7 @@ export default RootStack = createStackNavigator(
         }
 
     }
-)
+);
+
 
 

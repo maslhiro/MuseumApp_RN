@@ -12,12 +12,10 @@ import styles from "./styles.js";
 import Header from "../../components/Header";
 import FastImage from "react-native-fast-image";
 import {
-  rootRef,
   typesRef,
   museumsRef,
   objectsRef,
   FirebaseAuth,
-  rootRefStorage,
   TempRefStorage,
   UserUpdateRefStorage
 } from "./../../config/FirebaseConfig";
