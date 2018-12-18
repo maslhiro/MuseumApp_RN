@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   text: {
-    fontSize: 13,
+    fontSize: 14,
 //    color: '#679186'
     color:'black'
 },
@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
   },
   textErrStyle : {
     color:'red',
-    fontSize:10
+    fontSize:12
   } ,
   textInputNameUser:
   {

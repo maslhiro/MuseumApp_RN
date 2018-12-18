@@ -5,14 +5,14 @@ import {
   ImageBackground,
   Image,
   TextInput,
+  ScrollView,
   TouchableOpacity,
   Alert
 } from 'react-native';
 import styles from './styles';
-import bg_SignIn from '../../assets/SignIn/bg_SignIn.jpg';
-import ic_MuseumBurned from '../../assets/SignIn/img_MuseumBurned.png';
-
-import Icon from 'react-native-vector-icons/Ionicons';
+import img_Background from '../../assets/img_Background.jpg'
+import Header from '../../components/Header'
+import AwesomeAlert from "react-native-awesome-alerts";
 import { FirebaseAuth } from '../../config/FirebaseConfig'
 
 class SignUpScreen extends Component {
@@ -20,16 +20,12 @@ class SignUpScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isAuthenticated: false,
-      isLoading: false, // bien de spiner xoay xoay khi fetch du lieu
-      hidePass: true,
+      isLoading: false,
       txtEmail: '',
       txtPassword: '',
-
+      showAlert:0,
       errEmail: false,
       errPassword: false,
-
-      user: null,
     };
   }
 
@@ -47,26 +43,34 @@ class SignUpScreen extends Component {
       });
   }
 
-
-  onPress_Hide_Pass = () => {
-    this.setState(
-      {
-        hidePass: !this.state.hidePass
-      }
-    )
-  }
-
   checkData = () => {
-    if (
-      this.state.txtEmail ||
-      this.state.txtPassword) {
+    if ( this.state.txtEmail==="" || this.state.txtPassword==="") 
+    {
+
+        this.setState({
+          errEmail: !this.state.txtEmail,
+          errPassword: !this.state.txtPassword
+        })  
+    }
+    else 
+    {
+     
       this.setState(
         {
+          errEmail: false,
+          errPassword:false,
           isLoading: true
-        }, () => this.onSignUp())
-    }
-    else {
-      Alert.alert("Thông Báo", " Nhâp Đầy Đủ THông TIn")
+        }, () => {
+          // this.onSignIn()
+           // Test 
+          setTimeout(()=>{
+              this.setState({
+                isLoading:false,
+                showAlert: 1
+              })
+          },3000)
+        })
+        
     }
   }
 
@@ -97,83 +101,109 @@ class SignUpScreen extends Component {
       });
   }
 
-  onPress_Open_Sign_In_Screen = () => {
-    this.props.navigation.goBack()
+  
+  renderAlert = () => {
+    switch(this.state.showAlert)
+    {
+      case 0 :{
+        return null
+        break
+      }
+      case 1: {
+        return (
+            <AwesomeAlert
+              show={true}
+              title="Opps!"
+              message="Sôme Thing Went Wrong Please Try Again :<"
+              confirmText=" OK "
+              closeOnTouchOutside={false}
+              onConfirmPressed={()=>this.setState({showAlert:0})}
+              closeOnHardwareBackPress={false}
+              showCancelButton={false}
+              showConfirmButton={true}
+            />
+        )
+        break
+      }
+      default: {
+        return null
+      }
+    }
+
+
   }
 
   render() {
     return (
-      <ImageBackground
-        source={bg_SignIn}
-        style={styles.BackgroundContainer}>
-        <View style={styles.logoContainer}>
-          <Image source={ic_MuseumBurned} style={styles.logoStyle} />
-          <Text style={styles.logoText}>Sign Up</Text>
-          <Text style={styles.logoText}>VINDI MUSEUM</Text>
-          {this.state.isLoading ? <Text style={styles.logoText}>Đang Tải .....</Text> : null}
-        </View>
+      <View style={styles.container}>
+      <Header
+        title="Create Account"
+      />
+      <View style={{ flex: 1, backgroundColor: 'blue', }} >
+        <ScrollView
+          showsVerticalScrollIndicator={false} >
+          <ImageBackground
+            source={img_Background}
+            style={styles.infoContainer}>
 
-        <View style={styles.inputContainer}>
-          <Icon
-            name={'ios-mail'}
-            size={28}
-            color={`rgba(255, 255, 255, 0.7)`}
-            style={styles.inputIcon}
-          />
-          <TextInput
-            style={styles.inputText}
-            keyboardType='email-address'
-            placeholder={'E-mail'}
-            autoCapitalize='none'
-            placeholderTextColor={`rgba(255, 255, 255, 0.7)`}
-            underlineColorAndroid='transparent'
-            onChangeText={(text) => this.onChangeText_Email(text)}
-          />
-        </View>
+            <View style={styles.overlayContainer}>
+              <View style={{ flexDirection: 'row',marginVertical: 20}}>
+                <View style={{ flex: 1 ,  backgroundColor: 'transparent', alignItems:'flex-start' , justifyContent:'center'}}>
+                  <Text style={{ fontWeight: 'bold', fontSize: 28, color:'white' }}> Sign Up</Text>
+                </View>
+                <View style={{ flex: 1 , alignItems:'flex-end' , justifyContent:'center'}}>
+                <Text style={{ fontWeight: 'bold', fontSize: 28, color:'white' }}>  1 of 2</Text>
+                </View>
+              </View>
+              <View style={styles.overlayContainer_01}>
+                <View style={{ padding: 5, margin: 5 , }}>
+                  <Text style={styles.text}>Email :</Text>
+                  {this.state.errEmail?<Text style={styles.textErrStyle}> *Email can not be empty</Text>:null}
+                  <TextInput
+                    style={styles.textInputNameUser}
+                    keyboardType='email-address'
+                    autoCorrect={false}
+                    placeholderTextColor='black'
+                    underlineColorAndroid='black'
+                    onChangeText={(text) => this.onChangeText_Email(text)}
+                  />
+                  <Text style={styles.text}>Password :</Text>
+                  {this.state.errPassword?<Text style={styles.textErrStyle}> *Password can not be empty</Text>:null}
+                  <TextInput
+                    style={styles.textInputNameUser}
+                    secureTextEntry={true}                    
+                    autoCorrect={false}
+                    placeholderTextColor='black'
+                    underlineColorAndroid='black'
+                    onChangeText={(text) => this.onChangeText_Pass(text)}
+                  />
 
-        <View style={styles.inputContainer}>
-          <Icon
-            name={'ios-lock'}
-            size={28}
-            color={`rgba(255, 255, 255, 0.7)`}
-            style={styles.inputIcon}
-          />
-          <TextInput
-            style={styles.inputText}
-            keyboardType='default'
-            placeholder={'Password'}
-            autoCapitalize='none'
-            secureTextEntry={this.state.hidePass}
-            placeholderTextColor={`rgba(255, 255, 255, 0.7)`}
-            underlineColorAndroid='transparent'
-            onChangeText={(text) => this.onChangeText_Pass(text)}
+                </View>
+              </View>
 
-          />
-          <TouchableOpacity
-            style={styles.btnEye}
-            onPress={() => { this.onPress_Hide_Pass() }}>
-            <Icon
-              name={this.state.hidePass ? 'ios-eye-off' : 'ios-eye'}
-              size={26}
-              color={`rgba(255, 255, 255, 0.7)`}
-            />
-          </TouchableOpacity>
-        </View>
+              <TouchableOpacity
+                style={styles.touchView}
+                onPress={() => this.checkData()}>
+                <Text style={styles.textTouch}> Next Step </Text>
+              </TouchableOpacity>
 
-        <TouchableOpacity
-          style={styles.btnSignUp}
-          onPress={() => this.checkData()}>
-          <Text style={styles.txtSignUp}> Sign Up</Text>
-        </TouchableOpacity>
+              <AwesomeAlert
+                show={this.state.isLoading}
+                showProgress={true}
+                title="Loading"
+                message="Please wait..."
+                closeOnTouchOutside={false}
+                closeOnHardwareBackPress={false}
+              />
+              {this.renderAlert()}
 
-        <View style={styles.textContainer}>
-          <TouchableOpacity
-            onPress={() => this.onPress_Open_Sign_In_Screen()}>
-            <Text style={styles.textStyle}>Back</Text>
-          </TouchableOpacity>
-        </View>
+            </View>
 
-      </ImageBackground>
+          </ImageBackground>
+        </ScrollView>
+
+      </View>
+    </View>
     );
   }
 }

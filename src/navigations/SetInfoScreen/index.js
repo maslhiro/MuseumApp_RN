@@ -14,7 +14,7 @@ import {
   profileRef,
   AvatarsRefStorage,
 } from "./../../config/FirebaseConfig";
-
+import img_Background from '../../assets/img_Background.jpg'
 import Header from '../../components/Header'
 import ImagePicker from "react-native-image-picker";
 import AwesomeAlert from "react-native-awesome-alerts";
@@ -131,8 +131,26 @@ class SetInfoScreen extends PureComponent {
         return null
         break
       }
-
-      case 1: {
+      case 1 : {
+        return(
+          <AwesomeAlert
+            show={true}
+            title="Congratulation !"
+            message="You've Successfully Signed Up ^^"
+            confirmText=" OK "
+            closeOnTouchOutside={false}
+            onConfirmPressed={()=>{
+              // navigate HomeScreen
+              this.setState({showAlert:0})
+            }}
+            closeOnHardwareBackPress={false}
+            showCancelButton={false}
+            showConfirmButton={true}
+          />
+          )
+        break
+      }
+      case 2: {
         return (
             <AwesomeAlert
               show={true}
@@ -148,7 +166,7 @@ class SetInfoScreen extends PureComponent {
         )
         break
       } 
-      case 2: {
+      case 3: {
         return (
             <AwesomeAlert
               show={true}
@@ -182,7 +200,7 @@ class SetInfoScreen extends PureComponent {
           <ScrollView
             showsVerticalScrollIndicator={false} >
             <ImageBackground
-              source={{ uri: 'https://i.pinimg.com/originals/e2/72/ba/e272baea3f1fada020360a80ce924989.jpg' }}
+              source={img_Background}
               style={styles.infoContainer}>
 
               <View style={styles.overlayContainer}>
