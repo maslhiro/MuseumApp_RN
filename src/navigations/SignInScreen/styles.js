@@ -1,91 +1,68 @@
 import {StyleSheet, Platform, Dimensions} from 'react-native';
 
-const {width : WIDTH}   = Dimensions.get('window');
+const {width ,height}   = Dimensions.get('screen');
 
 export default styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FAFAFA',
+    padding :5
   },
 
-  BackgroundContainer: {
+  backgroundContainer: {
     flex: 1,
-    width: null,
-    height: null,
-    justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: "center",
+    padding:5,
+    justifyContent: "center"
   },
-
-  logoContainer:{
-    alignItems: 'center',
-    marginBottom: 50,
+  overlayContainer: {
+    width: (width * 80) / 100,
+    height: (height * 85) / 100,
   },
-
+  logoContainer:{ 
+    flex:1, 
+    backgroundColor: 'transparent', 
+    justifyContent:'flex-end',
+    alignItems:'center' 
+  },
+  inputContainer:{
+    flex:1, 
+    backgroundColor:'white', 
+    justifyContent:'center',
+  },
   logoStyle: {
-    width: 160,
-    height: 160,
+    height:180,
+    width:180,
+    marginBottom:20
   },
-
-  logoText: {
-    color: 'white',
-    fontSize: 20,
-    fontWeight: '500',
-    marginTop: 10,
-    opacity: 0.7,
-  },
-
-  inputContainer: {
-    marginTop: 10,
-  },
-
-  inputText: {
-    width: WIDTH - 55,
-    height: 45,
-    borderRadius: 25,
-    fontSize: 16,
-    paddingLeft: 45,
-    backgroundColor : `rgba(0, 0, 0, 0.35)`,
-    color: `rgba(255, 255, 255, 0.7)`,
-    marginHorizontal: 25,
-  },
-
-  inputIcon: {
-    position: 'absolute',
-    top: 8,
-    left: 37 
-  },
-
-  btnEye: {
-    position: 'absolute',
-    top: 9,
-    right: 37 
-  },
-
-  btnSignIn: {
-    width: WIDTH - 55,
-    height: 45,
-    borderRadius: 25,
-    backgroundColor: '#086A87',
-    justifyContent: 'center',
-    marginTop: 20,
-  },
-
-  txtSignIn: {
-    color: `rgba(255, 255, 255, 0.7)`,
-    fontSize: 16,
-    textAlign: 'center',
-  },
-
-  textContainer: {
-    alignItems: 'center',
-    marginTop: 30,
-  },
-
-  textStyle: {
-    color: '#0B173B',
+  inputStyle:{
     fontSize: 14,
-    textAlign: 'center',
-    marginBottom: 10,
+    marginVertical:10,
+    color: "black",
+  },
+  touchStyle: {
+    height: 60,
+    backgroundColor: '#f79f24',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  textTouchStyle : {
+    color: 'black',
+    fontSize: 18
+  },
+  textStyle: {
+    fontWeight: 'bold',
+    color: '#f79f24',
+    fontSize: 14
+  },
+  textErrStyle : {
+    color:'red',
+    fontSize:10
+  } ,
+  bottomContainer:{
+    margin:5, 
+    marginBottom:20, 
+    backgroundColor:'transparent', 
+    flexDirection:'row'
   }
-  
+
 });

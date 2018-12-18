@@ -13,10 +13,6 @@ import Header from "../../components/Header";
 import FastImage from 'react-native-fast-image'
 import { rootRef, testRef } from "./../../config/FirebaseConfig";
 import Icon from 'react-native-vector-icons/Ionicons'
-import ic_image from "../../assets/ic_image.png";
-import ic_checkin from "../../assets/ic_checkin.png";
-import ic_label from "../../assets/ic_label.png";
-
 // Du Lieu Test
 const Type = [
   {
@@ -121,6 +117,7 @@ class PostScreen extends Component {
         <ImageBackground
           source={{ uri: 'https://i.pinimg.com/564x/e2/72/ba/e272baea3f1fada020360a80ce924989.jpg' }}
           style={styles.infoContainer}>
+          <ScrollView style={{flex:1}}>
           <View style={styles.overlayContainer}>
             <View style={{ flex: 1, backgroundColor: 'green' }}>
                 <FastImage
@@ -185,6 +182,7 @@ class PostScreen extends Component {
 
             </View>
           </View>
+          </ScrollView>
         </ImageBackground>
       </View>
     );

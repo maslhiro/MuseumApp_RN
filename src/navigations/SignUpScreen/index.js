@@ -78,7 +78,7 @@ class SignUpScreen extends Component {
         }, () =>
             Alert.alert(
               'Sign Up Successfully',
-              'Chúc mừng bạn đã tạo tài khoản  thành công',
+              'Chúc mừng bạn đã tạo tài khoản thành công',
               [
                 {
                   text: 'OK', onPress: () => {

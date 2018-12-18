@@ -20,11 +20,11 @@ export default RootStack = createStackNavigator(
         Search: SearchScreen,
         Post: PostScreen,
         SetInfo: SetInfoScreen,
-        Test: TestScreen
+        Test: TestScreen,
 
     },
     {
-        initialRouteName: 'Home',
+        initialRouteName: 'SetInfo',
         navigationOptions:
         {
             header:null

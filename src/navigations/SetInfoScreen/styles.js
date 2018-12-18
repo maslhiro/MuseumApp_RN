@@ -8,23 +8,14 @@ const styles = StyleSheet.create({
     padding:5,
     backgroundColor: "white"
   },
-  headerContainer: {
-    backgroundColor: "black",
-    alignItems: "center",
-    flexDirection: "row",
-    paddingHorizontal: 10,
-    justifyContent: 'space-between',
-    padding:5,
-    height: 55
-  },
   overlayContainer : {
     width: (width * 80) / 100,
-    height: (height * 55) / 100,
-    backgroundColor: 'white',
+    height: (height * 70) / 100,
+    backgroundColor: 'transparent',
     justifyContent: 'space-evenly',
   },
   overlayContainer_01 : {
-    padding: 2,
+    padding: 5,
     backgroundColor: 'white',
     justifyContent: 'space-evenly',
     flex: 1
@@ -36,7 +27,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
   },
   infoContainer: {
-    flex: 1,
+    width: (width * 100) / 100,
+    height: (height - 90),
     backgroundColor: "red",
     alignItems: "center",
     padding:5,
@@ -64,10 +56,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: 'white'
   },
+  textErrStyle : {
+    color:'red',
+    fontSize:10
+  } ,
   textInputNameUser:
   {
     backgroundColor: 'white',
-    color:'#679186',
+    color:'black',
     alignSelf:'center',
     width: (width * 70) / 100,
     padding: 5
