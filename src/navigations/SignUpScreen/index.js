@@ -100,7 +100,6 @@ class SignUpScreen extends Component {
         alert(`Register fail with error: ${error}`)
       });
   }
-
   
   renderAlert = () => {
     switch(this.state.showAlert)

@@ -117,7 +117,8 @@ class PostScreen extends Component {
         <ImageBackground
           source={{ uri: 'https://i.pinimg.com/564x/e2/72/ba/e272baea3f1fada020360a80ce924989.jpg' }}
           style={styles.infoContainer}>
-          <ScrollView style={{flex:1}}>
+          <ScrollView style={{flex:1}}           
+          showsVerticalScrollIndicator={false}>
           <View style={styles.overlayContainer}>
             <View style={{ flex: 1, backgroundColor: 'green' }}>
                 <FastImage

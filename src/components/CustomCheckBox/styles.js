@@ -3,12 +3,14 @@ let {width,height} = Dimensions.get('screen')
 
 const styles = {
     touchOpacity: {
-        backgroundColor:'red',
+        backgroundColor:'white',
         paddingHorizontal:20,
         paddingVertical:10,
         alignItems:'center',
         justifyContent:'center',
         borderRadius:50,
+        borderColor:"black",
+        borderWidth:1,
         overflow: 'hidden',
     },
     image:{
@@ -16,7 +18,7 @@ const styles = {
         flex :1,
     },
     text:{
-        color:'white',
+        color:'black',
         // fontWeight:'bold',
         fontSize:17
     },

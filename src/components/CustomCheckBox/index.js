@@ -10,14 +10,14 @@ class CustomCheckBox extends PureComponent {
     static propTypes = {
         checked:PropTypes.bool,
         text: PropTypes.string,
-        image: PropTypes.number,
+        color: PropTypes.string,
         opacity:PropTypes.number
     };
     
     static defaultProps = {
         checked:false,
         text: "Text",
-        image: img_History,
+        color: "green",
         opacity:0.7
     };
 
@@ -29,7 +29,8 @@ class CustomCheckBox extends PureComponent {
 
     componentWillReceiveProps(nextProps)
     {
-        if( nextProps.width!==this.props.width ||
+        if( nextProps.touchOpacity!==this.props.touchOpacity_Style ||
+            nextProps.image!==this.props.imageStyle ||
             nextProps.textStyle!==this.props.textStyle) 
         {
             this.setInstanceStyle(nextProps)
@@ -38,10 +39,25 @@ class CustomCheckBox extends PureComponent {
 
     setInstanceStyle = (props) => {
         this.touchOpacity_Style = Object.assign({}, styles.touchOpacity,)
+        this.touchOpacity_Style_Checked = Object.assign({}, styles.touchOpacity,
+            {
+                backgroundColor : this.props.color,
+                borderColor:'white'
+            })
+    
+
+            console.log(this.touchOpacity_Style)
 
         this.imageStyle = Object.assign({}, styles.image,)
         
         this.textStyle = Object.assign({}, styles.text, props.textStyle)
+
+        this.textStyle_Checked = Object.assign({}, styles.text, props.textStyle,
+            {
+                color:'white'
+            })
+
+
     }
 
     onPress = () => {
@@ -61,19 +77,9 @@ class CustomCheckBox extends PureComponent {
             style={styles.container}
             >
                 <TouchableOpacity
-                style={this.touchOpacity_Style}
+                style={this.props.checked?this.touchOpacity_Style_Checked:this.touchOpacity_Style}
                 onPress={this.onPress}>
-                {this.props.checked?
-                    <FastImage
-                        source={this.props.image} 
-                        resizeMode="cover" 
-                        style={{flexShrink:1}}/>
-               :    <FastImage
-                        source={this.props.image} 
-                        resizeMode="cover" 
-                        style={{height:200,width:200}}/>
-                }
-                <Text style={this.textStyle}> {this.props.text} </Text>
+                <Text style={this.props.checked?this.textStyle_Checked:this.textStyle}> {this.props.text} </Text>
 
                 </TouchableOpacity>
             </View>

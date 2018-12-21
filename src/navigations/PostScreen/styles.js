@@ -5,7 +5,7 @@ const { width, height } = Dimensions.get("window");
 export default styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding:5
+    // padding:5
   },
   headerContainer: {
     backgroundColor: "black",

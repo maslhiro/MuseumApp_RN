@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Text, View } from 'react-native';
+import { Text, View, TouchableOpacity } from 'react-native';
 import styles from './styles'
 import Icon from "react-native-vector-icons/Ionicons";
 import PropTypes from 'prop-types';
@@ -8,6 +8,7 @@ class Header extends PureComponent {
 
   static propTypes = {
     onPressLeftIcon: PropTypes.func,
+    onPressRightIcon: PropTypes.func,
     title: PropTypes.string,
     showLeftIcon:PropTypes.bool,
     leftIcon:PropTypes.object,
@@ -17,6 +18,7 @@ class Header extends PureComponent {
 
   static defaultProps = {
     onPressLeftIcon: () => {},
+    onPressRightIcon: () =>{},
     title: "Title",
     showLeftIcon: true,
     rightIcon: null,
@@ -50,7 +52,10 @@ class Header extends PureComponent {
     else
     {
       if(this.props.showLeftIcon){
-        return <Icon name="md-arrow-dropleft" size={40} color="white" onPress={() => this.props.onPressLeftIcon()} />
+        return (
+        <TouchableOpacity onPress={() => this.props.onPressLeftIcon()}>
+          <Icon name="md-arrow-dropleft" size={40} color="white"  />
+        </TouchableOpacity>)
       }
       else
         return <Text/>
@@ -62,10 +67,13 @@ class Header extends PureComponent {
       <View style={this.headerContainer}>
         {this.renderLeftIcon()}
         <Text style={styles.textHeader}> {this.props.title} </Text>
+        <TouchableOpacity onPress={() => this.props.onPressRightIcon()}>
         {
           this.props.rightIcon ?
             this.props.rightIcon : <Text />
         }
+        </TouchableOpacity>
+
       </View>
     )
   }
