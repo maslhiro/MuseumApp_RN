@@ -86,6 +86,10 @@ export default class SearchScreen extends Component {
       txtSearch: text,
     })
   }
+  
+  goBack = () => {
+    this.props.navigation.goBack()
+  }
 
   onSearch = () => {
     objectsRef.on('value', (child) => {
@@ -127,7 +131,7 @@ export default class SearchScreen extends Component {
 
   renderCheckBox = () => 
   {
-    let checkbox = []
+    let arrCheckbox = []
     let {listCheckBox } = this.state
     Type.forEach((item,index)=>
     {
@@ -141,7 +145,7 @@ export default class SearchScreen extends Component {
         color = ColorType[index]
       }
 
-      checkbox.push(
+      arrCheckbox.push(
         <CustomCheckBox 
         color={color}
         key={item.key} 
@@ -151,7 +155,7 @@ export default class SearchScreen extends Component {
       )
     })
     
-    return checkbox
+    return arrCheckbox
     
   }
 
@@ -161,7 +165,8 @@ export default class SearchScreen extends Component {
       <View style={styles.container}>
         <Header
           title="Tìm Kiếm"
-          showLeftIcon={true} />
+          onPressLeftIcon={() => this.goBack()}
+          />
 
         <ImageBackground
           source={img_Background}

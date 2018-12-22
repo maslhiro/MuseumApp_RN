@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react'
 import { View, Text, TouchableOpacity, ImageBackground } from 'react-native';
 import FastImage from 'react-native-fast-image'
-import img_History from '../../assets/CheckBox/img_History.jpg'
 import styles from './styles'
 import PropTypes from 'prop-types';
 

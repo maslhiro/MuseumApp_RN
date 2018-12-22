@@ -5,14 +5,20 @@ import {
   View
 } from 'react-native';
 import RootStack from './src/config/RouteConfig'
+import {
+  Provider,
+} from 'unstated';
 
 export default class App extends Component {
   render() {
     return (
-      <View style={styles.container}>
+      <Provider >
+       <View style={styles.container}>
         <StatusBar backgroundColor="black"/>
         <RootStack/>
       </View>
+          
+      </Provider>
     );
   }
 } 
