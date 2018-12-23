@@ -10,74 +10,22 @@ import {
   Dimensions,
 } from 'react-native';
 import styles from './styles'
-const { width, height } = Dimensions.get('screen')
 
 import img_Background from '../../assets/img_Background.jpg'
 import Header from '../../components/Header'
-import firebase, { firestore } from 'react-native-firebase';
-import { rootRef, objectsRef } from './../../config/FirebaseConfig';
 import Icon from 'react-native-vector-icons/Ionicons';
 import CustomCheckBox from '../../components/CustomCheckBox'
+import AppContainer from '../../container'
+import { Provider, Subscribe, Container } from 'unstated';
 
-import ImageProgress from '../../components/ImageProgress'
-
-// Du Lieu Test
-const Type = [
-  {
-    key: "T000",
-    des: "Tranh ảnh"
-  },
-  {
-    key: "T004",
-    des: "Văn hoá"
-  },
-  
-  {
-    key: "T003",
-    des: "Chiến tranh"
-  },
-  
-  {
-    key: "T005",
-    des: "Nghệ thuật"
-  },
-  {
-    key: "T001",
-    des: "Thủ công mỹ nghệ"
-  },
-  {
-    key: "T008",
-    des: "Nông nghiệp"
-  },
-  {
-    key: "T006",
-    des: "Đồ dùng sinh hoạt"
-  },
-  
-  {
-    key: "T009",
-    des: "Nhà nước phong kiến"
-  },
-  {
-    key: "T007",
-    des: "Công nghiệp"
-  },  
-
-  {
-    key: "T025",
-    des: "Mục Khác"
-  },
-]
-
-const ColorType = ["green","red","yellow","gray"]
+const ColorType = ["gray","#c6e377","#729d39","#36622b"]
 
 export default class SearchScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
       txtSearch: '',
-      data: [],
-      listCheckBox: [false, false, true, true, false, false, false, true, false, true]
+      showAdvanced:false,
     };
   }
 
@@ -91,72 +39,37 @@ export default class SearchScreen extends Component {
     this.props.navigation.goBack()
   }
 
-  onSearch = () => {
-    objectsRef.on('value', (child) => {
-      let arr = []
-      let searchText = this.state.txtSearch;
-
-      child.forEach((item) => {
-        if (item.child('name').val().toLowerCase().indexOf(searchText.toLowerCase()) != -1
-          || item.child('description').val().toLowerCase().indexOf(searchText.toLowerCase()) != -1) {
-          for (let i = 0; i < 10; i++) {
-            if ((this.state.listCheckBox)[i]) {
-              type = 'T00' + i.toString()
-              if (item.child('idType').val() == type) {
-                arr.push({
-                  key: item.key,
-                  data: item.toJSON()
-                })
-              }
-            }
-          }
-        }
-      })
-      this.setState(
-        {
-          data: arr
-        }, () => console.log("OK", this.state.data)
-      )
-    });
-    //alert((this.state.listCheckBox))
-  }
-
-  onChecked = (isChecked, index) => {
-    let arr = this.state.listCheckBox;
-    arr[index] = isChecked
-    this.setState({
-      listCheckBox: arr
-    })
-  }
-
-  renderCheckBox = () => 
-  {
-    let arrCheckbox = []
-    let {listCheckBox } = this.state
-    Type.forEach((item,index)=>
-    {
-      let color 
-      if(index>3)
+  onSearch = (container) => {
+      if(container.searchObject(this.state.txtSearch))
       {
-        color= ColorType[index%4]
+        this.props.navigation.goBack()
+      }
+  }
+
+  renderCheckBox = (container) => 
+  {
+    let arrType = container.getAppState().arrType
+
+    return arrType.map((item, index) => {
+      let color 
+      if(index>ColorType.length-1)
+      {
+        color= ColorType[index%ColorType.length]
       }
       else 
       {
         color = ColorType[index]
       }
 
-      arrCheckbox.push(
-        <CustomCheckBox 
-        color={color}
-        key={item.key} 
-        text={item.des} 
-        checked={listCheckBox[index]}
-        onPress={()=>{this.onChecked(!listCheckBox[index],index)}}/>
+      return (
+        <CustomCheckBox
+          color={color}
+          text={item.des}
+          key={item.key}
+          checked={item.checked}
+          onPress={() => { container.setState_Checked(index, !item.checked) }} />
       )
     })
-    
-    return arrCheckbox
-    
   }
 
   render() {
@@ -176,7 +89,9 @@ export default class SearchScreen extends Component {
             showsVerticalScrollIndicator={false}
           >
             <View style={styles.overlayContainer}>
-              <View style={{ flex: 1, backgroundColor: 'white', padding: 5 }}>
+              <Subscribe to={[AppContainer]}>
+              {container =>
+                <View style={{ flex: 1, backgroundColor: 'white', padding: 5 }}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', margin: 5 }}>
                   <Icon name="ios-search" color="black" size={30} />
                   <TextInput
@@ -185,35 +100,46 @@ export default class SearchScreen extends Component {
                     onChangeText={text => this.onChangeText_Search(text)}
                   />
                 </View>
-                <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', margin: 5 }}>
-                  <Icon name="md-arrow-dropdown" color="black" size={30} />
+                <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', margin: 5 }}
+                  onPress={()=>this.setState({showAdvanced:!this.state.showAdvanced})}>
+                  {this.state.showAdvanced?
+                  <Icon name="md-arrow-dropdown" color="black" size={30} /> : 
+                  <Icon name="md-arrow-dropup" color="black" size={30} /> }
                   <Text style={{ margin: 10, fontSize: 14, color: 'black' }}>Tìm Kiếm Nâng Cao</Text>
 
                 </TouchableOpacity>
                 <ScrollView>
                   <View style={{ flexDirection: 'row', flex: 1, padding: 5, flexWrap: 'wrap' }}>
-                  {this.renderCheckBox()}
+                  {this.state.showAdvanced?this.renderCheckBox(container):null}
                   </View>
+
                 </ScrollView>
               </View>
+              }
+              </Subscribe>
             </View>
           </ScrollView>
         
 
         </ImageBackground>
-        <TouchableOpacity style={{ height: 50, backgroundColor: '#f79f24',padding:10 }}>
-            <View style={{ flex: 1, flexDirection: 'row' }}>
-              <View style={{ flex: 1, justifyContent: 'center', alignItems:'flex-start', }}>
-                <Text style={{fontWeight:'bold',fontSize:14,color:'black'}}>Tìm</Text>
+        <Subscribe to={[AppContainer]}>
+        {container =>
+          <TouchableOpacity style={{ height: 50, backgroundColor: '#f79f24',padding:10 }}
+            onPress={()=>{this.onSearch(container)}}>
+              <View style={{ flex: 1, flexDirection: 'row' }}>
+                <View style={{ flex: 1, justifyContent: 'center', alignItems:'flex-start', }}>
+                  <Text style={{fontWeight:'bold',fontSize:14,color:'black'}}>Tìm</Text>
+                </View>
+                <View style={{ flex: 1, justifyContent: 'center', alignItems:'flex-end' }}>
+                  <Icon name="md-arrow-forward" color="black" size={30}/>
+                </View>
+
+
               </View>
-              <View style={{ flex: 1, justifyContent: 'center', alignItems:'flex-end' }}>
-                <Icon name="md-arrow-forward" color="black" size={30}/>
-              </View>
 
-
-            </View>
-
-          </TouchableOpacity>
+            </TouchableOpacity>
+          }
+          </Subscribe>
       </View>
     )
   }

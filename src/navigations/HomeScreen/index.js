@@ -21,6 +21,7 @@ import AppContainer from '../../container'
 import { Provider, Subscribe, Container } from 'unstated';
 import AwesomeAlert from 'react-native-awesome-alerts'
 const defaultUri ="https://snack-code-uploads.s3.us-west-1.amazonaws.com/~asset/3c4456be614c1710b655baf00b1e14c0"
+const ColorType = ["gray","#c6e377","#729d39","#36622b"]
 
 class HomeScreen extends Component {
   constructor(props) {
@@ -85,8 +86,20 @@ class HomeScreen extends Component {
     let arrType = container.getAppState().arrType
 
     return arrType.map((item, index) => {
+      let color 
+      if(index>ColorType.length-1)
+      {
+        color= ColorType[index%ColorType.length]
+      }
+      else 
+      {
+        color = ColorType[index]
+      }
+
+
       return (
         <CustomCheckBox
+          color={color}
           text={item.des}
           key={item.key}
           checked={item.checked}

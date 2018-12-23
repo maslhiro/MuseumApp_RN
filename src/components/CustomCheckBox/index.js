@@ -45,7 +45,7 @@ class CustomCheckBox extends PureComponent {
             })
     
 
-            console.log(this.touchOpacity_Style)
+    //  console.log(this.touchOpacity_Style)
 
         this.imageStyle = Object.assign({}, styles.image,)
         
