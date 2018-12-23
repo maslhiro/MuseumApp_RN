@@ -158,6 +158,10 @@ class SignUpScreen extends Component {
     }
   }
 
+  goBack = () => {
+    this.props.navigation.goBack()
+  }
+
   render() {
     return (
       <View style={styles.container}>

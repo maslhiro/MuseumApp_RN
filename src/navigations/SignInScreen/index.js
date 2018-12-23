@@ -16,6 +16,10 @@ import { FirebaseAuth, profileRef } from '../../config/FirebaseConfig';
 import AwesomeAlert from 'react-native-awesome-alerts';
 import FastImage from 'react-native-fast-image'
 import Icon from 'react-native-vector-icons/Ionicons'
+import {
+  Subscribe,
+} from 'unstated';
+import AppContainer from '../../container'
 
 class SignInScreen extends Component {
   constructor(props) {
@@ -26,11 +30,13 @@ class SignInScreen extends Component {
       txtPassword: "",
       errEmail: false,
       errPassword: false,
+      linkAva:"",
+      errCode:"",
       showAlert: 0, // 1  - Thanh Cong / 2 - Sai Username-Pass / 3 - Loi Ket Noi
     };
   }
 
-  checkData = () => {
+  checkData = (container) => {
     if ( this.state.txtEmail==="" || this.state.txtPassword==="") 
     {
 
@@ -48,13 +54,13 @@ class SignInScreen extends Component {
           errPassword:false,
           isLoading: true
         }, () => {
-          // this.onSignIn()
+          this.onSignIn(container)
            // Test 
-          setTimeout(()=>{
-              this.setState({
-                isLoading:false
-              })
-          },3000)
+          // setTimeout(()=>{
+          //     this.setState({
+          //       isLoading:false
+          //     })
+          // },3000)
         })
         
     }
@@ -74,24 +80,32 @@ class SignInScreen extends Component {
       });
   }
 
-  onSignIn = () => {
+  onSignIn = (container) => {
     FirebaseAuth.signInWithEmailAndPassword(this.state.txtEmail, this.state.txtPassword)
-      .then(() => {
-        let uid = FirebaseAuth.currentUser.uid;
-        profileRef.on('value', (child)=>{
-          if (!child.hasChild(uid)){
-            this.setState({
-              showAlert : 1
-            })
-          } else{
-            this.setState({
-              showAlert : 2
-            })
-          }
-        })}).catch((error) => {
+      .then((data) => {
+        let user = container.checkUid_Exists(data.user.uid)
+        console.log("SIGN IN",user)
+
+        if(user)
+        {
+          this.setState({
+            showAlert : 1,
+            isLoading:false,
+            linkAva : user.data.urlAvatar 
+          })
+        }
+        else{
+          this.setState({
+            isLoading:false,
+            showAlert : 2
+          })
+        }
+      }).catch((error) => {
             console.log("Err Sign In ", error)
             this.setState({
-              showAlert:3
+              isLoading:false,
+              showAlert:3,
+              errCode : error.message
             })
       })
   }
@@ -99,6 +113,11 @@ class SignInScreen extends Component {
   onPress_Open_Sign_Up_Screen = () => {
     this.props.navigation.push('SignUp');
   }
+
+  onPress_Open_Home_Screen = () => {
+    this.props.navigation.push('Home',{linkAva:this.state.linkAva});
+  }
+
 
   renderAlert = () => {
     switch(this.state.showAlert)
@@ -115,7 +134,7 @@ class SignInScreen extends Component {
             message="Bạn đã đăng nhập thành công ^^"
             confirmText=" OK "
             closeOnTouchOutside={false}
-            onConfirmPressed={()=>this.setState({showAlert:0})}
+            onConfirmPressed={()=>this.setState({showAlert:0},()=>this.onPress_Open_Home_Screen())}
             closeOnHardwareBackPress={false}
             showCancelButton={false}
             showConfirmButton={true}
@@ -128,7 +147,7 @@ class SignInScreen extends Component {
             <AwesomeAlert
               show={true}
               title="Opps !"
-              message="Username Or Password Is Incorrect, Please Try Again :<"
+              message="Username hoặc mật khẩu không chính xác:<"
               confirmText=" OK "
               closeOnTouchOutside={false}
               onConfirmPressed={()=>this.setState({showAlert:0})}
@@ -144,7 +163,7 @@ class SignInScreen extends Component {
             <AwesomeAlert
               show={true}
               title="Opps!"
-              message="Lỗi kết nối,bạn vui lòng thử lại nhé :<"
+              message={this.state.errCode}
               confirmText=" OK "
               closeOnTouchOutside={false}
               onConfirmPressed={()=>this.setState({showAlert:0})}
@@ -210,11 +229,15 @@ class SignInScreen extends Component {
                   /> 
                 </View>
               </View>
+              <Subscribe to={[AppContainer]}>
+              {container=>
               <TouchableOpacity 
                   style={styles.touchStyle}
-                  onPress={()=>{ this.checkData()}}>
+                  onPress={()=>{ this.checkData(container)}}>
                   <Text style={styles.textTouchStyle}> Sign In </Text>
                 </TouchableOpacity> 
+              }
+              </Subscribe>
           </View>
 
         </View>

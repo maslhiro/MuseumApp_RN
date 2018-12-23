@@ -14,6 +14,7 @@ type AppState = {
     arrObject : object,
     arrObject_Show : object,
     arrFavorites_Show  : object,
+    arrProfile:object,
     linkAva : string,
     uid : string
 };
@@ -30,6 +31,7 @@ class AppContainer extends Container < AppState > {
             arrFavorites : [],
             arrObject : [],
             arrObject_Show : [],
+            arrProfile:[],
             arrFavorites_Show  : [],
             uid : props.uid?props.uid:"",
             linkAva : props.linkAva?props.linkAva:""
@@ -57,6 +59,8 @@ class AppContainer extends Container < AppState > {
             arrObject,
             arrObject_Show,
             arrFavorites_Show,
+            arrProfile,
+            linkAva,
             uid
         } = state
 
@@ -69,7 +73,9 @@ class AppContainer extends Container < AppState > {
             arrObject : this.checkArr_Empty(arrObject)?this.state.arrObject:arrObject,
             arrObject_Show : this.checkArr_Empty(arrObject_Show)?this.state.arrObject_Show:arrObject_Show,
             arrFavorites_Show  : this.checkArr_Empty(arrFavorites_Show)?this.state.arrFavorites_Show:arrFavorites_Show,
-            uid : this.checkArr_Empty(uid)?this.state.uid:uid,
+            arrProfile  : this.checkArr_Empty(arrProfile)?this.state.arrProfile:arrProfile,
+            linkAva : linkAva,
+            uid : uid,
         })
         return true
 
@@ -125,6 +131,18 @@ class AppContainer extends Container < AppState > {
        return true
     }
 
+    // Kiem tra Uid co trong arrProfile ko ?
+    checkUid_Exists = (uid)  => {
+        let arrProfile = this.state.arrProfile.map((item)=>{return item.data.uid})
+        console.log("Check Uid", arrProfile)
+        let check = arrProfile.findIndex((item)=> {return item == uid})
+        if(check==-1) return false
+        // Save info user
+        this.setInfo_User(uid,this.state.arrProfile[check].data.linkAva)
+
+        return this.state.arrProfile[check]
+    }
+
     getAppState = () => {
         let {
             arrType,
@@ -134,6 +152,7 @@ class AppContainer extends Container < AppState > {
             arrObject,
             arrObject_Show,
             arrFavorites_Show,
+            arrProfile,
             uid, 
             linkAva
         } = this.state
@@ -146,6 +165,7 @@ class AppContainer extends Container < AppState > {
             arrObject : arrObject,
             arrObject_Show : arrObject_Show,
             arrFavorites_Show  : arrFavorites_Show,
+            arrProfile : arrProfile,
             uid : uid,
             linkAva: linkAva
         })
@@ -156,6 +176,7 @@ class AppContainer extends Container < AppState > {
                 let arrObj = []
                 let arrMus = []
                 let arrType = []
+                let arrProfile = []
 
                 child.forEach((item)=>{
                     console.log("Updated", item.key)
@@ -193,7 +214,13 @@ class AppContainer extends Container < AppState > {
 
                     if(item.key=="Profiles")
                     {
-                        console.log("Profile", item.toJSON())
+                        item.forEach((itm)=>{
+                            arrProfile.push({
+                                key:itm.key,
+                                data : itm.toJSON()
+                            })
+                        })
+                       
                     }
                 })
 
@@ -213,6 +240,7 @@ class AppContainer extends Container < AppState > {
                         isLoading:false,
                         arrObject: arrObj_FillName,
                         arrObject_Show: arrObj_FillName,
+                        arrProfile : arrProfile,
                         arrType : arrType,
                         arrMuseum: arrMus
                     },()=>

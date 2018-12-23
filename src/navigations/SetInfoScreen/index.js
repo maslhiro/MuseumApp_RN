@@ -35,10 +35,10 @@ class SetInfoScreen extends PureComponent {
         txtName: "",
         errName: false,
         uriAvt:defaultUri , 
-        linkAvt: "",
+        linkAva: "",
         errCode :'',
-        uid: "KpgrDjw0IJWc3fUaZ2VmiG2mySJ3"
-//        uid : this.props.navigation.getParam("uid")?this.props.navigation.getParam("uid"):"vinh"
+        // uid: "KpgrDjw0IJWc3fUaZ2VmiG2mySJ3"
+       uid : this.props.navigation.getParam("uid")?this.props.navigation.getParam("uid"):""
       };
   }
   onChoosePhoto = () => {
@@ -71,7 +71,7 @@ class SetInfoScreen extends PureComponent {
         this.setState({ 
           isLoading: false,
           uriAvt : uri,
-          linkAvt: snapshot.downloadURL,
+          linkAva: snapshot.downloadURL,
         })
       }).catch((err)=>{
           this.setState({
@@ -89,7 +89,7 @@ class SetInfoScreen extends PureComponent {
       {
         uid: this.state.uid,
         name: this.state.txtName,
-        urlAvatar: this.state.linkAvt
+        urlAvatar: this.state.linkAva
       },
       (error) => {
         if (error) {
@@ -165,9 +165,9 @@ class SetInfoScreen extends PureComponent {
             closeOnTouchOutside={false}
             onConfirmPressed={()=>{
               // navigate HomeScreen
-              if(container.setInfo_User(this.state.uid,this.state.linkAvt))
+              if(container.setInfo_User(this.state.uid,this.state.linkAva))
               {
-                this.setState({showAlert:0},()=>this.props.navigation.navigate("Home",{linkAvt : this.state.linkAvt}))
+                this.setState({showAlert:0},()=>this.props.navigation.push('Home',{linkAva:this.state.linkAva}))
               }
             }}
             closeOnHardwareBackPress={false}

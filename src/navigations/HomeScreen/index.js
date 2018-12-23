@@ -28,7 +28,6 @@ class HomeScreen extends Component {
     this.state = {
       isRefeshing: false,
       visibleModal: false,
-      linkAva : this.props.navigation.getParam("linkAva")?this.props.navigation.getParam("linkAva"):defaultUri
     }
   }
   renderItem = (item) => {
@@ -49,6 +48,10 @@ class HomeScreen extends Component {
 
   onPress_OpenPostScreen = () => {
     this.props.navigation.navigate("Post")
+  }
+
+  onPress_OpenSignScreen = () => {
+    this.props.navigation.navigate("SignIn")
   }
 
   onPress_IconFilter = () => {
@@ -94,8 +97,9 @@ class HomeScreen extends Component {
 
   render() {
     const { isRefeshing } = this.state
-    let rightIcon_Header =  <FastImage style={{ width: 26, height: 26 }} resizeMode={FastImage.resizeMode.cover}
-      source={{ uri: this.state.linkAva }} />
+    console.log("LINK", this.props.navigation.getParam("linkAva"))
+    let rightIcon_Header =  <ImageProgress style={{ width: 26, height: 26 }} resizeMode="cover"
+      source={{ uri: this.props.navigation.getParam("linkAva")?this.props.navigation.getParam("linkAva"):defaultUri }} />
    
     return (
       <View style={styles.container}>
@@ -126,29 +130,30 @@ class HomeScreen extends Component {
               <Icon name="md-search" size={20} color="white" />
             </TouchableOpacity>
           </View>
-
-          <View style={{ flex: 1, justifyContent: 'flex-end', }}>
-            <Subscribe to={[AppContainer]}>
-              {container =>
-                <FlatList
-                  removeClippedSubviews
-                  disableVirtualization
-                  data={container.getAppState().arrObject_Show}
-                  numColumns={2}
-                  style={{ flex: 1, margin: 5 }}
-                  refreshing={isRefeshing}
-                  onRefresh={() => this.onRefresh(container)}
-                  keyExtractor={(item) => item.key}
-                  renderItem={({ item }) => this.renderItem(item)} />
-              }
-            </Subscribe>
-            <TouchableOpacity
-              style={styles.touchView}
-              activeOpacity={0.7}
-              onPress={() => this.onPress_OpenPostScreen()}>
-              <Icon name="md-add" size={30} color="white" />
-            </TouchableOpacity>
-          </View>
+          <Subscribe to={[AppContainer]}>
+          {container =>
+            <View style={{ flex: 1, justifyContent: 'flex-end', }}>
+              <FlatList
+                removeClippedSubviews
+                disableVirtualization
+                data={container.getAppState().arrObject_Show}
+                numColumns={2}
+                style={{ flex: 1, margin: 5 }}
+                refreshing={isRefeshing}
+                onRefresh={() => this.onRefresh(container)}
+                keyExtractor={(item) => item.key}
+                renderItem={({ item }) => this.renderItem(item)} />
+        
+              <TouchableOpacity
+                style={styles.touchView}
+                activeOpacity={0.7}
+                onPress={() => container.getAppState().uid?this.onPress_OpenPostScreen():this.onPress_OpenSignScreen()}>
+                <Icon name="md-add" size={30} color="white" />
+              </TouchableOpacity>
+              
+            </View>
+          }
+          </Subscribe>
 
         </ImageBackground>
 
