@@ -111,8 +111,8 @@ class SignInScreen extends Component {
         return(
           <AwesomeAlert
             show={true}
-            title="Congratulation !"
-            message="You've Successfully Signed In ^^"
+            title="Chúc Mừng !"
+            message="Bạn đã đăng nhập thành công ^^"
             confirmText=" OK "
             closeOnTouchOutside={false}
             onConfirmPressed={()=>this.setState({showAlert:0})}
@@ -144,7 +144,7 @@ class SignInScreen extends Component {
             <AwesomeAlert
               show={true}
               title="Opps!"
-              message="Sôme Thing Went Wrong Please Try Again :<"
+              message="Lỗi kết nối,bạn vui lòng thử lại nhé :<"
               confirmText=" OK "
               closeOnTouchOutside={false}
               onConfirmPressed={()=>this.setState({showAlert:0})}

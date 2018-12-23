@@ -19,7 +19,10 @@ import Header from '../../components/Header'
 import ImagePicker from "react-native-image-picker";
 import AwesomeAlert from "react-native-awesome-alerts";
 import FastImage from 'react-native-fast-image'
-
+import {
+  Subscribe,
+} from 'unstated';
+import AppContainer from '../../container'
 const defaultUri = "https://snack-code-uploads.s3.us-west-1.amazonaws.com/~asset/3c4456be614c1710b655baf00b1e14c0"
 
 class SetInfoScreen extends PureComponent {
@@ -33,7 +36,9 @@ class SetInfoScreen extends PureComponent {
         errName: false,
         uriAvt:defaultUri , 
         linkAvt: "",
-        uid: "FirebaseAuth.currentUser.uid"
+        errCode :'',
+        uid: "KpgrDjw0IJWc3fUaZ2VmiG2mySJ3"
+//        uid : this.props.navigation.getParam("uid")?this.props.navigation.getParam("uid"):"vinh"
       };
   }
   onChoosePhoto = () => {
@@ -55,22 +60,29 @@ class SetInfoScreen extends PureComponent {
       } else {
         let source = { uri: response.uri };
         let uri = response.uri;
-        this.setState({ uriAvt: uri });
+        this.setState({isLoading:true},()=>this.upLoad_Image(uri))
       }
     });
   };
 
-  onFinish = () => {
-    if (this.checkCompleted()) {
+  upLoad_Image = (uri) => {
       let fileUpload = AvatarsRefStorage.child(this.state.uid + ".jpg");
-      fileUpload.putFile(this.state.uriAvt).then(snapshot => {
-        this.setState({ linkAvt: snapshot.downloadURL(), showAlert: true }, () =>
-          this.setupInfoUser())
+      fileUpload.putFile(uri).then(snapshot => {
+        this.setState({ 
+          isLoading: false,
+          uriAvt : uri,
+          linkAvt: snapshot.downloadURL,
+        })
       }).catch((err)=>{
+          this.setState({
+            showAlert: 3,
+            isLoading: false,
+            errCode : err.message
+          })
           console.log(err)
       })
     }
-  };
+
 
   setupInfoUser = () => {
     profileRef.child(this.state.uid).set(
@@ -81,10 +93,22 @@ class SetInfoScreen extends PureComponent {
       },
       (error) => {
         if (error) {
-          console.log("failed to setup");
+          this.setState(
+            {
+              isLoading: false,
+              showAlert : 3,
+              errCode : error.message
+            }
+          )
+          console.log("failed to setup",error);
         } else {
-          console.log("successful for user");
-          this.props.navigation.push("Home");
+
+
+          this.setState(
+            {
+              isLoading: false,
+              showAlert:1
+            })
         }
       }
     );
@@ -107,14 +131,14 @@ class SetInfoScreen extends PureComponent {
           showAlert:0,
           isLoading: true
         }, () => {
-          //this.setupInfoUsere()
+          this.setupInfoUser()
            // Test 
-          setTimeout(()=>{
-              this.setState({
-                isLoading:false,
-                showAlert:2,
-              })
-          },3000)
+          // setTimeout(()=>{
+          //     this.setState({
+          //       isLoading:false,
+          //       showAlert:2,
+          //     })
+          // },3000)
         })
         
     }
@@ -124,7 +148,7 @@ class SetInfoScreen extends PureComponent {
     this.setState({ txtName: text });
   }
 
-  renderAlert = () => {
+  renderAlert = (container) => {
     switch(this.state.showAlert)
     {
       case 0 :{
@@ -135,13 +159,16 @@ class SetInfoScreen extends PureComponent {
         return(
           <AwesomeAlert
             show={true}
-            title="Congratulation !"
-            message="You've Successfully Signed Up ^^"
+            title="Chúc mừng !"
+            message="Bạn đã đăng kí thành công ^^"
             confirmText=" OK "
             closeOnTouchOutside={false}
             onConfirmPressed={()=>{
               // navigate HomeScreen
-              this.setState({showAlert:0})
+              if(container.setInfo_User(this.state.uid,this.state.linkAvt))
+              {
+                this.setState({showAlert:0},()=>this.props.navigation.navigate("Home",{linkAvt : this.state.linkAvt}))
+              }
             }}
             closeOnHardwareBackPress={false}
             showCancelButton={false}
@@ -155,7 +182,7 @@ class SetInfoScreen extends PureComponent {
             <AwesomeAlert
               show={true}
               title="Opps !"
-              message="Please Select Your Photo"
+              message="Bạn chưa chọn ảnh"
               confirmText=" OK "
               closeOnTouchOutside={false}
               onConfirmPressed={()=>this.setState({showAlert:0})}
@@ -171,7 +198,7 @@ class SetInfoScreen extends PureComponent {
             <AwesomeAlert
               show={true}
               title="Opps!"
-              message="Sôme Thing Went Wrong Please Try Again :<"
+              message={this.state.errCode}
               confirmText=" OK "
               closeOnTouchOutside={false}
               onConfirmPressed={()=>this.setState({showAlert:0})}
@@ -194,7 +221,8 @@ class SetInfoScreen extends PureComponent {
     return (
       <View style={styles.container}>
         <Header
-          title="Create Account"
+          title="Tạo Tài Khoản"
+          showLeftIcon = {false}
         />
         <View style={{ flex: 1, backgroundColor: 'blue', }} >
           <ScrollView
@@ -202,14 +230,15 @@ class SetInfoScreen extends PureComponent {
             <ImageBackground
               source={img_Background}
               style={styles.infoContainer}>
-
-              <View style={styles.overlayContainer}>
+              <Subscribe to={[AppContainer]}>
+              {container =>
+                <View style={styles.overlayContainer}>
                 <View style={{ flexDirection: 'row',marginVertical: 20}}>
                   <View style={{ flex: 1 ,  backgroundColor: 'transparent', alignItems:'flex-start' , justifyContent:'center'}}>
-                    <Text style={{ fontWeight: 'bold', fontSize: 28, color:'white' }}> Sign Up</Text>
+                    <Text style={{ fontWeight: 'bold', fontSize: 28, color:'white' }}> Đăng Kí</Text>
                   </View>
                   <View style={{ flex: 1 , alignItems:'flex-end' , justifyContent:'center'}}>
-                  <Text style={{ fontWeight: 'bold', fontSize: 28, color:'white' }}>  2 of 2</Text>
+                  <Text style={{ fontWeight: 'bold', fontSize: 28, color:'white' }}>  Bước 2/2</Text>
                   </View>
                 </View>
                 <View style={styles.overlayContainer_01}>
@@ -221,15 +250,15 @@ class SetInfoScreen extends PureComponent {
                     />
                     <View>
                       <TouchableOpacity onPress={() => this.onChoosePhoto()}>
-                        <Text style={{ fontSize: 15, color: 'black' }}> Upload Image </Text>
+                        <Text style={{ fontSize: 15, color: 'black' }}> Upload Ảnh </Text>
                         <View style={{ height: 1, backgroundColor: '#679186' }} />
                       </TouchableOpacity>
                     </View>
 
                   </View>
                   <View style={{ padding: 5, margin: 5 }}>
-                    <Text style={styles.text}>Your Name :</Text>
-                    {this.state.errName?<Text style={styles.textErrStyle}> *Name can not be empty</Text>:null}
+                    <Text style={styles.text}>Tên bạn :</Text>
+                    {this.state.errName?<Text style={styles.textErrStyle}> *Tên không được để trống</Text>:null}
                     <TextInput
                       style={styles.textInputNameUser}
                       autoCorrect={false}
@@ -243,21 +272,24 @@ class SetInfoScreen extends PureComponent {
 
                 <TouchableOpacity
                   style={styles.touchView}
-                  onPress={() => this.onFinish()}>
-                  <Text style={styles.textTouch}> Next Step </Text>
+                  onPress={() => this.checkCompleted()}>
+                  <Text style={styles.textTouch}> Upload </Text>
                 </TouchableOpacity>
 
                 <AwesomeAlert
                   show={this.state.isLoading}
                   showProgress={true}
-                  title="Loading"
-                  message="Please wait..."
+                  title="Đang tải"
+                  message="Vui Bạn chờ tí nhé ^^"
                   closeOnTouchOutside={false}
                   closeOnHardwareBackPress={false}
                 />
-                {this.renderAlert()}
-
+               
+                {this.renderAlert(container)}
+               
               </View>
+              }
+              </Subscribe>
 
             </ImageBackground>
           </ScrollView>

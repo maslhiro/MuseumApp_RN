@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
   },
   infoContainer: {
     width: (width * 100) / 100,
-    height: (height - 90),
+    height: (height - 80),
     backgroundColor: "red",
     alignItems: "center",
     padding:5,

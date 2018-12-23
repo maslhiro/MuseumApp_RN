@@ -14,6 +14,7 @@ import img_Background from '../../assets/img_Background.jpg'
 import Header from '../../components/Header'
 import AwesomeAlert from "react-native-awesome-alerts";
 import { FirebaseAuth } from '../../config/FirebaseConfig'
+import { Firebase } from 'react-native-firebase';
 
 class SignUpScreen extends Component {
 
@@ -24,8 +25,10 @@ class SignUpScreen extends Component {
       txtEmail: '',
       txtPassword: '',
       showAlert:0,
+      errCode : "",
       errEmail: false,
       errPassword: false,
+      uid : ''
     };
   }
 
@@ -61,14 +64,16 @@ class SignUpScreen extends Component {
           errPassword:false,
           isLoading: true
         }, () => {
-          // this.onSignIn()
-           // Test 
-          setTimeout(()=>{
-              this.setState({
-                isLoading:false,
-                showAlert: 1
-              })
-          },3000)
+           this.onSignUp()
+          
+          
+          // Test 
+          // setTimeout(()=>{
+          //     this.setState({
+          //       isLoading:false,
+          //       showAlert: 1
+          //     })
+          // },3000)
         })
         
     }
@@ -76,28 +81,19 @@ class SignUpScreen extends Component {
 
   onSignUp = () => {
     FirebaseAuth.createUserWithEmailAndPassword(this.state.txtEmail, this.state.txtPassword)
-      .then(() => {
+      .then((data) => {
+        console.log("User", data)
         this.setState({
-          isLoading: false
-        }, () =>
-            Alert.alert(
-              'Sign Up Successfully',
-              'Chúc mừng bạn đã tạo tài khoản thành công',
-              [
-                {
-                  text: 'OK', onPress: () => {
-                    this.props.navigation.goBack()
-                  }
-                },
-              ],
-              { cancelable: false }
-            ))
+          isLoading: false,
+          uid : data.user.uid
+        }, ()=>this.props.navigation.navigate("SetInfo",{uid : this.state.uid}))
       }).catch((error) => {
         this.setState({
-          isLoading: false
+          isLoading: false,
+          showAlert : 2,
+          errCode : error.message
         })
         console.log(`Register fail `, error);
-        alert(`Register fail with error: ${error}`)
       });
   }
   
@@ -113,7 +109,7 @@ class SignUpScreen extends Component {
             <AwesomeAlert
               show={true}
               title="Opps!"
-              message="Sôme Thing Went Wrong Please Try Again :<"
+              message="Lỗi kết nối, bạn vui lòng thử lại nhé :<"
               confirmText=" OK "
               closeOnTouchOutside={false}
               onConfirmPressed={()=>this.setState({showAlert:0})}
@@ -124,22 +120,54 @@ class SignUpScreen extends Component {
         )
         break
       }
+      case 2: {
+        return (
+            <AwesomeAlert
+              show={true}
+              title="Opps!"
+              message={this.state.errCode}
+              confirmText=" OK "
+              closeOnTouchOutside={false}
+              onConfirmPressed={()=>this.setState({showAlert:0})}
+              closeOnHardwareBackPress={false}
+              showCancelButton={false}
+              showConfirmButton={true}
+            />
+        )
+        break
+      }
+      case 3 : {
+        return (  
+          <AwesomeAlert
+            show={true}
+            title="Chúc mừng !"
+            message="Bạn đã đăng nhập thành công :3"
+            confirmText=" OK "
+            closeOnTouchOutside={false}
+            onConfirmPressed={()=>this.setState({showAlert:0,},()=>this.props.navigation.navigate("SetInfo",{uid : this.state.uid}))}
+            closeOnHardwareBackPress={false}
+            showCancelButton={false}
+            showConfirmButton={true}
+          />
+        )
+        break
+      }
       default: {
         return null
       }
     }
-
-
   }
 
   render() {
     return (
       <View style={styles.container}>
       <Header
-        title="Create Account"
+        title="Tạo Tài Khoản"
+        onPressLeftIcon ={()=> this.goBack()}
       />
       <View style={{ flex: 1, backgroundColor: 'blue', }} >
         <ScrollView
+          style={{flex:1, backgroundColor: 'yellow',}}
           showsVerticalScrollIndicator={false} >
           <ImageBackground
             source={img_Background}
@@ -148,16 +176,16 @@ class SignUpScreen extends Component {
             <View style={styles.overlayContainer}>
               <View style={{ flexDirection: 'row',marginVertical: 20}}>
                 <View style={{ flex: 1 ,  backgroundColor: 'transparent', alignItems:'flex-start' , justifyContent:'center'}}>
-                  <Text style={{ fontWeight: 'bold', fontSize: 28, color:'white' }}> Sign Up</Text>
+                  <Text style={{ fontWeight: 'bold', fontSize: 28, color:'white' }}> Đăng Kí</Text>
                 </View>
                 <View style={{ flex: 1 , alignItems:'flex-end' , justifyContent:'center'}}>
-                <Text style={{ fontWeight: 'bold', fontSize: 28, color:'white' }}>  1 of 2</Text>
+                <Text style={{ fontWeight: 'bold', fontSize: 28, color:'white' }}>  Bước 1/2</Text>
                 </View>
               </View>
               <View style={styles.overlayContainer_01}>
                 <View style={{ padding: 5, margin: 5 , }}>
                   <Text style={styles.text}>Email :</Text>
-                  {this.state.errEmail?<Text style={styles.textErrStyle}> *Email can not be empty</Text>:null}
+                  {this.state.errEmail?<Text style={styles.textErrStyle}> *Email không được để trống</Text>:null}
                   <TextInput
                     style={styles.textInputNameUser}
                     keyboardType='email-address'
@@ -166,8 +194,8 @@ class SignUpScreen extends Component {
                     underlineColorAndroid='black'
                     onChangeText={(text) => this.onChangeText_Email(text)}
                   />
-                  <Text style={styles.text}>Password :</Text>
-                  {this.state.errPassword?<Text style={styles.textErrStyle}> *Password can not be empty</Text>:null}
+                  <Text style={styles.text}>Mật Khẩu :</Text>
+                  {this.state.errPassword?<Text style={styles.textErrStyle}> *Mật khẩu không được để trống</Text>:null}
                   <TextInput
                     style={styles.textInputNameUser}
                     secureTextEntry={true}                    
@@ -183,14 +211,14 @@ class SignUpScreen extends Component {
               <TouchableOpacity
                 style={styles.touchView}
                 onPress={() => this.checkData()}>
-                <Text style={styles.textTouch}> Next Step </Text>
+                <Text style={styles.textTouch}> Tiếp Theo </Text>
               </TouchableOpacity>
 
               <AwesomeAlert
                 show={this.state.isLoading}
                 showProgress={true}
-                title="Loading"
-                message="Please wait..."
+                title="Đang tải"
+                message="Bạn chờ tí nhé ^^"
                 closeOnTouchOutside={false}
                 closeOnHardwareBackPress={false}
               />

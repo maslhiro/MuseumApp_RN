@@ -1,5 +1,6 @@
 import React from 'react';
 import { rootRef, objectsRef } from '../config/FirebaseConfig';
+import {AsyncStorage} from 'react-native'
 
 import {
     Container
@@ -13,11 +14,12 @@ type AppState = {
     arrObject : object,
     arrObject_Show : object,
     arrFavorites_Show  : object,
-    uid : "Vinh"
+    linkAva : string,
+    uid : string
 };
 
 class AppContainer extends Container < AppState > {
-    constructor(props)
+    constructor(props = {})
     {
         super(props)
         this.state = {
@@ -29,12 +31,99 @@ class AppContainer extends Container < AppState > {
             arrObject : [],
             arrObject_Show : [],
             arrFavorites_Show  : [],
-            uid : "Vinh"
+            uid : props.uid?props.uid:"",
+            linkAva : props.linkAva?props.linkAva:""
         };
-
+      
         this.getData_From_FireBase()
+
+    }
+
+    checkArr_Empty = (arr) => {
+        if ( typeof arr == "undefined" || arr.length == 0) {
+            return true
+        }
+        return false
+
     }
     
+    setAppState = ( state ) => {
+        let {
+            isLoading ,
+            arrType,
+            arrMuseum,
+            arrComt,
+            arrFavorites,
+            arrObject,
+            arrObject_Show,
+            arrFavorites_Show,
+            uid
+        } = state
+
+        this.setState({
+            isLoading : this.checkArr_Empty(isLoading)?this.state.isLoading:isLoading,
+            arrType : this.checkArr_Empty(arrType)?this.state.arrType:arrType,
+            arrMuseum : this.checkArr_Empty(arrMuseum)?this.state.arrMuseum:arrMuseum,
+            arrComt : this.checkArr_Empty(arrComt)?this.state.arrComt:arrComt,
+            arrFavorites : this.checkArr_Empty(arrFavorites)?this.state.arrFavorites:arrFavorites,
+            arrObject : this.checkArr_Empty(arrObject)?this.state.arrObject:arrObject,
+            arrObject_Show : this.checkArr_Empty(arrObject_Show)?this.state.arrObject_Show:arrObject_Show,
+            arrFavorites_Show  : this.checkArr_Empty(arrFavorites_Show)?this.state.arrFavorites_Show:arrFavorites_Show,
+            uid : this.checkArr_Empty(uid)?this.state.uid:uid,
+        })
+        return true
+
+    }
+
+    setState_Checked = (index,value) => {
+        let { arrType } = this.state
+        arrType[index].checked = value
+        
+        this.setState({
+            arrType : arrType,
+        })
+        
+        return true
+
+    }
+
+    setInfo_User =  async (uid, linkAva) => {
+        try {
+            await AsyncStorage.setItem("@Key:uid",uid)
+            await AsyncStorage.setItem("@Key:linkava",linkAva)
+        } catch (error) {
+            console.log("Error Storage User",error)
+            return false
+        }
+
+        this.setState({
+            uid: uid,
+            linkAva: linkAva
+        },()=> console.log("Uid Updated", this.state))
+        return true
+
+    }
+
+    filterList_Object = () => {
+       let arrType = this.state.arrType.filter((item)=>{return (item.checked == true)}).map((item)=>{return(item.key)})
+       console.log("Filter List", arrType)
+       if(this.checkArr_Empty(arrType)) return false
+
+       let arrObj = this.state.arrObject.filter((item)=>{
+            return (arrType.indexOf(item.data.idType)!==-1)
+       })
+       console.log("Filter List", arrObj)
+
+       this.setState({
+           arrObject_Show : arrObj,
+           arrType : this.state.arrType.map((item)=>{
+               let type = item
+               type.checked = false
+               return type
+           })
+       },()=>console.log("Filter Obj",this.state.arrType))
+       return true
+    }
 
     getAppState = () => {
         let {
@@ -45,7 +134,8 @@ class AppContainer extends Container < AppState > {
             arrObject,
             arrObject_Show,
             arrFavorites_Show,
-            uid
+            uid, 
+            linkAva
         } = this.state
 
         return({
@@ -56,7 +146,8 @@ class AppContainer extends Container < AppState > {
             arrObject : arrObject,
             arrObject_Show : arrObject_Show,
             arrFavorites_Show  : arrFavorites_Show,
-            uid : uid
+            uid : uid,
+            linkAva: linkAva
         })
     }   
 
@@ -93,9 +184,16 @@ class AppContainer extends Container < AppState > {
                         item.forEach((itm)=>{
                             arrType.push({
                                 key: itm.key,
+                                checked : false,
                                 des : itm.toJSON()
                             })
                         })
+                    }
+
+
+                    if(item.key=="Profiles")
+                    {
+                        console.log("Profile", item.toJSON())
                     }
                 })
 
@@ -107,19 +205,19 @@ class AppContainer extends Container < AppState > {
                     return  obj
                 })
 
-                console.log("Obj",arrObj_FillName)
-                console.log("Muse",arrMus)
-                console.log("Type",arrType)
+                //console.log("Obj",arrObj_FillName)
+                // console.log("Muse",arrMus)
+                //console.log("Type",arrType)
                 this.setState(
                     {
                         isLoading:false,
-                        arrFavorites_Show:arrObj_FillName,
                         arrObject: arrObj_FillName,
+                        arrObject_Show: arrObj_FillName,
                         arrType : arrType,
                         arrMuseum: arrMus
                     },()=>
                 {
-                    console.log("Updated")
+                    console.log("Updated",this.state)
                 }
                 )
               
@@ -143,6 +241,7 @@ class AppContainer extends Container < AppState > {
                 console.log("Random data sucessful :)))")
             }   
         )
+        return true
     }
 
     
