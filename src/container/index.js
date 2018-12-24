@@ -98,10 +98,9 @@ class AppContainer extends Container < AppState > {
             await AsyncStorage.setItem("@Key:uid",uid)
             await AsyncStorage.setItem("@Key:linkava",linkAva)
         } catch (error) {
-            console.log("Error Storage User",error)
+            console.log("Err Set Info User",error)
             return false
         }
-
         this.setState({
             uid: uid,
             linkAva: linkAva
@@ -175,7 +174,7 @@ class AppContainer extends Container < AppState > {
         let check = arrProfile.findIndex((item)=> {return item == uid})
         if(check==-1) return false
         // Save info user
-        this.setInfo_User(uid,this.state.arrProfile[check].data.linkAva)
+        this.setInfo_User(uid,this.state.arrProfile[check].data.urlAvatar)
 
         return this.state.arrProfile[check]
     }
@@ -271,7 +270,7 @@ class AppContainer extends Container < AppState > {
 
                 //console.log("Obj",arrObj_FillName)
                 // console.log("Muse",arrMus)
-                //console.log("Type",arrType)
+                console.log("Type",arrType)
                 this.setState(
                     {
                         isLoading:false,

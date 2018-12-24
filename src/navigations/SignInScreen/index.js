@@ -15,7 +15,6 @@ import img_Background from '../../assets/img_Background.jpg'
 import { FirebaseAuth, profileRef } from '../../config/FirebaseConfig';
 import AwesomeAlert from 'react-native-awesome-alerts';
 import FastImage from 'react-native-fast-image'
-import Icon from 'react-native-vector-icons/Ionicons'
 import {
   Subscribe,
 } from 'unstated';
@@ -115,9 +114,8 @@ class SignInScreen extends Component {
   }
 
   onPress_Open_Home_Screen = () => {
-    this.props.navigation.push('Home',{linkAva:this.state.linkAva});
+    this.props.navigation.push('Home');
   }
-
 
   renderAlert = () => {
     switch(this.state.showAlert)
@@ -207,7 +205,7 @@ class SignInScreen extends Component {
               <View style={{flex:1, marginVertical:12, marginHorizontal:20}}>              
                 <View style={{flex:1, backgroundColor: 'white', padding:5,  }}>
                   <Text style={{color:'black'}}>Username</Text>
-                  {this.state.errEmail?<Text style={styles.textErrStyle}>*Username can not be empty</Text>:null}
+                  {this.state.errEmail?<Text style={styles.textErrStyle}>*Username không được để trống</Text>:null}
                   <TextInput
                     style={styles.inputStyle}
                     defaultValue={this.state.txtEmail}
@@ -217,7 +215,7 @@ class SignInScreen extends Component {
                   />
                 
                   <Text style={{color:'black'}}>Password</Text>
-                  {this.state.errPassword?<Text style={styles.textErrStyle}> *Password can not be empty </Text>:null}
+                  {this.state.errPassword?<Text style={styles.textErrStyle}> *Password không được để trống </Text>:null}
 
                   <TextInput
                     style={styles.inputStyle}
@@ -234,7 +232,7 @@ class SignInScreen extends Component {
               <TouchableOpacity 
                   style={styles.touchStyle}
                   onPress={()=>{ this.checkData(container)}}>
-                  <Text style={styles.textTouchStyle}> Sign In </Text>
+                  <Text style={styles.textTouchStyle}> Đăng Nhập </Text>
                 </TouchableOpacity> 
               }
               </Subscribe>
@@ -245,9 +243,9 @@ class SignInScreen extends Component {
         </ScrollView>
         
         <View style={styles.bottomContainer}>
-            <Text style={styles.textStyle} > Not Registered ? </Text>
+            <Text style={styles.textStyle} > Chưa đăng kí ? </Text>
             <TouchableOpacity onPress={()=>{this.onPress_Open_Sign_Up_Screen()}}>
-              <Text style={styles.textStyle} > Create Anccount </Text>
+              <Text style={styles.textStyle} > Tạo tài khoản </Text>
             </TouchableOpacity>
         </View>
 

@@ -22,7 +22,7 @@ export default RootStack = createStackNavigator(
 
     },
     {
-        initialRouteName: 'SignIn',
+        initialRouteName: 'Post',
         navigationOptions:
         {
             header:null

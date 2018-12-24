@@ -79,7 +79,7 @@ class SetInfoScreen extends PureComponent {
             isLoading: false,
             errCode : err.message
           })
-          console.log(err)
+          console.log("Upload Image",err)
       })
     }
 
@@ -167,7 +167,7 @@ class SetInfoScreen extends PureComponent {
               // navigate HomeScreen
               if(container.setInfo_User(this.state.uid,this.state.linkAva))
               {
-                this.setState({showAlert:0},()=>this.props.navigation.push('Home',{linkAva:this.state.linkAva}))
+                this.setState({showAlert:0},()=>this.props.navigation.push('Home'))
               }
             }}
             closeOnHardwareBackPress={false}
@@ -280,7 +280,7 @@ class SetInfoScreen extends PureComponent {
                   show={this.state.isLoading}
                   showProgress={true}
                   title="Đang tải"
-                  message="Vui Bạn chờ tí nhé ^^"
+                  message="Bạn chờ tí nhé ^^"
                   closeOnTouchOutside={false}
                   closeOnHardwareBackPress={false}
                 />

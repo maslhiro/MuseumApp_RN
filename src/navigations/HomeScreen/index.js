@@ -20,7 +20,7 @@ import FastImage from 'react-native-fast-image';
 import AppContainer from '../../container'
 import { Provider, Subscribe, Container } from 'unstated';
 import AwesomeAlert from 'react-native-awesome-alerts'
-const defaultUri ="https://snack-code-uploads.s3.us-west-1.amazonaws.com/~asset/3c4456be614c1710b655baf00b1e14c0"
+const defaultUri ="https://static-cdn.jtvnw.net/jtv_user_pictures/e91a3dcf-c15a-441a-b369-996922364cdc-profile_image-300x300.png"
 const ColorType = ["gray","#c6e377","#729d39","#36622b"]
 
 class HomeScreen extends Component {
@@ -47,8 +47,11 @@ class HomeScreen extends Component {
     )
   }
 
-  onPress_OpenPostScreen = () => {
-    this.props.navigation.navigate("Post")
+  onPress_OpenPostScreen = (container) => {
+    this.props.navigation.navigate("Post", {
+      idType : container.getAppState().arrType[0].key,
+      idMuseum :  container.getAppState().arrMuseum[0].key,
+    })
   }
 
   onPress_OpenSignScreen = () => {
@@ -110,10 +113,12 @@ class HomeScreen extends Component {
 
   render() {
     const { isRefeshing } = this.state
-    console.log("LINK", this.props.navigation.getParam("linkAva"))
-    let rightIcon_Header =  <ImageProgress style={{ width: 26, height: 26 }} resizeMode="cover"
-      source={{ uri: this.props.navigation.getParam("linkAva")?this.props.navigation.getParam("linkAva"):defaultUri }} />
-   
+    let rightIcon_Header =  <Subscribe to={[AppContainer]}>
+    {container=>
+    <ImageProgress style={{ width: 26, height: 26 }} resizeMode="cover"
+      source={{ uri: container.getAppState().linkAva?container.getAppState().linkAva:defaultUri }} />
+    }
+    </Subscribe>
     return (
       <View style={styles.container}>
         <Header
@@ -160,7 +165,7 @@ class HomeScreen extends Component {
               <TouchableOpacity
                 style={styles.touchView}
                 activeOpacity={0.7}
-                onPress={() => container.getAppState().uid?this.onPress_OpenPostScreen():this.onPress_OpenSignScreen()}>
+                onPress={() => container.getAppState().uid?this.onPress_OpenPostScreen(container):this.onPress_OpenSignScreen()}>
                 <Icon name="md-add" size={30} color="white" />
               </TouchableOpacity>
               
@@ -209,8 +214,8 @@ class HomeScreen extends Component {
             <AwesomeAlert
               show={container.state.isLoading}
               showProgress={true}
-              title="Loading"
-              message="Please wait ..."
+              title="Đang tải"
+              message="Bạn đợi tí nhé ^^"
               closeOnTouchOutside={false}
               closeOnHardwareBackPress={false}
               showCancelButton={false}

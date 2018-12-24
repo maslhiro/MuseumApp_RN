@@ -5,20 +5,12 @@ const { width, height } = Dimensions.get("window");
 export default styles = StyleSheet.create({
   container: {
     flex: 1,
-    // padding:5
-  },
-  headerContainer: {
-    backgroundColor: "black",
-    alignItems: "center",
-    flexDirection: "row",
-    paddingHorizontal: 10,
-    justifyContent: 'space-between',
-    padding:5,
-    height: 55
+    // alignItems: "center",
+    // padding:5,
+    justifyContent: "center"
   },
   infoContainer: {
     flex: 1,
-    backgroundColor: "red",
     alignItems: "center",
     padding:5,
     justifyContent: "center"
@@ -57,14 +49,14 @@ export default styles = StyleSheet.create({
   titleInputText: {
     fontSize: 20,
     marginHorizontal: 25,
-    margin: 20,
+    margin: 15,
     fontWeight:'bold',
     color: "#679186",
     // backgroundColor:'red'
   },
   descriptionInputText:{
     fontSize: 16,
-    margin: 20,
+    margin: 15,
     marginHorizontal: 25,
     color : "#679186",
     // backgroundColor:'yellow'
