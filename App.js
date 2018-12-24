@@ -4,7 +4,7 @@ import {
   StatusBar,
   View
 } from 'react-native';
-import RootStack from './src/config/RouteConfig'
+import {RootStack} from './src/config/RouteConfig'
 
 export default class App extends Component {
   render() {
