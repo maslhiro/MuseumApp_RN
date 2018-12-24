@@ -22,12 +22,28 @@ import {
 } from "./../../config/FirebaseConfig";
 
 class DetailScreen extends Component {
+  static navigationOptions = {
+    tabBarIcon: ({focused}) => <Icon name="md-information-circle" size={25} color={focused?"#f79f24":"white"}/>,
+    tabBarOptions: { 
+      showLabel: false,
+      activeTintColor:'#f79f24',
+      inactiveTintColor:'white',
+      style: {
+          backgroundColor: 'black',
+          borderBottomColorWidth:2,
+          borderBottomColor:'#f79f24'
+      }
+      
+  }
+   };
+
+
   constructor(props) {
     super(props);
     this.state = {
       isFavorite: false,
       uid: null,
-      idObject: "",
+      idObject: "-LTaCm5-yAfUYX9Pfg16",
       idType: "",
       idMuseum: "",
       type: "",
@@ -139,10 +155,6 @@ class DetailScreen extends Component {
     );
   };
 
-  componentDidMount() {
-    this.getObject();
-  }
-
   render() {
     return (
       <View style={styles.container}>
@@ -154,8 +166,8 @@ class DetailScreen extends Component {
           }}
           style={styles.infoContainer}
         >
-          <View style={styles.overlayContainer}>
-            <View style={{ flex: 1, backgroundColor: "green" }}>
+        <View style={{flex:1}}>
+            <View style={{ flex: 1, backgroundColor: "green" , justifyContent:'center'}}>
               <FastImage
                 style={{ flex: 1 }}
                 source={{
@@ -163,14 +175,14 @@ class DetailScreen extends Component {
                 }}
                 resizeMode={FastImage.resizeMode.cover}
               />
-            </View>
+         
             <ScrollView style={{ flex: 1, backgroundColor: "white" }}>
               <View
                 style={{
                   flex: 1,
                   alignItems: "center",
                   justifyContent: "space-between",
-                  margin: 20
+                  margin: 20,
                 }}
               >
                 <Text style={styles.text}>Loại hiện vật</Text>
@@ -183,7 +195,7 @@ class DetailScreen extends Component {
             </ScrollView>
 
             <View style={styles.touchPhotoContainer}>
-              {this.state.uid == null ? (
+            
                 <TouchableOpacity
                   style={styles.touchPhoto}
                   activeOpacity={0.8}
@@ -193,44 +205,11 @@ class DetailScreen extends Component {
                 >
                   <Icon name="md-star" size={30} color="white" />
                 </TouchableOpacity>
-              ) : this.state.isFavorite == false ? (
-                <TouchableOpacity
-                  style={styles.touchPhoto}
-                  activeOpacity={0.8}
-                  onPress={() => {
-                    this.onFavorite();
-                  }}
-                >
-                  <Icon name="md-star" size={30} color="white" />
-                </TouchableOpacity>
-              ) : (
-                <TouchableOpacity
-                  style={styles.touchPhoto}
-                  activeOpacity={0.8}
-                  onPress={() => {
-                    this.unFavorite();
-                  }}
-                >
-                  <Icon name="md-star" size={30} color="#00BFFF" />
-                </TouchableOpacity>
-              )}
-              {/* <TouchableOpacity
-                style={styles.touchPhoto}
-                activeOpacity={0.8}
-                onPress={() => {
-                  this.onFavoriteChecked();
-                }}
-              >
-                {this.state.uid == null ? (
-                  <Icon name="md-star" size={30} color="white" />
-                ) : this.state.isFavorite == false ? (
-                  <Icon name="md-star" size={30} color="white" />
-                ) : (
-                  <Icon name="md-star" size={30} color="yellow" />
-                )}
-              </TouchableOpacity> */}
+            
+  
             </View>
-          </View>
+            </View>
+            </View>
         </ImageBackground>
       </View>
     );

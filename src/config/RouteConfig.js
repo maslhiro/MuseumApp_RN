@@ -18,8 +18,23 @@ export const DetailTab = createBottomTabNavigator(
         Detail: DetailScreen,
         Comments: CommentScreen,
     },
-    
-);
+    {
+    tabBarOptions: { 
+        showLabel: false,
+        activeTintColor:'#f79f24',
+        inactiveTintColor:'white',
+        style: {
+            backgroundColor: 'black',
+            borderBottomColorWidth:2,
+            borderBottomColor:'#f79f24'
+        },
+        tabBarSelectedItemStyle: {
+            borderBottomWidth: 2,
+            borderBottomColor: '#f79f24',
+        }
+        
+    }
+    });
 
 export const RootStack = createStackNavigator(
     {
@@ -35,7 +50,7 @@ export const RootStack = createStackNavigator(
         Test: TestScreen
     },
     {
-        initialRouteName: 'Home',
+        initialRouteName: 'Detail',
         navigationOptions:
         {
             header:null

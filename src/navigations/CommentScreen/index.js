@@ -17,7 +17,22 @@ import firebase, { firestore } from "react-native-firebase";
 import { rootRef, testRef, commentsRef, FirebaseAuth } from "./../../config/FirebaseConfig";
 import Icon from "react-native-vector-icons/Ionicons";
 
-export default class CommentScreen extends Component {
+class CommentScreen extends Component {
+  static navigationOptions = {
+    tabBarIcon: ({focused}) => <Icon name="ios-chatbubbles" size={25} color={focused?"#f79f24":"white"}/>,
+    tabBarOptions: { 
+      showLabel: false,
+      activeTintColor:'#f79f24',
+      inactiveTintColor:'white',
+      style: {
+          backgroundColor: 'black',
+          borderBottomColorWidth:2,
+          borderBottomColor:'#f79f24'
+      }
+      
+  }
+   };
+
   constructor(props) {
     super(props);
     this.state={
@@ -70,14 +85,16 @@ export default class CommentScreen extends Component {
     })
   }
 
-  componentDidMount(){
-    this.getObject()
-  }
+  // componentDidMount(){
+  //   this.getObject()
+  // }
 
   render() {
     return (
       <View style={styles.container}>
-        <Header title="Comment" />
+        <Header 
+          showLeftIcon={false}
+          title="Comment"  />
         <ImageBackground
           source={{
             uri:
@@ -111,3 +128,5 @@ export default class CommentScreen extends Component {
     );
   }
 }
+
+export default  CommentScreen

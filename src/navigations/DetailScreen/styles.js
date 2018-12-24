@@ -5,22 +5,11 @@ const { width, height } = Dimensions.get("window");
 export default (styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 5
-  },
-  headerContainer: {
-    backgroundColor: "black",
-    alignItems: "center",
-    flexDirection: "row",
-    paddingHorizontal: 10,
-    justifyContent: "space-between",
-    padding: 5,
-    height: 55
   },
   infoContainer: {
     flex: 1,
-    backgroundColor: "red",
-    alignItems: "center",
     padding: 5,
+    paddingTop : 0,
     justifyContent: "center"
   },
   overlayContainer: {
@@ -41,7 +30,7 @@ export default (styles = StyleSheet.create({
     flex: 1,
     borderRadius: 30,
     backgroundColor: "green",
-    alignItems: "center",
+    alignItems:'center',
     justifyContent: "center"
   },
   text: {
