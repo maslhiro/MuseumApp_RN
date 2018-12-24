@@ -1,43 +1,61 @@
-import { StyleSheet, Dimensions } from "react-native";
+import {
+  StyleSheet,
+  Dimensions
+} from "react-native";
 import ImageProgress from "./../../components/ImageProgress/index";
 
-const { width: WIDTH } = Dimensions.get("window");
-const { height: HEIGHT } = Dimensions.get("window");
+const {
+  width,
+  height
+} = Dimensions.get("screen");
 
 export default (styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 5,
-    //paddingTop: Constants.statusBarHeight
-    // overflow:'hidden'
-    // backgroundColor:'white'
   },
-  insideView:{
-    backgroundColor: "red",
-    height: 400,
-    marginVertical: 10,
-    width: WIDTH,
-    alignSelf: "center",
-    justifyContent: "center"
+  bgContainer: {
+    flex: 1,
+    padding: 5
   },
-  imageView:{
+  userContainer: {
     flex: 2,
-    backgroundColor: "green",
-    justifyContent: "center",
-    alignItems: "center",
-    flexDirection: "row",
-    marginHorizontal: 20
+    backgroundColor: 'transparent',
+    justifyContent: 'flex-end',
+    alignItems: 'center'
   },
-  flatlistContainer:{
-    backgroundColor: "yellow",
-    flex: 3,
-    flexDirection: "row",
-    marginTop: 10,
+  userContainer01: {
+    height: height * 30 / 100,
+    width: width * 80 / 100,
+    backgroundColor: 'white'
   },
-  touchable:{
-    height: 60,
-    backgroundColor: "#f79f24",
-    alignItems: "center",
-    justifyContent: "center"
+  avaContainer: {
+    flex: 1,
+    backgroundColor: 'transparent',
+    overflow: 'hidden',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  nameContainer: {
+    flex: 1,
+    backgroundColor: 'transparent',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    padding: 5
+  },
+
+
+
+  textName: {
+    fontWeight: 'bold',
+    fontSize: 20,
+    textAlign: 'left',
+    color: 'black'
   }
+
+
+
+
+
+
+
 }));

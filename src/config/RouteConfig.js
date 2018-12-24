@@ -7,6 +7,7 @@ import SearchScreen from '../navigations/SearchSreen'
 import PostScreen from '../navigations/PostScreen'
 import SetInfoScreen from '../navigations/SetInfoScreen'
 import TestScreen from '../navigations/TestScreen';
+import ProfileScreen from '../navigations/ProfileScreen';
 
 import {createStackNavigator} from 'react-navigation'
 
@@ -20,11 +21,12 @@ export default RootStack = createStackNavigator(
         Search: SearchScreen,
         Post: PostScreen,
         SetInfo: SetInfoScreen,
-        Test: TestScreen
+        Test: TestScreen,
+        Profile : ProfileScreen
 
     },
     {
-        initialRouteName: 'Home',
+        initialRouteName: 'Profile',
         navigationOptions:
         {
             header:null
