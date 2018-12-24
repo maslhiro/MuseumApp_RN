@@ -211,7 +211,7 @@ class DetailScreen extends Component {
                     this.unFavorite();
                   }}
                 >
-                  <Icon name="md-star" size={30} color="yellow" />
+                  <Icon name="md-star" size={30} color="#00BFFF" />
                 </TouchableOpacity>
               )}
               {/* <TouchableOpacity
