@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
     height: 55
   },
   textHeader: {
-    fontSize: 16,
+    fontSize: 17,
     color: 'white'
   },
 

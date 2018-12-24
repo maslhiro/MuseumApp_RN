@@ -1,158 +1,145 @@
 import React, { Component } from 'react';
 import {
   Platform,
-  StyleSheet,
+  ImageBackground,
   Text,
   View,
   TouchableOpacity,
-  Image,
+  ScrollView,
   TextInput,
-  FlatList,
+  Dimensions,
 } from 'react-native';
 import styles from './styles'
-import firebase, { firestore } from 'react-native-firebase';
-import { rootRef, objectsRef } from './../../config/FirebaseConfig';
-import lgMuseum from '../../assets/SignIn/img_Museum.png';
+
+import img_Background from '../../assets/img_Background.jpg'
+import Header from '../../components/Header'
 import Icon from 'react-native-vector-icons/Ionicons';
-import SmallCheckbox from './../../components/SmallCheckBox/index';
-import ImageProgress from '../../components/ImageProgress'
+import CustomCheckBox from '../../components/CustomCheckBox'
+import AppContainer from '../../container'
+import { Provider, Subscribe, Container } from 'unstated';
+
+const ColorType = ["gray","#c6e377","#729d39","#36622b"]
 
 export default class SearchScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      txtSearch : '',
-      data : [],
-      listCheckBox : [false, false, false, false, false, false, false, false, false, false]
+      txtSearch: '',
+      showAdvanced:false,
     };
   }
 
-  renderItem = (item) => {
-    return (
-      <View style={{flex:1,margin:5,backgroundColor:"#EFF8FB",padding:5}}>
-        <Text style={styles.titleItem}>{item.data.name}</Text>
-        <Text>{item.data.description}</Text>
-        <View style={{flex:1, justifyContent: 'center', alignItems: 'center'}}>
-          <ImageProgress style={styles.imgProgress}
-            source={{
-              uri: item.data.linkImg
-            }}/>
-        </View>
-      </View>
-    )
+  onChangeText_Search = (text) => {
+    this.setState({
+      txtSearch: text,
+    })
+  }
+  
+  goBack = () => {
+    this.props.navigation.goBack()
   }
 
-  onTxtSearchChanged = (text) => {
-    this.setState({
-      txtSearch : text,
-    })
-  } 
+  onSearch = (container) => {
+      if(container.searchObject(this.state.txtSearch))
+      {
+        this.props.navigation.goBack()
+      }
+  }
 
-  onSearch = () => {
-    objectsRef.on('value', (child) => {
-      let arr = []
-      let searchText = this.state.txtSearch;
-      
-      child.forEach((item) => {
-        if (item.child('name').val().toLowerCase().indexOf(searchText.toLowerCase()) != -1
-            || item.child('description').val().toLowerCase().indexOf(searchText.toLowerCase()) != -1){
-          for (let i=0; i<10; i++){
-            if ((this.state.listCheckBox)[i]){
-              type = 'T00'  + i.toString()
-              if (item.child('idType').val() == type){
-                arr.push({
-                  key: item.key,
-                  data: item.toJSON()
-                })
-              }
-            }
-          }
-        }
-      })
-      this.setState(
-        {
-          data: arr
-        },()=>console.log("OK",this.state.data)
+  renderCheckBox = (container) => 
+  {
+    let arrType = container.getAppState().arrType
+
+    return arrType.map((item, index) => {
+      let color 
+      if(index>ColorType.length-1)
+      {
+        color= ColorType[index%ColorType.length]
+      }
+      else 
+      {
+        color = ColorType[index]
+      }
+
+      return (
+        <CustomCheckBox
+          color={color}
+          text={item.des}
+          key={item.key}
+          checked={item.checked}
+          onPress={() => { container.setState_Checked(index, !item.checked) }} />
       )
-    });
-    //alert((this.state.listCheckBox))
-  }
-
-  onCheckedBox = (isChecked, index) => {
-    arr = this.state.listCheckBox;
-    arr[index] = isChecked
-    this.setState({
-      listCheckBox: arr
     })
   }
 
-  render(){
-    const {data} = this.state
-    return(
-      <View style = {styles.container}>
-        <View style={styles.logoContainer}>
-          <Image source = {lgMuseum} style = {styles.logoStyle}/>
-          <Text style={styles.logoText}>VINDI MUSEUM</Text>
-        </View>
-
-        <View style={styles.checkboxContainer}>
-          <View style={styles.lineCheckbox}>
-            <SmallCheckbox title="Tranh ảnh" color='#FACC2E' onCheck={(isChecked)=>{this.onCheckedBox(isChecked, 1)}} />
-            <SmallCheckbox title="Thủ công mỹ nghệ" color='#2ECCFA' onCheck={(isChecked)=>{this.onCheckedBox(isChecked, 2)}}/>
-            <SmallCheckbox title="Chiến tranh" color='#000000' onCheck={(isChecked)=>{this.onCheckedBox(isChecked, 3)}}/>
-            <SmallCheckbox title="Văn hóa" color='#B40431' onCheck={(isChecked)=>{this.onCheckedBox(isChecked, 4)}}/>
-            <SmallCheckbox title="Nghệ thuật" color='#FF8000' onCheck={(isChecked)=>{this.onCheckedBox(isChecked, 5)}}/>
-          </View>
-
-          <View style={styles.lineCheckbox}>
-            <SmallCheckbox title="Đồ dùng sinh hoạt" color='#3104B4' onCheck={(isChecked)=>{this.onCheckedBox(isChecked, 6)}}/>
-            <SmallCheckbox title="Công nghiệp" color='#AEB404' onCheck={(isChecked)=>{this.onCheckedBox(isChecked, 7)}}/>
-            <SmallCheckbox title="Nông nghiệp" color='#088A29' onCheck={(isChecked)=>{this.onCheckedBox(isChecked, 8)}}/>
-            <SmallCheckbox title="Nhà nước phong kiến" color='#B40404' onCheck={(isChecked)=>{this.onCheckedBox(isChecked, 9)}}/>
-            <SmallCheckbox title="Mục Khác" color='#58D3F7' onCheck={(isChecked)=>{this.onCheckedBox(isChecked, 0)}}/>
-          </View>
-        </View>
-        
-        <View style={styles.searchContainer}>
-          <View style = {styles.inputContainer}>
-            
-            <TextInput
-              style = {styles.inputText}
-              keyboardType='email-address'
-              placeholder = {'Bạn muốn tìm hiện vật...'}
-              autoCapitalize='none'
-              secureTextEntry={true}
-              placeholderTextColor = '#BDBDBD'
-              underlineColorAndroid = 'transparent'
-              onChangeText={
-                (text) => {
-                    this.onTxtSearchChanged(text)
-                }}
-            />
-          </View>
-          <TouchableOpacity
-            style={styles.btnSearch}
-            onPress = {this.onSearch}
-          >
-            <Icon 
-              name = {'ios-search'}
-              size = {28}
-              color = '#6E6E6E'  
-              style = {styles.inputIcon}
-            />
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.listviewContainer}>
-          <FlatList
-              data={data}
-              numColumns={1}
-              style={{flex:1}}
-              keyExtractor={(item)=>item.key}
-              renderItem={({item})=>this.renderItem(item)}
+  render() {
+    const { data } = this.state
+    return (
+      <View style={styles.container}>
+        <Header
+          title="Tìm Kiếm"
+          onPressLeftIcon={() => this.goBack()}
           />
-        </View>
+
+        <ImageBackground
+          source={img_Background}
+          style={styles.infoContainer}>
+          <ScrollView
+            style={{ flex: 1 }}
+            showsVerticalScrollIndicator={false}
+          >
+            <View style={styles.overlayContainer}>
+              <Subscribe to={[AppContainer]}>
+              {container =>
+                <View style={{ flex: 1, backgroundColor: 'white', padding: 5 }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', margin: 5 }}>
+                  <Icon name="ios-search" color="black" size={30} />
+                  <TextInput
+                    style={{ flex: 1 }}
+                    underlineColorAndroid="black"
+                    onChangeText={text => this.onChangeText_Search(text)}
+                  />
+                </View>
+                <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', margin: 5 }}
+                  onPress={()=>this.setState({showAdvanced:!this.state.showAdvanced})}>
+                  {this.state.showAdvanced?
+                  <Icon name="md-arrow-dropdown" color="black" size={30} /> : 
+                  <Icon name="md-arrow-dropup" color="black" size={30} /> }
+                  <Text style={{ margin: 10, fontSize: 14, color: 'black' }}>Tìm Kiếm Nâng Cao</Text>
+
+                </TouchableOpacity>
+                <ScrollView>
+                  <View style={{ flexDirection: 'row', flex: 1, padding: 5, flexWrap: 'wrap' }}>
+                  {this.state.showAdvanced?this.renderCheckBox(container):null}
+                  </View>
+
+                </ScrollView>
+              </View>
+              }
+              </Subscribe>
+            </View>
+          </ScrollView>
         
+
+        </ImageBackground>
+        <Subscribe to={[AppContainer]}>
+        {container =>
+          <TouchableOpacity style={{ height: 50, backgroundColor: '#f79f24',padding:10 }}
+            onPress={()=>{this.onSearch(container)}}>
+              <View style={{ flex: 1, flexDirection: 'row' }}>
+                <View style={{ flex: 1, justifyContent: 'center', alignItems:'flex-start', }}>
+                  <Text style={{fontWeight:'bold',fontSize:14,color:'black'}}>Tìm</Text>
+                </View>
+                <View style={{ flex: 1, justifyContent: 'center', alignItems:'flex-end' }}>
+                  <Icon name="md-arrow-forward" color="black" size={30}/>
+                </View>
+
+
+              </View>
+
+            </TouchableOpacity>
+          }
+          </Subscribe>
       </View>
     )
   }

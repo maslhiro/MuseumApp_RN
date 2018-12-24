@@ -1,91 +1,80 @@
-import {StyleSheet, Platform, Dimensions} from 'react-native';
+import { StyleSheet, Dimensions } from "react-native";
 
-const {width : WIDTH}   = Dimensions.get('window');
+const { width, height } = Dimensions.get("window");
 
-export default styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FAFAFA',
+    // padding:5,
+    backgroundColor: "white"
   },
-
-  BackgroundContainer: {
-    flex: 1,
-    width: null,
-    height: null,
-    justifyContent: 'center',
+  overlayContainer : {
+    width: (width * 80) / 100,
+    height: (height * 70) / 100,
+    backgroundColor: 'transparent',
+    justifyContent: 'space-evenly',
+  },
+  overlayContainer_01 : {
+    padding: 5,
+    backgroundColor: 'white',
+    justifyContent: 'space-evenly',
+    flex: 1
+  },
+  chooseAvtContainer: {
+    flexDirection: 'row',
+    padding:5,
+    // alignItems: 'center',
+    justifyContent: 'space-evenly',
+  },
+  infoContainer: {
+    width: (width * 100) / 100,
+    height: (height - 80),
+    backgroundColor: "red",
+    alignItems: "center",
+    padding:5,
+    justifyContent: "center"
+  },
+  touchView: {
+    height: 60,
+    backgroundColor: '#f79f24',
     alignItems: 'center',
+    justifyContent: 'center'
   },
-
-  logoContainer:{
-    alignItems: 'center',
-    marginBottom: 50,
-  },
-
-  logoStyle: {
-    width: 160,
-    height: 160,
-  },
-
-  logoText: {
-    color: 'white',
-    fontSize: 20,
-    fontWeight: '500',
-    marginTop: 10,
-    opacity: 0.7,
-  },
-
-  inputContainer: {
-    marginTop: 10,
-  },
-
-  inputText: {
-    width: WIDTH - 55,
-    height: 45,
+  touchChoosePhotoView: {
     borderRadius: 25,
-    fontSize: 16,
-    paddingLeft: 45,
-    backgroundColor : `rgba(0, 0, 0, 0.35)`,
-    color: `rgba(255, 255, 255, 0.7)`,
-    marginHorizontal: 25,
-  },
-
-  inputIcon: {
-    position: 'absolute',
-    top: 8,
-    left: 37 
-  },
-
-  btnEye: {
-    position: 'absolute',
-    top: 9,
-    right: 37 
-  },
-
-  btnSignUp: {
-    width: WIDTH - 55,
-    height: 45,
-    borderRadius: 25,
-    backgroundColor: '#086A87',
-    justifyContent: 'center',
-    marginTop: 20,
-  },
-
-  txtSignUp: {
-    color: `rgba(255, 255, 255, 0.7)`,
-    fontSize: 16,
-    textAlign: 'center',
-  },
-
-  textContainer: {
+    backgroundColor: '#f79f24',
+    margin:10,
     alignItems: 'center',
-    marginTop: 30,
+    justifyContent: 'center'
   },
-
-  textStyle: {
-    color: '#0B173B',
+  text: {
     fontSize: 14,
-    textAlign: 'center',
-    marginBottom: 10,
+//    color: '#679186'
+    color:'black'
+},
+  textHeader: {
+    fontSize: 16,
+    color: 'white'
+  },
+  textErrStyle : {
+    color:'red',
+    fontSize:12
+  } ,
+  textInputNameUser:
+  {
+    marginVertical:20,
+    backgroundColor: 'white',
+    color:'black',
+    alignSelf:'center',
+    width: (width * 70) / 100,
+    padding: 5
+  },
+  textTouch: {
+    fontWeight: 'bold',
+    color: 'black',
+    fontSize: 14
   }
-  
-});
+
+})
+
+export default styles

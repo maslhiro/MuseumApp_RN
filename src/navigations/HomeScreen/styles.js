@@ -5,7 +5,7 @@ const {width,height} = Dimensions.get('screen')
 export default styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 5,
+    // padding: 5,
     backgroundColor:'white'
   },
   viewObject:{
@@ -13,7 +13,9 @@ export default styles = StyleSheet.create({
     padding: 5, 
     justifyContent: 'center', 
     alignItems: 'center', 
-    backgroundColor: '#f3f6c8', 
+    borderRadius:10,
+//    backgroundColor: '#f3f6c8', 
+    backgroundColor:'white',
     margin: 5 
   },
   image : {
@@ -30,5 +32,16 @@ export default styles = StyleSheet.create({
     overflow: 'hidden'
 
   },
+  touchView: {
+    height: 60,
+    width: 60,
+    position: 'absolute',
+    borderRadius:30,
+    alignItems:'center',
+    justifyContent:'center',
+    end:20,
+    bottom:20,
+    backgroundColor: 'red'
+  }
 
 });

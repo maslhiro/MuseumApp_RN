@@ -5,31 +5,30 @@ import {
   ImageBackground,
   Image,
   TextInput,
+  ScrollView,
   TouchableOpacity,
   Alert
 } from 'react-native';
 import styles from './styles';
-import bg_SignIn from '../../assets/SignIn/bg_SignIn.jpg';
-import ic_MuseumBurned from '../../assets/SignIn/img_MuseumBurned.png';
-
-import Icon from 'react-native-vector-icons/Ionicons';
+import img_Background from '../../assets/img_Background.jpg'
+import Header from '../../components/Header'
+import AwesomeAlert from "react-native-awesome-alerts";
 import { FirebaseAuth } from '../../config/FirebaseConfig'
+import { Firebase } from 'react-native-firebase';
 
 class SignUpScreen extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      isAuthenticated: false,
-      isLoading: false, // bien de spiner xoay xoay khi fetch du lieu
-      hidePass: true,
+      isLoading: false,
       txtEmail: '',
       txtPassword: '',
-
+      showAlert:0,
+      errCode : "",
       errEmail: false,
       errPassword: false,
-
-      user: null,
+      uid : ''
     };
   }
 
@@ -47,133 +46,195 @@ class SignUpScreen extends Component {
       });
   }
 
-
-  onPress_Hide_Pass = () => {
-    this.setState(
-      {
-        hidePass: !this.state.hidePass
-      }
-    )
-  }
-
   checkData = () => {
-    if (
-      this.state.txtEmail ||
-      this.state.txtPassword) {
+    if ( this.state.txtEmail==="" || this.state.txtPassword==="") 
+    {
+
+        this.setState({
+          errEmail: !this.state.txtEmail,
+          errPassword: !this.state.txtPassword
+        })  
+    }
+    else 
+    {
+     
       this.setState(
         {
+          errEmail: false,
+          errPassword:false,
           isLoading: true
-        }, () => this.onSignUp())
-    }
-    else {
-      Alert.alert("Thông Báo", " Nhâp Đầy Đủ THông TIn")
+        }, () => {
+           this.onSignUp()
+          
+          
+          // Test 
+          // setTimeout(()=>{
+          //     this.setState({
+          //       isLoading:false,
+          //       showAlert: 1
+          //     })
+          // },3000)
+        })
+        
     }
   }
 
   onSignUp = () => {
     FirebaseAuth.createUserWithEmailAndPassword(this.state.txtEmail, this.state.txtPassword)
-      .then(() => {
+      .then((data) => {
+        console.log("User", data)
         this.setState({
-          isLoading: false
-        }, () =>
-            Alert.alert(
-              'Sign Up Successfully',
-              'Chúc mừng bạn đã tạo tài khoản  thành công',
-              [
-                {
-                  text: 'OK', onPress: () => {
-                    this.props.navigation.goBack()
-                  }
-                },
-              ],
-              { cancelable: false }
-            ))
+          isLoading: false,
+          uid : data.user.uid
+        }, ()=>this.props.navigation.navigate("SetInfo",{uid : this.state.uid}))
       }).catch((error) => {
         this.setState({
-          isLoading: false
+          isLoading: false,
+          showAlert : 2,
+          errCode : error.message
         })
         console.log(`Register fail `, error);
-        alert(`Register fail with error: ${error}`)
       });
   }
+  
+  renderAlert = () => {
+    switch(this.state.showAlert)
+    {
+      case 0 :{
+        return null
+        break
+      }
+      case 1: {
+        return (
+            <AwesomeAlert
+              show={true}
+              title="Opps!"
+              message="Lỗi kết nối, bạn vui lòng thử lại nhé :<"
+              confirmText=" OK "
+              closeOnTouchOutside={false}
+              onConfirmPressed={()=>this.setState({showAlert:0})}
+              closeOnHardwareBackPress={false}
+              showCancelButton={false}
+              showConfirmButton={true}
+            />
+        )
+        break
+      }
+      case 2: {
+        return (
+            <AwesomeAlert
+              show={true}
+              title="Opps!"
+              message={this.state.errCode}
+              confirmText=" OK "
+              closeOnTouchOutside={false}
+              onConfirmPressed={()=>this.setState({showAlert:0})}
+              closeOnHardwareBackPress={false}
+              showCancelButton={false}
+              showConfirmButton={true}
+            />
+        )
+        break
+      }
+      case 3 : {
+        return (  
+          <AwesomeAlert
+            show={true}
+            title="Chúc mừng !"
+            message="Bạn đã đăng nhập thành công :3"
+            confirmText=" OK "
+            closeOnTouchOutside={false}
+            onConfirmPressed={()=>this.setState({showAlert:0,},()=>this.props.navigation.navigate("SetInfo",{uid : this.state.uid}))}
+            closeOnHardwareBackPress={false}
+            showCancelButton={false}
+            showConfirmButton={true}
+          />
+        )
+        break
+      }
+      default: {
+        return null
+      }
+    }
+  }
 
-  onPress_Open_Sign_In_Screen = () => {
+  goBack = () => {
     this.props.navigation.goBack()
   }
 
   render() {
     return (
-      <ImageBackground
-        source={bg_SignIn}
-        style={styles.BackgroundContainer}>
-        <View style={styles.logoContainer}>
-          <Image source={ic_MuseumBurned} style={styles.logoStyle} />
-          <Text style={styles.logoText}>Sign Up</Text>
-          <Text style={styles.logoText}>VINDI MUSEUM</Text>
-          {this.state.isLoading ? <Text style={styles.logoText}>Đang Tải .....</Text> : null}
-        </View>
+      <View style={styles.container}>
+      <Header
+        title="Tạo Tài Khoản"
+        onPressLeftIcon ={()=> this.goBack()}
+      />
+      <View style={{ flex: 1, backgroundColor: 'blue', }} >
+        <ScrollView
+          style={{flex:1, backgroundColor: 'yellow',}}
+          showsVerticalScrollIndicator={false} >
+          <ImageBackground
+            source={img_Background}
+            style={styles.infoContainer}>
 
-        <View style={styles.inputContainer}>
-          <Icon
-            name={'ios-mail'}
-            size={28}
-            color={`rgba(255, 255, 255, 0.7)`}
-            style={styles.inputIcon}
-          />
-          <TextInput
-            style={styles.inputText}
-            keyboardType='email-address'
-            placeholder={'E-mail'}
-            autoCapitalize='none'
-            placeholderTextColor={`rgba(255, 255, 255, 0.7)`}
-            underlineColorAndroid='transparent'
-            onChangeText={(text) => this.onChangeText_Email(text)}
-          />
-        </View>
+            <View style={styles.overlayContainer}>
+              <View style={{ flexDirection: 'row',marginVertical: 20}}>
+                <View style={{ flex: 1 ,  backgroundColor: 'transparent', alignItems:'flex-start' , justifyContent:'center'}}>
+                  <Text style={{ fontWeight: 'bold', fontSize: 28, color:'white' }}> Đăng Kí</Text>
+                </View>
+                <View style={{ flex: 1 , alignItems:'flex-end' , justifyContent:'center'}}>
+                <Text style={{ fontWeight: 'bold', fontSize: 28, color:'white' }}>  Bước 1/2</Text>
+                </View>
+              </View>
+              <View style={styles.overlayContainer_01}>
+                <View style={{ padding: 5, margin: 5 , }}>
+                  <Text style={styles.text}>Email :</Text>
+                  {this.state.errEmail?<Text style={styles.textErrStyle}> *Email không được để trống</Text>:null}
+                  <TextInput
+                    style={styles.textInputNameUser}
+                    keyboardType='email-address'
+                    autoCorrect={false}
+                    placeholderTextColor='black'
+                    underlineColorAndroid='black'
+                    onChangeText={(text) => this.onChangeText_Email(text)}
+                  />
+                  <Text style={styles.text}>Mật Khẩu :</Text>
+                  {this.state.errPassword?<Text style={styles.textErrStyle}> *Mật khẩu không được để trống</Text>:null}
+                  <TextInput
+                    style={styles.textInputNameUser}
+                    secureTextEntry={true}                    
+                    autoCorrect={false}
+                    placeholderTextColor='black'
+                    underlineColorAndroid='black'
+                    onChangeText={(text) => this.onChangeText_Pass(text)}
+                  />
 
-        <View style={styles.inputContainer}>
-          <Icon
-            name={'ios-lock'}
-            size={28}
-            color={`rgba(255, 255, 255, 0.7)`}
-            style={styles.inputIcon}
-          />
-          <TextInput
-            style={styles.inputText}
-            keyboardType='default'
-            placeholder={'Password'}
-            autoCapitalize='none'
-            secureTextEntry={this.state.hidePass}
-            placeholderTextColor={`rgba(255, 255, 255, 0.7)`}
-            underlineColorAndroid='transparent'
-            onChangeText={(text) => this.onChangeText_Pass(text)}
+                </View>
+              </View>
 
-          />
-          <TouchableOpacity
-            style={styles.btnEye}
-            onPress={() => { this.onPress_Hide_Pass() }}>
-            <Icon
-              name={this.state.hidePass ? 'ios-eye-off' : 'ios-eye'}
-              size={26}
-              color={`rgba(255, 255, 255, 0.7)`}
-            />
-          </TouchableOpacity>
-        </View>
+              <TouchableOpacity
+                style={styles.touchView}
+                onPress={() => this.checkData()}>
+                <Text style={styles.textTouch}> Tiếp Theo </Text>
+              </TouchableOpacity>
 
-        <TouchableOpacity
-          style={styles.btnSignUp}
-          onPress={() => this.checkData()}>
-          <Text style={styles.txtSignUp}> Sign Up</Text>
-        </TouchableOpacity>
+              <AwesomeAlert
+                show={this.state.isLoading}
+                showProgress={true}
+                title="Đang tải"
+                message="Bạn chờ tí nhé ^^"
+                closeOnTouchOutside={false}
+                closeOnHardwareBackPress={false}
+              />
+              {this.renderAlert()}
 
-        <View style={styles.textContainer}>
-          <TouchableOpacity
-            onPress={() => this.onPress_Open_Sign_In_Screen()}>
-            <Text style={styles.textStyle}>Back</Text>
-          </TouchableOpacity>
-        </View>
+            </View>
 
-      </ImageBackground>
+          </ImageBackground>
+        </ScrollView>
+
+      </View>
+    </View>
     );
   }
 }

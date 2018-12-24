@@ -4,48 +4,64 @@ import {
   View,
   ImageBackground,
   Image,
+  ScrollView,
   TextInput,
   TouchableOpacity,
-  Alert
+  Alert,
+  Dimensions
 } from 'react-native';
 import styles from './styles';
-import bg_SignIn from '../../assets/SignIn/bg_SignIn.jpg';
-import ic_MuseumBurned from '../../assets/SignIn/img_MuseumBurned.png';
+import img_Background from '../../assets/img_Background.jpg'
 import { FirebaseAuth, profileRef } from '../../config/FirebaseConfig';
 import AwesomeAlert from 'react-native-awesome-alerts';
-
-import Icon from 'react-native-vector-icons/Ionicons';
+import FastImage from 'react-native-fast-image'
+import {
+  Subscribe,
+} from 'unstated';
+import AppContainer from '../../container'
 
 class SignInScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isAuthenticated: false,
       isLoading: false, // bien de spiner xoay xoay khi fetch du lieu
-      hidePass: true,
-      txtEmail: '',
-      txtPassword: '',
+      txtEmail: "",
+      txtPassword: "",
       errEmail: false,
       errPassword: false,
-      showAlert: false,
-      user: null,
+      linkAva:"",
+      errCode:"",
+      showAlert: 0, // 1  - Thanh Cong / 2 - Sai Username-Pass / 3 - Loi Ket Noi
     };
   }
 
-  checkData = () => {
-    if (
-      this.state.txtEmail ||
-      this.state.txtPassword) {
+  checkData = (container) => {
+    if ( this.state.txtEmail==="" || this.state.txtPassword==="") 
+    {
+
+        this.setState({
+          errEmail: !this.state.txtEmail,
+          errPassword: !this.state.txtPassword
+        })  
+    }
+    else 
+    {
+     
       this.setState(
         {
+          errEmail: false,
+          errPassword:false,
           isLoading: true
         }, () => {
-          this.setState({showAlert: true})
-          this.onSignIn();
+          this.onSignIn(container)
+           // Test 
+          // setTimeout(()=>{
+          //     this.setState({
+          //       isLoading:false
+          //     })
+          // },3000)
         })
-    }
-    else {
-      Alert.alert("Thông Báo", " Nhâp Đầy Đủ THông TIn")
+        
     }
   }
 
@@ -63,135 +79,190 @@ class SignInScreen extends Component {
       });
   }
 
-  onSignIn = () => {
+  onSignIn = (container) => {
     FirebaseAuth.signInWithEmailAndPassword(this.state.txtEmail, this.state.txtPassword)
-      .then(() => {
-        uid = FirebaseAuth.currentUser.uid;
-        profileRef.on('value', (child)=>{
-          if (!child.hasChild(uid)){
-            console.log(`Login successfully`);
-            this.props.navigation.push('SetInfo');
-          } else{
-            this.props.navigation.push('Home')
-          }
-        })}).catch((error) => {
-        this.setState({showAlert:false})
-        console.log('Login failed', error);
-        alert('Log in failed');
-      })
-  }
+      .then((data) => {
+        let user = container.checkUid_Exists(data.user.uid)
+        console.log("SIGN IN",user)
 
-  onPress_Quen_MK = () => {
-    Alert.alert(
-      'Quên mật khẩu',
-      'Đoán xem...',
-      [
-        { text: 'Đoán', onPress: () => console.log('OK Pressed') },
-      ],
-      { cancelable: false }
-    )
+        if(user)
+        {
+          this.setState({
+            showAlert : 1,
+            isLoading:false,
+            linkAva : user.data.urlAvatar 
+          })
+        }
+        else{
+          this.setState({
+            isLoading:false,
+            showAlert : 2
+          })
+        }
+      }).catch((error) => {
+            console.log("Err Sign In ", error)
+            this.setState({
+              isLoading:false,
+              showAlert:3,
+              errCode : error.message
+            })
+      })
   }
 
   onPress_Open_Sign_Up_Screen = () => {
     this.props.navigation.push('SignUp');
   }
 
-  onPress_Hide_Pass = () => {
-    this.setState(
-      {
-        hidePass: !this.state.hidePass
+  onPress_Open_Home_Screen = () => {
+    this.props.navigation.push('Home');
+  }
+
+  renderAlert = () => {
+    switch(this.state.showAlert)
+    {
+      case 0 :{
+        return null
+        break
       }
-    )
+      case 1 : {
+        return(
+          <AwesomeAlert
+            show={true}
+            title="Chúc Mừng !"
+            message="Bạn đã đăng nhập thành công ^^"
+            confirmText=" OK "
+            closeOnTouchOutside={false}
+            onConfirmPressed={()=>this.setState({showAlert:0},()=>this.onPress_Open_Home_Screen())}
+            closeOnHardwareBackPress={false}
+            showCancelButton={false}
+            showConfirmButton={true}
+          />
+          )
+        break
+      }
+      case 2: {
+        return (
+            <AwesomeAlert
+              show={true}
+              title="Opps !"
+              message="Username hoặc mật khẩu không chính xác:<"
+              confirmText=" OK "
+              closeOnTouchOutside={false}
+              onConfirmPressed={()=>this.setState({showAlert:0})}
+              closeOnHardwareBackPress={false}
+              showCancelButton={false}
+              showConfirmButton={true}
+            />
+        )
+        break
+      } 
+      case 3: {
+        return (
+            <AwesomeAlert
+              show={true}
+              title="Opps!"
+              message={this.state.errCode}
+              confirmText=" OK "
+              closeOnTouchOutside={false}
+              onConfirmPressed={()=>this.setState({showAlert:0})}
+              closeOnHardwareBackPress={false}
+              showCancelButton={false}
+              showConfirmButton={true}
+            />
+        )
+        break
+      }
+      default: {
+        return null
+      }
+    }
+
+
   }
 
   render() {
     return (
+      <View style={styles.container}>
       <ImageBackground
-        source={bg_SignIn}
-        style={styles.BackgroundContainer}>
+        source={img_Background}
+        style={styles.backgroundContainer}>
+        <ScrollView 
+          style={{flex:1}}
+          showsVerticalScrollIndicator={false}
+          >
 
-        <View style={styles.logoContainer}>
-          <Image source={ic_MuseumBurned} style={styles.logoStyle} />
-          <Text style={styles.logoText}>Sign In</Text>
-          <Text style={styles.logoText}>VINDI MUSEUM</Text>
-          {this.state.isLoading ? <Text style={styles.logoText}>Đang Tải .....</Text> : null}
+        <View style={styles.overlayContainer}>
+          <View style={styles.logoContainer}>
+              <FastImage
+                style={styles.logoStyle}
+                source={{uri:"https://uphinhnhanh.com/images/2018/12/17/Krown-Creatives.png"}}
+                resizeMode={FastImage.resizeMode.cover}
+                />
+            
+          </View>
+          
+          <View style={styles.inputContainer}>
+              <View style={{flex:1, marginVertical:12, marginHorizontal:20}}>              
+                <View style={{flex:1, backgroundColor: 'white', padding:5,  }}>
+                  <Text style={{color:'black'}}>Username</Text>
+                  {this.state.errEmail?<Text style={styles.textErrStyle}>*Username không được để trống</Text>:null}
+                  <TextInput
+                    style={styles.inputStyle}
+                    defaultValue={this.state.txtEmail}
+                    autoCorrect={false}
+                    underlineColorAndroid="#679186"
+                    onChangeText={text => this.onChangeText_Email(text)}
+                  />
+                
+                  <Text style={{color:'black'}}>Password</Text>
+                  {this.state.errPassword?<Text style={styles.textErrStyle}> *Password không được để trống </Text>:null}
+
+                  <TextInput
+                    style={styles.inputStyle}
+                    defaultValue={this.state.txtPassword}
+                    secureTextEntry={true}
+                    autoCorrect={false}
+                    underlineColorAndroid="#679186"
+                    onChangeText={text => this.onChangeText_Pass(text)}
+                  /> 
+                </View>
+              </View>
+              <Subscribe to={[AppContainer]}>
+              {container=>
+              <TouchableOpacity 
+                  style={styles.touchStyle}
+                  onPress={()=>{ this.checkData(container)}}>
+                  <Text style={styles.textTouchStyle}> Đăng Nhập </Text>
+                </TouchableOpacity> 
+              }
+              </Subscribe>
+          </View>
+
         </View>
-
-        <View style={styles.inputContainer}>
-          <Icon
-            name={'ios-mail'}
-            size={28}
-            color={`rgba(255, 255, 255, 0.7)`}
-            style={styles.inputIcon}
-          />
-          <TextInput
-            style={styles.inputText}
-            keyboardType='email-address'
-            placeholder={'E-mail'}
-            autoCapitalize='none'
-            placeholderTextColor={`rgba(255, 255, 255, 0.7)`}
-            underlineColorAndroid='transparent'
-            onChangeText={(text) => this.onChangeText_Email(text)}
-          />
-        </View>
-
-        <View style={styles.inputContainer}>
-          <Icon
-            name={'ios-lock'}
-            size={28}
-            color={`rgba(255, 255, 255, 0.7)`}
-            style={styles.inputIcon}
-          />
-          <TextInput
-            style={styles.inputText}
-            keyboardType='default'
-            placeholder={'Password'}
-            autoCapitalize='none'
-            secureTextEntry={this.state.hidePass}
-            placeholderTextColor={`rgba(255, 255, 255, 0.7)`}
-            underlineColorAndroid='transparent'
-            onChangeText={(text) => this.onChangeText_Pass(text)}
-          />
-          <TouchableOpacity
-            style={styles.btnEye}
-            onPress={() => { this.onPress_Hide_Pass() }}>
-            <Icon
-              name={this.state.hidePass?'ios-eye-off':'ios-eye'}
-              size={26}
-              color={`rgba(255, 255, 255, 0.7)`}
-            />
-          </TouchableOpacity>
-        </View>
-
-        <TouchableOpacity style={styles.btnSignIn}
-          onPress={() => this.checkData()} >
-          <Text style={styles.txtSignIn}> Sign In </Text>
-        </TouchableOpacity>
-
-        <View style={styles.textContainer}>
-          <TouchableOpacity
-            onPress={() => this.onPress_Quen_MK()}>
-            <Text style={styles.textStyle}> Bạn đã quên mật khẩu?</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            onPress={() => this.onPress_Open_Sign_Up_Screen()}>
-            <Text style={styles.textStyle}> Bạn chưa có tài khoản?</Text>
-          </TouchableOpacity>
+      
+        </ScrollView>
+        
+        <View style={styles.bottomContainer}>
+            <Text style={styles.textStyle} > Chưa đăng kí ? </Text>
+            <TouchableOpacity onPress={()=>{this.onPress_Open_Sign_Up_Screen()}}>
+              <Text style={styles.textStyle} > Tạo tài khoản </Text>
+            </TouchableOpacity>
         </View>
 
         <AwesomeAlert
-          show={this.state.showAlert}
-          showProgress={true}
-          title="Đang xử lý"
-          message="Vui lòng đợi..."
-          closeOnTouchOutside={false}
-          closeOnHardwareBackPress={false}
-          showCancelButton={false}
-          showConfirmButton={false}
-        />
+            show={this.state.isLoading}
+            showProgress={true}
+            title="Loading"
+            message="Please wait ..."
+            closeOnTouchOutside={false}
+            closeOnHardwareBackPress={false}
+            showCancelButton={false}
+            showConfirmButton={false}
+          />
+        {this.renderAlert()}
 
       </ImageBackground>
+    </View>
     );
   }
 
