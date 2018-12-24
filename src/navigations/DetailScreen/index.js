@@ -83,12 +83,12 @@ class DetailScreen extends Component {
   //   console.log("Favorite checked");
   //   if (this.state.uid) {
   //     if (this.state.isFavorite) {
-  //       this.unFavorite();
+  //       ()=>{this.unFavorite()}
   //     } else {
-  //       this.onFavorite();
+  //       ()=>{this.onFavorite()}
   //     }
   //   } else {
-  //     this.askSignIn();
+  //     ()=>{this.askSignIn()}
   //   }
   // };
 
