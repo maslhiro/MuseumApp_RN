@@ -5,11 +5,39 @@ import SignUpScreen from '../navigations/SignUpScreen'
 import SearchScreen from '../navigations/SearchSreen'
 import PostScreen from '../navigations/PostScreen'
 import SetInfoScreen from '../navigations/SetInfoScreen'
+import DetailScreen from '../navigations/DetailScreen';
+import CommentScreen from './../navigations/CommentScreen';
 import TestScreen from '../navigations/TestScreen';
+import ProfileScreen from '../navigations/ProfileScreen';
+import {createStackNavigator, createBottomTabNavigator} from 'react-navigation';
 
-import {createStackNavigator} from 'react-navigation'
 
-export default RootStack = createStackNavigator(
+
+
+export const DetailTab = createBottomTabNavigator(
+    {
+        Detail: DetailScreen,
+        Comments: CommentScreen,
+    },
+    {
+    tabBarOptions: { 
+        showLabel: false,
+        activeTintColor:'#f79f24',
+        inactiveTintColor:'white',
+        style: {
+            backgroundColor: 'black',
+            borderBottomColorWidth:2,
+            borderBottomColor:'#f79f24'
+        },
+        tabBarSelectedItemStyle: {
+            borderBottomWidth: 2,
+            borderBottomColor: '#f79f24',
+        }
+        
+    }
+    });
+
+export const RootStack = createStackNavigator(
     {
         Home: HomeScreen,
         Info: InfoScreen,
@@ -18,17 +46,19 @@ export default RootStack = createStackNavigator(
         Search: SearchScreen,
         Post: PostScreen,
         SetInfo: SetInfoScreen,
+        Detail: DetailTab,
         Test: TestScreen,
-
+        Profile : ProfileScreen
     },
     {
-        initialRouteName: 'Post',
+        initialRouteName: 'Profile',
         navigationOptions:
         {
             header:null
         }
 
     }
-)
+);
+
 
 

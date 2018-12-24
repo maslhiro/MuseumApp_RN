@@ -5,12 +5,12 @@ import {
   View,
   AsyncStorage
 } from 'react-native';
+
 import RootStack from './src/config/RouteConfig'
 import {
   Provider,
 } from 'unstated';
 import AppContainer from './src/container'
-
 
 export default class App extends Component {
   constructor(props)

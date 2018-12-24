@@ -33,7 +33,7 @@ class HomeScreen extends Component {
   }
   renderItem = (item) => {
     return (
-      <View style={styles.viewObject}>
+      <TouchableOpacity style={styles.viewObject} onPress = {() => {this.toDetail(item)}} >
         <View style={styles.viewImage}>
           <ImageProgress
             style={styles.image}
@@ -43,15 +43,20 @@ class HomeScreen extends Component {
         </View>
 
         <Text style={styles.textObject}>{item.data.name}</Text>
-      </View>
+      </TouchableOpacity>
     )
   }
+
 
   onPress_OpenPostScreen = (container) => {
     this.props.navigation.navigate("Post", {
       idType : container.getAppState().arrType[0].key,
       idMuseum :  container.getAppState().arrMuseum[0].key,
     })
+  }
+  
+  toDetail = (item) => {
+    this.props.navigation.push("Detail", {idObject : item.data.idObject})
   }
 
   onPress_OpenSignScreen = () => {
