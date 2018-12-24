@@ -9,8 +9,10 @@ import SetInfoScreen from '../navigations/SetInfoScreen'
 import DetailScreen from '../navigations/DetailScreen';
 import CommentScreen from './../navigations/CommentScreen';
 import TestScreen from '../navigations/TestScreen';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import ProfileScreen from '../navigations/ProfileScreen';
 import {createStackNavigator, createBottomTabNavigator} from 'react-navigation';
+
+
 
 
 export const DetailTab = createBottomTabNavigator(
@@ -47,10 +49,11 @@ export const RootStack = createStackNavigator(
         Post: PostScreen,
         SetInfo: SetInfoScreen,
         Detail: DetailTab,
-        Test: TestScreen
+        Test: TestScreen,
+        Profile : ProfileScreen
     },
     {
-        initialRouteName: 'Detail',
+        initialRouteName: 'Profile',
         navigationOptions:
         {
             header:null
