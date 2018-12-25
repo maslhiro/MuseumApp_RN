@@ -86,7 +86,7 @@ class SignUpScreen extends Component {
         this.setState({
           isLoading: false,
           uid : data.user.uid
-        }, ()=>this.props.navigation.navigate("SetInfo",{uid : this.state.uid}))
+        }, ()=>this.props.navigation.navigate("SetInfo",{uid : data.user.uid}))
       }).catch((error) => {
         this.setState({
           isLoading: false,

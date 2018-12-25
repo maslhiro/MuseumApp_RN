@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import {
   Platform,
-  ToastAndroid,
   Text,
   View,
   TouchableOpacity,
@@ -116,7 +115,7 @@ class DetailScreen extends Component {
       .child(keyChild).remove((err)=> {
         if(err){
           console.log("Error On Favo",err)
-          ToastAndroid.show("Bạn đã bỏ theo dõi hiện vât này")
+          Alert.alert("Thông báo","Bạn đã bỏ theo dõi hiện vât này")
           this.setState({isLoading:false})
         }
         else 
@@ -144,7 +143,7 @@ class DetailScreen extends Component {
       }
       else
       {
-      ToastAndroid.show("Bạn đã bỏ theo dõi hiện vât này")
+        Alert.alert("Thông báo","Bạn đã theo dõi hiện vât này")
       this.setState({isLoading:false})
     }})
   };

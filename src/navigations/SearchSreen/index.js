@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   ScrollView,
   TextInput,
-  Dimensions,
+  Alert,
 } from 'react-native';
 import styles from './styles'
 
@@ -40,6 +40,11 @@ export default class SearchScreen extends Component {
   }
 
   onSearch = (container) => {
+      if(this.state.txtSearch) 
+      {
+        Alert.alert("Thông Báo","Bạn chưa nhập từ khoá tìm kiếm")
+        return
+      }
       if(container.searchObject(this.state.txtSearch))
       {
         this.props.navigation.goBack()

@@ -93,7 +93,7 @@ class SignInScreen extends Component {
             linkAva : user.data.urlAvatar 
           }, () =>
           {
-            FirebaseAuth.signOut()
+            // FirebaseAuth.signOut()
           })
         }
         else{

@@ -31,14 +31,15 @@ class ProfileScreen extends Component {
     };
   }
 
-  renderItem = (arr, index) => {
+  renderItem = (arr, index, container) => {
     let checkReverse = (index) % 2 != 0 ? true : false
+
 
     switch (arr.length) {
       case 1: {
         return (
           <TouchableOpacity
-            onPress={() => { }}
+            onPress={() => { this.onPress_Open_Detail_Screen(container,arr[0])}}
             style={{ flex: 1, height: 200, margin: 5, backgroundColor: 'black' }}>
 
             <ImageProgress
@@ -53,7 +54,7 @@ class ProfileScreen extends Component {
         return (
           <View style={{ flex: 1, height: 200, flexDirection: `${checkReverse ? 'row' : 'row-reverse'}`, margin: 5, backgroundColor: 'black' }}>
             <TouchableOpacity
-              onPress={() => { }}
+              onPress={() => this.onPress_Open_Detail_Screen(container,arr[0])}
               style={{ flex: 1 }}>
               <ImageProgress
                 style={{ flex: 1 }}
@@ -61,7 +62,7 @@ class ProfileScreen extends Component {
             </TouchableOpacity>
 
             <TouchableOpacity
-              onPress={() => { }}
+              onPress={() => this.onPress_Open_Detail_Screen(container,arr[1])}
               style={{ flex: 1 }}>
               <ImageProgress
                 style={{ flex: 1 }}
@@ -75,7 +76,7 @@ class ProfileScreen extends Component {
         return (
           <View style={{ flex: 1, height: 200, flexDirection: `${checkReverse ? 'row' : 'row-reverse'}`, margin: 5, backgroundColor: 'black' }}>
             <TouchableOpacity
-              onPress={() => { }}
+              onPress={() => this.onPress_Open_Detail_Screen(container,arr[0])}
               style={{ flex: 3 }}>
               <ImageProgress
                 style={{ flex: 1 }}
@@ -84,15 +85,15 @@ class ProfileScreen extends Component {
 
             <View style={{ flex: 2 }}>
               <TouchableOpacity
-                onPress={() => { }}
-                style={{ flex: 1 }}>
+              onPress={() => this.onPress_Open_Detail_Screen(container,arr[1])}
+              style={{ flex: 1 }}>
                 <ImageProgress
                   style={{ flex: 1 }}
                   source={{ uri: arr[1].data.linkImg }} />
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={() => { }}
-                style={{ flex: 1 }}>
+              onPress={() => this.onPress_Open_Detail_Screen(container,arr[2])}
+              style={{ flex: 1 }}>
                 <ImageProgress
                   style={{ flex: 1 }}
                   source={{ uri: arr[2].data.linkImg }} />
@@ -196,6 +197,11 @@ class ProfileScreen extends Component {
 
   }
 
+  onPress_Open_Detail_Screen = (container,item) => {
+    container.setCurrent_Obj(item)
+    this.props.navigation.push("TabDetail")
+  }
+
   render() {
 
     let rightIconHeader = <Icon name="md-log-out" size={30} color="white" />
@@ -247,7 +253,7 @@ class ProfileScreen extends Component {
               style={{ flex: 1 }}
               data={this.state.data}
               keyExtractor={(arr) => arr[0].key}
-              renderItem={({ item, index }) => this.renderItem(item, index)}
+              renderItem={({ item, index, container }) => this.renderItem(item, index, container)}
             />
           </View>
           }
