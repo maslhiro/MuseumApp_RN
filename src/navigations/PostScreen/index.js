@@ -120,7 +120,7 @@ class PostScreen extends Component {
         name: this.state.txtTitle,
         description: this.state.txtDescription,
         linkImg: this.state.linkImg,
-        isActivated: "true"
+        isActivated: "false"
       },
       (error) => {
         if (error) {

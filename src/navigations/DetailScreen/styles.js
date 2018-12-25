@@ -29,7 +29,14 @@ export default (styles = StyleSheet.create({
   touchPhoto: {
     flex: 1,
     borderRadius: 30,
-    backgroundColor: "green",
+    backgroundColor: "yellow",
+    alignItems:'center',
+    justifyContent: "center"
+  },
+  touchPhoto_Un: {
+    flex: 1,
+    borderRadius: 30,
+    backgroundColor: "red",
     alignItems:'center',
     justifyContent: "center"
   },
@@ -41,7 +48,7 @@ export default (styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "400",
     color: "#00455b",
-    textAlign: 'center'
+    textAlign: 'left'
   },
   textHeader: {
     fontSize: 16,

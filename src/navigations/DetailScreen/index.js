@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import {
   Platform,
-  StyleSheet,
+  ToastAndroid,
   Text,
   View,
   TouchableOpacity,
@@ -15,11 +15,13 @@ import Icon from "react-native-vector-icons/Ionicons";
 import FastImage from "react-native-fast-image";
 import {
   favoriteRef,
-  objectsRef,
-  typesRef,
-  museumsRef,
-  FirebaseAuth
 } from "./../../config/FirebaseConfig";
+import AwesomeAlert from 'react-native-awesome-alerts'
+
+import AppContainer from '../../container'
+import { Provider, Subscribe, Container } from 'unstated';
+import img_Background from '../../assets/img_Background.jpg'
+import ImageProgress from "../../components/ImageProgress";
 
 class DetailScreen extends Component {
   static navigationOptions = {
@@ -41,59 +43,49 @@ class DetailScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isFavorite: false,
-      uid: null,
-      idObject: "-LTaCm5-yAfUYX9Pfg16",
-      idType: "",
-      idMuseum: "",
-      type: "",
-      museum: "",
-      nameObject: "",
-      description: "",
-      linkImg:
-        "https://snack-code-uploads.s3.us-west-1.amazonaws.com/~asset/3c4456be614c1710b655baf00b1e14c0"
+     isLoading: false
     };
   }
 
-  getObject = () => {
-    let _uid = null;
-    let _isFavorite = this.state.isFavorite;
-    let idObject = this.props.navigation.getParam("idObject");
+  // getObject = () => {
+  //   let _uid = null;
+  //   let _isFavorite = this.state.isFavorite;
+  //   let idObject = this.props.navigation.getParam("idObject");
 
-    if (FirebaseAuth.currentUser.uid) {
-      _uid = FirebaseAuth.currentUser.uid;
-    }
-    console.log("isFavorite ::" + _isFavorite);
-    objectsRef.child(idObject).on("value", snapshot => {
-      this.setState(
-        {
-          idObject: snapshot.child("idObject").val(),
-          idType: snapshot.child("idType").val(),
-          idMuseum: snapshot.child("idMuseum").val(),
-          nameObject: snapshot.child("name").val(),
-          description: snapshot.child("description").val(),
-          linkImg: snapshot.child("linkImg").val(),
-          uid: _uid,
-          isFavorite: _isFavorite
-        },
-        () => {
-          typesRef.child(this.state.idType).on("value", child => {
-            this.setState({ type: child.val() });
-          });
-          museumsRef.child(this.state.idMuseum).on("value", child => {
-            this.setState({ museum: child.val() });
-          });
-          favoriteRef.child(_uid).on("value", child => {
-            child.forEach(item => {
-              if (item.val() == this.state.idObject) {
-                this.setState({ isFavorite: true });
-              }
-            });
-          });
-        }
-      );
-    });
-  };
+  //   if (FirebaseAuth.currentObj.uid) {
+  //     _uid = FirebaseAuth.currentObj.uid;
+  //   }
+  //   console.log("isFavorite ::" + _isFavorite);
+  //   objectsRef.child(idObject).on("value", snapshot => {
+  //     this.setState(
+  //       {
+  //         idObject: snapshot.child("idObject").val(),
+  //         idType: snapshot.child("idType").val(),
+  //         idMuseum: snapshot.child("idMuseum").val(),
+  //         nameObject: snapshot.child("name").val(),
+  //         description: snapshot.child("description").val(),
+  //         linkImg: snapshot.child("linkImg").val(),
+  //         uid: _uid,
+  //         isFavorite: _isFavorite
+  //       },
+  //       () => {
+  //         typesRef.child(this.state.idType).on("value", child => {
+  //           this.setState({ type: child.val() });
+  //         });
+  //         museumsRef.child(this.state.idMuseum).on("value", child => {
+  //           this.setState({ museum: child.val() });
+  //         });
+  //         favoriteRef.child(_uid).on("value", child => {
+  //           child.forEach(item => {
+  //             if (item.val() == this.state.idObject) {
+  //               this.setState({ isFavorite: true });
+  //             }
+  //           });
+  //         });
+  //       }
+  //     );
+  //   });
+  // };
 
   // onFavoriteChecked = () => {
   //   console.log("Favorite checked");
@@ -108,27 +100,53 @@ class DetailScreen extends Component {
   //   }
   // };
 
-  unFavorite = () => {
+  unFavorite = (container) => {
     console.log("unFavorite checked");
-    favoriteRef.child(this.state.uid).on("value", child => {
-      child.forEach(item => {
-        if (item.val() == this.state.idObject) {
-          favoriteRef
-            .child(this.state.uid)
-            .child(item.key)
-            .remove();
-          this.setState({ isFavorite: false }, () => {
-            console.log("recall");
-            return;
-          });
+    let {
+      arrFavorites,
+      currentObj
+    } = container.getAppState()
+
+    let keyChild = arrFavorites.find((item)=>{
+      return(
+        item.data.idObject == currentObj.data.idObject
+      )
+    }).key
+    favoriteRef
+      .child(keyChild).remove((err)=> {
+        if(err){
+          console.log("Error On Favo",err)
+          ToastAndroid.show("Bạn đã bỏ theo dõi hiện vât này")
+          this.setState({isLoading:false})
         }
-      });
-    });
+        else 
+        {
+          this.setState({isLoading:false})
+        }
+      })
   };
 
-  onFavorite = () => {
+  onFavorite = (container) => {
     console.log("onFavorite checked");
-    this.setState({ isFavorite: true }, () => {favoriteRef.child(this.state.uid).push(this.state.idObject);});
+    let {
+      uid,
+      currentObj
+    } = container.getAppState()
+
+    favoriteRef.push({
+        uid :uid,
+        idObject : currentObj.data.idObject
+    },(err) => {
+      if(err)
+      {
+        console.log("Error On Favo",err)
+        this.setState({isLoading:false})
+      }
+      else
+      {
+      ToastAndroid.show("Bạn đã bỏ theo dõi hiện vât này")
+      this.setState({isLoading:false})
+    }})
   };
 
   askSignIn = () => {
@@ -155,62 +173,110 @@ class DetailScreen extends Component {
     );
   };
 
+  goBack = () => {
+    this.props.navigation.push("Home")
+  }
+
   render() {
     return (
       <View style={styles.container}>
-        <Header title={this.state.nameObject} />
+     
+        <Header 
+          onPressLeftIcon={()=>this.goBack()}
+          title="Thông Tin Chi Tiết" />
+  
         <ImageBackground
-          source={{
-            uri:
-              "https://i.pinimg.com/564x/e2/72/ba/e272baea3f1fada020360a80ce924989.jpg"
-          }}
+          source={img_Background}
           style={styles.infoContainer}
         >
+        <Subscribe to={[AppContainer]}>
+        {container => 
+      
         <View style={{flex:1}}>
             <View style={{ flex: 1, backgroundColor: "green" , justifyContent:'center'}}>
-              <FastImage
+              <ImageProgress
                 style={{ flex: 1 }}
                 source={{
-                  uri: this.state.linkImg
+                  uri:container.getAppState().currentObj.data.linkImg
                 }}
-                resizeMode={FastImage.resizeMode.cover}
+                resizeMode="cover"
               />
          
             <ScrollView style={{ flex: 1, backgroundColor: "white" }}>
               <View
                 style={{
                   flex: 1,
-                  alignItems: "center",
+                  alignItems: "flex-start",
                   justifyContent: "space-between",
                   margin: 20,
                 }}
               >
+                <Text style={{fontSize:20,fontWeight:'bold',color:'black'}}>{container.getAppState().currentObj.data.name}</Text>
                 <Text style={styles.text}>Loại hiện vật</Text>
-                <Text style={styles.smalltext}>{this.state.type}</Text>
+                <Text style={styles.smalltext}>{container.getAppState().currentObj.data.nameType}</Text>
                 <Text style={styles.text}>Được trưng bài tại</Text>
-                <Text style={styles.smalltext}>{this.state.museum}</Text>
+                <Text style={styles.smalltext}>{container.getAppState().currentObj.data.nameMuseum}</Text>
                 <Text style={styles.text}>Mô tả</Text>
-                <Text style={styles.smalltext}>{this.state.description}</Text>
+                <Text style={styles.smalltext}>{container.getAppState().currentObj.data.description?container.getAppState().currentObj.data.description:"Không Có"}</Text>
               </View>
             </ScrollView>
 
             <View style={styles.touchPhotoContainer}>
-            
+                {container.getAppState().currentObj.isFavorites?
                 <TouchableOpacity
                   style={styles.touchPhoto}
                   activeOpacity={0.8}
                   onPress={() => {
-                    this.askSignIn();
+                    if(container.getAppState().uid)
+                    {
+                      this.setState({isLoading : true},()=>  this.unFavorite(container))
+                    }
+                    else
+                    {
+                      this.askSignIn()
+                    }
+                 
+                  }}
+                >
+                  <Icon name="md-star" size={30} color="white" />
+                </TouchableOpacity>:
+                <TouchableOpacity
+                  style={styles.touchPhoto_Un}
+                  activeOpacity={0.8}
+                  onPress={() => {
+                    if(container.getAppState().uid)
+                    {
+                      this.setState({isLoading : true},()=>  this.onFavorite(container))
+                    }
+                    else
+                    {
+                      this.askSignIn()
+                    }
+                 
                   }}
                 >
                   <Icon name="md-star" size={30} color="white" />
                 </TouchableOpacity>
+                }
             
   
             </View>
             </View>
             </View>
+            }
+            </Subscribe>
+            <AwesomeAlert
+              show={this.state.isLoading}
+              showProgress={true}
+              title="Đang xử lí"
+              message="Bạn đợi tí nhé ^^"
+              closeOnTouchOutside={false}
+              closeOnHardwareBackPress={false}
+              showCancelButton={false}
+              showConfirmButton={false}
+            />
         </ImageBackground>
+      
       </View>
     );
   }

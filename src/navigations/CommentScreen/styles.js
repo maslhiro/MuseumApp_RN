@@ -19,7 +19,6 @@ export default (styles = StyleSheet.create({
   },
   inputView:{
     height:60,
-    borderRadius: 30,
     backgroundColor:'#E6E6E6',
     flexDirection: 'row',
     justifyContent:'center',
@@ -28,7 +27,6 @@ export default (styles = StyleSheet.create({
   inputText:{
     height:50,
     flex:1,
-    borderRadius:20,
     paddingHorizontal: 20,
     fontSize: 20,
     opacity: 0.7

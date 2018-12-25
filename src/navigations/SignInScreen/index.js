@@ -91,6 +91,9 @@ class SignInScreen extends Component {
             showAlert : 1,
             isLoading:false,
             linkAva : user.data.urlAvatar 
+          }, () =>
+          {
+            FirebaseAuth.signOut()
           })
         }
         else{
@@ -252,8 +255,8 @@ class SignInScreen extends Component {
         <AwesomeAlert
             show={this.state.isLoading}
             showProgress={true}
-            title="Loading"
-            message="Please wait ..."
+            title="Đang tải"
+            message="Bạn đợi tí nhé ^^"
             closeOnTouchOutside={false}
             closeOnHardwareBackPress={false}
             showCancelButton={false}

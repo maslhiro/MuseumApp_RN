@@ -245,7 +245,7 @@ class SetInfoScreen extends PureComponent {
                   <View style={styles.chooseAvtContainer}>
                     <FastImage
                       source={{ uri: this.state.uriAvt }}
-                      style={{ width: 100, height: 100 }}
+                      style={{ width: 100, height: 100, backgroundColor:'black' }}
                       resizeMode={FastImage.resizeMode.cover}
                     />
                     <View>

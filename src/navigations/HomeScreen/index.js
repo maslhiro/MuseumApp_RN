@@ -5,8 +5,6 @@ import {
   View,
   TouchableOpacity,
   ImageBackground,
-  CheckBox,
-  Button
 } from 'react-native';
 import styles from './styles';
 import { rootRef, objectsRef } from './../../config/FirebaseConfig';
@@ -31,9 +29,9 @@ class HomeScreen extends Component {
       visibleModal: false,
     }
   }
-  renderItem = (item) => {
+  renderItem = (container,item) => {
     return (
-      <TouchableOpacity style={styles.viewObject} onPress = {() => {this.toDetail(item)}} >
+      <TouchableOpacity style={styles.viewObject} onPress = {() => {this.toDetail(container,item)}} >
         <View style={styles.viewImage}>
           <ImageProgress
             style={styles.image}
@@ -55,13 +53,20 @@ class HomeScreen extends Component {
     })
   }
   
-  toDetail = (item) => {
-    this.props.navigation.push("Detail", {idObject : item.data.idObject})
+  toDetail = (container,item) => {
+    container.setCurrent_Obj(item)
+    this.props.navigation.push("TabDetail")
   }
 
   onPress_OpenSignScreen = () => {
     this.props.navigation.navigate("SignIn")
   }
+
+  onPress_OpenProfileScreen = (container) => {
+    let arr = this.formatArray_Favo(container.getAppState().arrFavorites_User)
+    this.props.navigation.navigate("Profile",{arr :arr })
+  }
+
 
   onPress_IconFilter = () => {
     this.setState(
@@ -118,19 +123,24 @@ class HomeScreen extends Component {
 
   render() {
     const { isRefeshing } = this.state
-    let rightIcon_Header =  <Subscribe to={[AppContainer]}>
+    const rightIcon_Header =  <Subscribe to={[AppContainer]}>
     {container=>
     <ImageProgress style={{ width: 26, height: 26 }} resizeMode="cover"
-      source={{ uri: container.getAppState().linkAva?container.getAppState().linkAva:defaultUri }} />
+      source={{ uri: container.getAppState().uid?container.getAppState().linkAva:defaultUri }} />
     }
     </Subscribe>
     return (
       <View style={styles.container}>
+      <Subscribe to={[AppContainer]}>
+      {container=>
         <Header
           title="Trang Chủ"
           showLeftIcon={false}
+          onPressRightIcon={()=>this.onPress_OpenProfileScreen(container)}
           rightIcon={rightIcon_Header}
         />
+      }
+      </Subscribe>
         <ImageBackground
           source={img_Background}
           style={{ flex: 1 }}>
@@ -165,7 +175,7 @@ class HomeScreen extends Component {
                 refreshing={isRefeshing}
                 onRefresh={() => this.onRefresh(container)}
                 keyExtractor={(item) => item.key}
-                renderItem={({ item }) => this.renderItem(item)} />
+                renderItem={({ item }) => this.renderItem(container,item)} />
         
               <TouchableOpacity
                 style={styles.touchView}
@@ -233,5 +243,38 @@ class HomeScreen extends Component {
     );
   }
 
+  formatArray_Favo = (arr = []) => {
+    console.log("Format array", arr)
+    let arrItem = []
+    let arrResult = []
+    
+    arr.forEach((item,index)=>{
+      console.log("INDex",index)
+
+      if(index == arr.length-1)
+      {
+        if(arrItem.length == 3)
+        {
+          arrResult.push(arrItem)
+          arrItem = []
+        }
+      
+        arrItem.push(item)
+        arrResult.push(arrItem )
+       
+     
+      }
+      else 
+      {
+      if(arrItem.length == 3)
+      {
+        arrResult.push(arrItem)
+        arrItem = []
+      }
+      arrItem.push(item)
+    }})
+    console.log("Arr ",arrResult)
+    return arrResult
+  }
 }
 export default HomeScreen

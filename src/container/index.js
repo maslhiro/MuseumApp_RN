@@ -1,23 +1,58 @@
 import React from 'react';
 import { rootRef, objectsRef } from '../config/FirebaseConfig';
 import {AsyncStorage} from 'react-native'
+const defaultUri ="https://static-cdn.jtvnw.net/jtv_user_pictures/e91a3dcf-c15a-441a-b369-996922364cdc-profile_image-300x300.png"
 
+const defaultObj = {
+    data : {
+        description: " ",
+        idMuseum: "",
+        idObject: "",
+        idType: "",
+        isActivated: "false",
+        linkImg:defaultUri,
+        name: "",
+        nameMuseum: "",
+        nameType: "",
+    },  
+    isFavorites: "false",
+    key: "",
+}
+
+const defaultObj_01 = {
+    data : {
+        description: "Thẻ thu tô loại 1 đấu, 10 đấu, 100 đấu và thẻ đếm bao lúa xuất nhập kho",
+        idMuseum: "M001",
+        idObject: "-LTaCm5-yAfUYX9Pfg16",
+        idType: "T008",
+        isActivated: true,
+        linkImg:"https://firebasestorage.googleapis.com/v0/b/testfb02-e7af9.appspot.com/o/Resized%2F0001%20(Copy).JPG?alt=media&token=49111e1a-fee6-49d3-9b92-eb7f70273dcd",
+        name: "Thẻ thu tô",
+        nameMuseum: "",
+        nameType: "",
+    },  
+    isFavorites: "false",
+    key: "-LTaCm5-yAfUYX9Pfg16",
+}
 import {
     Container
 } from 'unstated';
 
 type AppState = {
     arrType : object,
+    currentObj : object,
     arrMuseum : object,
     arrComt : object,
     arrFavorites : object,
     arrObject : object,
     arrObject_Show : object,
-    arrFavorites_Show  : object,
+    arrFavorites_User  : object,
     arrProfile:object,
     linkAva : string,
     uid : string
 };
+
+
 
 class AppContainer extends Container < AppState > {
     constructor(props = {})
@@ -27,12 +62,13 @@ class AppContainer extends Container < AppState > {
             isLoading : true,
             arrType : [],
             arrMuseum : [],
+            currentObj : defaultObj_01,
             arrComt : [],
             arrFavorites : [],
             arrObject : [],
             arrObject_Show : [],
             arrProfile:[],
-            arrFavorites_Show  : [],
+            arrFavorites_User  : [],
             uid : props.uid?props.uid:"",
             linkAva : props.linkAva?props.linkAva:""
         };
@@ -58,7 +94,7 @@ class AppContainer extends Container < AppState > {
             arrFavorites,
             arrObject,
             arrObject_Show,
-            arrFavorites_Show,
+            arrFavorites_User,
             arrProfile,
             linkAva,
             uid
@@ -72,7 +108,7 @@ class AppContainer extends Container < AppState > {
             arrFavorites : this.checkArr_Empty(arrFavorites)?this.state.arrFavorites:arrFavorites,
             arrObject : this.checkArr_Empty(arrObject)?this.state.arrObject:arrObject,
             arrObject_Show : this.checkArr_Empty(arrObject_Show)?this.state.arrObject_Show:arrObject_Show,
-            arrFavorites_Show  : this.checkArr_Empty(arrFavorites_Show)?this.state.arrFavorites_Show:arrFavorites_Show,
+            arrFavorites_User  : this.checkArr_Empty(arrFavorites_User)?this.state.arrFavorites_User:arrFavorites_User,
             arrProfile  : this.checkArr_Empty(arrProfile)?this.state.arrProfile:arrProfile,
             linkAva : linkAva,
             uid : uid,
@@ -101,12 +137,53 @@ class AppContainer extends Container < AppState > {
             console.log("Err Set Info User",error)
             return false
         }
-        this.setState({
+        let AppState = {
             uid: uid,
-            linkAva: linkAva
-        },()=> console.log("Uid Updated", this.state))
+            linkAva: linkAva,
+        }
+
+        this.setState(AppState,()=> 
+        {
+            this.getData_From_FireBase()
+            console.log("Uid Updated", this.state)
+        })
+        
         return true
 
+    }
+
+    getInfo_User = () => {
+        if(!this.state.uid) return {
+            name :"",
+            linkAva : defaultUri
+        }
+        let arrProfile = this.state.arrProfile
+        let check = arrProfile.find((item)=> {return item.key == this.state.uid})
+        if(check==-1) return {
+            name : "",
+            linkAva : defaultUri
+        }
+        return {
+            name : check.data.name,
+            linkAva : check.data.linkAva
+        }
+    }
+
+    clearInfo_User = async () => {
+        try {
+            await AsyncStorage.clear()
+            // await AsyncStorage.("@Key:uid"," ")  
+            // await AsyncStorage.setItem("@Key:linkava"," ")
+        } catch (error) {
+            console.log("Err Clear Info User",error)
+            return false
+        }
+        this.setState({
+            uid: "",
+            linkAva: "",
+            arrFavorites_User:[]
+        },()=> console.log("Clear User", this.state))
+        return true
     }
 
     filterList_Object = () => {
@@ -167,16 +244,23 @@ class AppContainer extends Container < AppState > {
       return true
     }
 
+    setCurrent_Obj = (currentObj) => {
+        this.setState({
+            currentObj: currentObj
+        }, () => console.log("Updated Current Obj",this.state))
+        return true
+    }
+
     // Kiem tra Uid co trong arrProfile ko ?
     checkUid_Exists = (uid)  => {
-        let arrProfile = this.state.arrProfile.map((item)=>{return item.data.uid})
+        let arrProfile = this.state.arrProfile
         console.log("Check Uid", arrProfile)
-        let check = arrProfile.findIndex((item)=> {return item == uid})
+        let check = arrProfile.findIndex((item)=> {return item.key == uid})
         if(check==-1) return false
         // Save info user
         this.setInfo_User(uid,this.state.arrProfile[check].data.urlAvatar)
 
-        return this.state.arrProfile[check]
+        return arrProfile[check]
     }
 
     getAppState = () => {
@@ -187,7 +271,8 @@ class AppContainer extends Container < AppState > {
             arrFavorites,
             arrObject,
             arrObject_Show,
-            arrFavorites_Show,
+            currentObj,
+            arrFavorites_User,
             arrProfile,
             uid, 
             linkAva
@@ -199,23 +284,24 @@ class AppContainer extends Container < AppState > {
             arrComt : arrComt,
             arrFavorites : arrFavorites,
             arrObject : arrObject,
+            currentObj:currentObj,
             arrObject_Show : arrObject_Show,
-            arrFavorites_Show  : arrFavorites_Show,
+            arrFavorites_User  : arrFavorites_User,
             arrProfile : arrProfile,
             uid : uid,
-            linkAva: linkAva
+            linkAva: linkAva?linkAva:defaultUri
         })
-    }   
-
+    } 
+    
     getData_From_FireBase = () => {
         rootRef.on('value', (child) => {
                 let arrObj = []
                 let arrMus = []
                 let arrType = []
                 let arrProfile = []
-
+                let arrFavorites = []
+                let arrComment = []
                 child.forEach((item)=>{
-                    console.log("Updated", item.key)
                     if(item.key=="Objects")
                     {
                         item.forEach((itm)=>{
@@ -247,7 +333,6 @@ class AppContainer extends Container < AppState > {
                         })
                     }
 
-
                     if(item.key=="Profiles")
                     {
                         item.forEach((itm)=>{
@@ -258,6 +343,26 @@ class AppContainer extends Container < AppState > {
                         })
                        
                     }
+                    
+                    if(item.key=="Favorite")
+                    {
+                        item.forEach((itm)=>{
+                            arrFavorites.push({
+                                key:itm.key,
+                                data : itm.toJSON()
+                            })
+                        })
+                    }
+
+                    if(item.key=="Comments")
+                    {
+                        item.forEach((itm)=>{
+                            arrComment.push({
+                                key: itm.key,
+                                data : itm.toJSON()
+                            })
+                        })
+                    }
                 })
 
                 //  Loc mang Obj 
@@ -266,31 +371,82 @@ class AppContainer extends Container < AppState > {
                     obj.data.nameType = arrType.find((types)=>{return (types.key == obj.data.idType)}).des
                     obj.data.nameMuseum = arrMus.find((museums)=>{return (museums.key == obj.data.idMuseum)}).des
                     return  obj
-                })
+                }).filter((item)=>{return(JSON.parse(item.data.isActivated))})
 
-                //console.log("Obj",arrObj_FillName)
+                arrComment = arrComment.map((item)=>{
+                    let obj = item
+                    let profile = arrProfile.find((itm)=>{return itm.data.uid == item.data.idUser})
+                    if(profile!=-1)
+                    {
+                        console.log(profile)
+                        obj.data.nameUser = profile.data.name,
+                        obj.data.linkAva = profile.data.urlAvatar
+                    }
+                    return obj
+
+                })
+                // console.log("Obj",arrObj_FillName)
                 // console.log("Muse",arrMus)
                 console.log("Type",arrType)
-                this.setState(
-                    {
-                        isLoading:false,
-                        arrObject: arrObj_FillName,
-                        arrObject_Show: arrObj_FillName,
-                        arrProfile : arrProfile,
-                        arrType : arrType,
-                        arrMuseum: arrMus
-                    },()=>
+                console.log("Favo",arrFavorites)
+                console.log("Comt",arrComment)
+
+                let AppState = {
+                    isLoading:false,
+                    arrObject: arrObj_FillName,
+                    arrObject_Show: arrObj_FillName,
+                    arrFavorites : arrFavorites,
+                    arrProfile : arrProfile,
+                    arrComt:arrComment,
+                    arrType : arrType,
+                    arrMuseum: arrMus
+                }
+                if(this.state.uid)
+                {
+                
+                    let arrFavorites_Uid = arrFavorites.filter((item)=>{return(item.data.uid==this.state.uid)})
+                    console.log("Favo Uid", arrFavorites_Uid)
+                    let arrFavo_Uid = arrFavorites_Uid.map((item)=>{return(item.data.idObject)})
+                    
+                    AppState.arrObject =  arrObj_FillName.map((item)=>{
+                        let  obj =  item
+                        if(arrFavo_Uid.findIndex((itm)=>{ return itm == obj.data.idObject})!=-1)
+                        {
+                            console.log("OK",obj)
+                            obj.isFavorites = true
+                        }
+                        else  obj.isFavorites = false
+                        return obj
+            
+                    })
+                    AppState.arrObject_Show =  AppState.arrObject
+                    AppState.arrFavorites_User = AppState.arrObject.filter((item)=>{return(item.isFavorites)})
+                 
+            
+                }
+
+                if(this.state.currentObj.key)
+                {
+                    let currentObj =  AppState.arrObject.find((item)=>{return(item.key==this.state.currentObj.key)})
+                    AppState.currentObj = currentObj
+                }
+
+                this.setState(AppState,()=>
                 {
                     console.log("Updated",this.state)
                 }
                 )
               
             })
-          
-          
 
+    }
 
-
+    findComt_ByIdObj = (id) => {
+        return (
+            this.state.arrComt.filter((item)=>{
+                return (item.data.idObject == id)
+            })
+        )
     }
 
     randomList_Obj = () => 

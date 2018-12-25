@@ -6,127 +6,142 @@ import {
   View,
   Button,
   CameraRoll,
-  ScrollView,
+  FlatList,
   ImageBackground,
   TextInput,
   TouchableOpacity
 } from "react-native";
 import styles from "./styles";
 import Header from "../../components/Header";
+import img_Background from '../../assets/img_Background.jpg'
 import firebase, { firestore } from "react-native-firebase";
 import { rootRef, testRef, commentsRef, FirebaseAuth } from "./../../config/FirebaseConfig";
 import Icon from "react-native-vector-icons/Ionicons";
+import AppContainer from '../../container'
+import { Provider, Subscribe, Container } from 'unstated';
+import ImageProgress from '../../components/ImageProgress'
 
 class CommentScreen extends Component {
   static navigationOptions = {
-    tabBarIcon: ({focused}) => <Icon name="ios-chatbubbles" size={25} color={focused?"#f79f24":"white"}/>,
-    tabBarOptions: { 
+    tabBarIcon: ({ focused }) => <Icon name="ios-chatbubbles" size={25} color={focused ? "#f79f24" : "white"} />,
+    tabBarOptions: {
       showLabel: false,
-      activeTintColor:'#f79f24',
-      inactiveTintColor:'white',
+      activeTintColor: '#f79f24',
+      inactiveTintColor: 'white',
       style: {
-          backgroundColor: 'black',
-          borderBottomColorWidth:2,
-          borderBottomColor:'#f79f24'
+        backgroundColor: 'black',
+        borderBottomColorWidth: 2,
+        borderBottomColor: '#f79f24'
       }
-      
-  }
-   };
+
+    }
+  };
 
   constructor(props) {
     super(props);
-    this.state={
-      comment:[],
+    this.state = {
+      comment: [],
       idObject: '',
       uid: '',
       txtComment: '',
     }
+    this.textInput = null
   }
 
-  onTxtCommentChanged = (text) =>{
+  onTxtCommentChanged = (text) => {
     this.setState({
       txtComment: text
     })
   }
 
-  onSend = () =>{
-    if (this.state.txtComment.length <= 0){
+  onSend = (container) => {
+    if (this.state.txtComment.length <= 0) {
       alert('Bạn chưa nhập bình luận!')
       return
     }
-    idComment = commentsRef.child(this.state.idObject).push().key
-    commentsRef.child(this.state.idObject).child(idComment).set({
-      idComment: idComment,
-      idUser: this.state.uid,
-      idObject: this.state.idObject,
+
+    let {
+      uid ,
+      currentObj
+    } = container.getAppState()
+    
+    let key = commentsRef.push().key
+    commentsRef.child(key).set({
+      idComment: key,
+      idUser: uid,
+      idObject: currentObj.data.idObject,
       comment: this.state.txtComment
     },
-    (error) => {
-      if (error) {
-        //objectsRef.child(idObject).remove();
-        alert("Bình luận thất bại. Vui lòng thử lại.");
-        console.log("Comment failed");
-      } else {
-        alert("Thao tác thành công!");
-        console.log(`successful for comment ${this.state.idObject}`);
-      }
-    })
+      (error) => {
+        if (error) {
+          //objectsRef.child(idObject).remove();
+          Alert.alert("Thông Báo","Bình luận thất bại. Vui lòng thử lại.");
+          console.log("Comment failed");
+        }else
+        {
+  
+        }
+      })
   }
 
-  getObject = () =>{
-    let _uid = null;
-    let _idObject = this.props.navigation.getParam("idObject");
-    if (FirebaseAuth.currentUser.uid) {
-      _uid = FirebaseAuth.currentUser.uid;
-    }
-    this.setState({
-      idObject: _idObject,
-      uid: _uid
-    })
-  }
+  renderItem = (item) => {
+    return (
 
-  // componentDidMount(){
-  //   this.getObject()
-  // }
+      <View style ={{flex:1, margin: 5, flexDirection:'row', justifyContent:'center'}}>
+          <ImageProgress style={{height:50,width:50}} source={{uri: item.data.linkAva}}/>
+          <View style={{flex:1, paddingVertical: 20,backgroundColor:'white',justifyContent:'center', padding:5}}>
+                <Text style={{fontSize:18,color:'black', justifyContent:'center', textAlign:'left'}}>{item.data.comment}</Text>
+          </View>
+      </View>
+    )
+
+  }
 
   render() {
     return (
       <View style={styles.container}>
-        <Header 
+        <Header
           showLeftIcon={false}
-          title="Comment"  />
-        <ImageBackground
-          source={{
-            uri:
-              "https://i.pinimg.com/564x/e2/72/ba/e272baea3f1fada020360a80ce924989.jpg"
-          }}
-          style={styles.infoContainer}
-        >
-        <View style={styles.showCommentView}>
+          title="Thảo Luận" />
+        <Subscribe to={[AppContainer]}>
+          {container =>
 
-        </View>
-        <View style={styles.inputView}>
-          <TextInput
-            style={styles.inputText}
-            keyboardType='email-address'
-            placeholder = {'Nhập gì đó...'}
-            autoCapitalize='none'
-            secureTextEntry={true}
-            placeholderTextColor = '#BDBDBD'
-            underlineColorAndroid = 'transparent'
-            onChangeText={
-              (text) => {
-                  this.onTxtCommentChanged(text)
-              }}
-          />
-          <TouchableOpacity style={styles.send} onPress={()=>{this.onSend()}}>
-            <Icon name="md-send" size={30} color="blue" />
-          </TouchableOpacity>
-        </View>
-        </ImageBackground>
+
+            <ImageBackground
+              source={img_Background}
+              style={styles.infoContainer}
+            >
+              <View style={styles.showCommentView}>
+              <FlatList
+                style={{flex:1, margin : 20 , backgroundColor:'transparent'}}
+                data={container.findComt_ByIdObj(container.state.currentObj.data.idObject)}
+                renderItem={({item}) => this.renderItem(item)}
+                />
+              </View>
+              <View style={styles.inputView}>
+                <TextInput
+                  ref={this.textInput}
+                  style={styles.inputText}
+                  placeholder={'Nhập gì đó...'}
+                  autoCapitalize='none'
+                  placeholderTextColor='#BDBDBD'
+                  underlineColorAndroid='transparent'
+                  onChangeText={
+                    (text) => {
+                      this.onTxtCommentChanged(text)
+                    }}
+                />
+                <TouchableOpacity style={styles.send} onPress={() => { this.onSend(container) }}>
+                  <Icon name="md-send" size={30} color="black" />
+                </TouchableOpacity>
+              </View>
+            </ImageBackground>
+          }
+
+        </Subscribe>
       </View>
     );
   }
 }
 
-export default  CommentScreen
+export default CommentScreen

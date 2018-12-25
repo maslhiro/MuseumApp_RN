@@ -11,15 +11,13 @@ import TestScreen from '../navigations/TestScreen';
 import ProfileScreen from '../navigations/ProfileScreen';
 import {createStackNavigator, createBottomTabNavigator} from 'react-navigation';
 
-
-
-
-export const DetailTab = createBottomTabNavigator(
+const DetailTab = createBottomTabNavigator(
     {
         Detail: DetailScreen,
         Comments: CommentScreen,
     },
     {
+    initialRouteName: 'Detail',
     tabBarOptions: { 
         showLabel: false,
         activeTintColor:'#f79f24',
@@ -46,12 +44,12 @@ export const RootStack = createStackNavigator(
         Search: SearchScreen,
         Post: PostScreen,
         SetInfo: SetInfoScreen,
-        Detail: DetailTab,
+        TabDetail: DetailTab,
         Test: TestScreen,
         Profile : ProfileScreen
     },
     {
-        initialRouteName: 'Profile',
+        initialRouteName: 'Home',
         navigationOptions:
         {
             header:null
@@ -59,6 +57,3 @@ export const RootStack = createStackNavigator(
 
     }
 );
-
-
-

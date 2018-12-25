@@ -13,67 +13,21 @@ import {
 } from "react-native";
 import Header from "../../components/Header";
 import styles from "./styles";
-import { rootRef, objectsRef } from "./../../config/FirebaseConfig";
+import img_Background from '../../assets/img_Background.jpg'
 import ImageProgress from "../../components/ImageProgress";
+import AwesomeAlert from 'react-native-awesome-alerts'
 import Icon from "react-native-vector-icons/Ionicons";
+import {
+  Subscribe,
+} from 'unstated';
+import AppContainer from '../../container'
 
-// dữ liệu tạm
-const data = [
-  [
-    {
-      _id: 1,
-      name: "Ảnh 1",
-      type: "T01",
-      linkImg:
-        "https://www.pets4homes.co.uk/images/articles/3288/large/pembroke-and-cardigan-welsh-corgi-health-issues-562a281499a2e.jpg"
-    },
-    {
-      _id: 2,
-      name: "Ảnh 1",
-      type: "T01",
-      linkImg:
-        "https://www.pets4homes.co.uk/images/articles/3288/large/pembroke-and-cardigan-welsh-corgi-health-issues-562a281499a2e.jpg"
-    },
-    {
-      _id: 3,
-      name: "Ảnh 1",
-      type: "T01",
-      linkImg:
-        "https://i.pinimg.com/564x/e2/72/ba/e272baea3f1fada020360a80ce924989.jpg"
-    }
-  ],
-  [
-    {
-      _id: 4,
-      name: "Ảnh 1",
-      type: "T01",
-      linkImg:
-        "https://www.pets4homes.co.uk/images/articles/3288/large/pembroke-and-cardigan-welsh-corgi-health-issues-562a281499a2e.jpg"
-    },
-    {
-      _id: 5,
-      name: "Ảnh 1",
-      type: "T01",
-      linkImg:
-        "https://i.pinimg.com/564x/e2/72/ba/e272baea3f1fada020360a80ce924989.jpg"
-    },
-  ],
-  [
-    {
-      _id: 7,
-      name: "Ảnh 1",
-      type: "T01",
-      linkImg:
-        "https://www.pets4homes.co.uk/images/articles/3288/large/pembroke-and-cardigan-welsh-corgi-health-issues-562a281499a2e.jpg"
-    }
-  ]
-];
-
-export default class HomeScreen extends Component {
+class ProfileScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: []
+      data:this.props.navigation.getParam("arr")?this.props.navigation.getParam("arr"): [],
+      showAlert: 0
     };
   }
 
@@ -83,13 +37,13 @@ export default class HomeScreen extends Component {
     switch (arr.length) {
       case 1: {
         return (
-          <TouchableOpacity 
-            onPress={()=>{}}
+          <TouchableOpacity
+            onPress={() => { }}
             style={{ flex: 1, height: 200, margin: 5, backgroundColor: 'black' }}>
 
             <ImageProgress
               style={{ flex: 1 }}
-              source={{ uri: arr[0].linkImg }} />
+              source={{ uri: arr[0].data.linkImg }} />
 
           </TouchableOpacity>
         )
@@ -98,20 +52,20 @@ export default class HomeScreen extends Component {
       case 2: {
         return (
           <View style={{ flex: 1, height: 200, flexDirection: `${checkReverse ? 'row' : 'row-reverse'}`, margin: 5, backgroundColor: 'black' }}>
-            <TouchableOpacity 
-              onPress={()=>{}}
+            <TouchableOpacity
+              onPress={() => { }}
               style={{ flex: 1 }}>
               <ImageProgress
                 style={{ flex: 1 }}
-                source={{ uri: arr[0].linkImg }} />
+                source={{ uri: arr[0].data.linkImg }} />
             </TouchableOpacity>
 
-            <TouchableOpacity 
-              onPress={()=>{}}
+            <TouchableOpacity
+              onPress={() => { }}
               style={{ flex: 1 }}>
               <ImageProgress
                 style={{ flex: 1 }}
-                source={{ uri: arr[1].linkImg }} />
+                source={{ uri: arr[1].data.linkImg }} />
             </TouchableOpacity>
           </View>
         )
@@ -120,28 +74,28 @@ export default class HomeScreen extends Component {
       case 3: {
         return (
           <View style={{ flex: 1, height: 200, flexDirection: `${checkReverse ? 'row' : 'row-reverse'}`, margin: 5, backgroundColor: 'black' }}>
-            <TouchableOpacity 
-              onPress={()=>{}}
+            <TouchableOpacity
+              onPress={() => { }}
               style={{ flex: 3 }}>
               <ImageProgress
                 style={{ flex: 1 }}
-                source={{ uri: arr[0].linkImg }} />
+                source={{ uri: arr[0].data.linkImg }} />
             </TouchableOpacity>
 
-            <View style={{ flex: 2}}>
-            <TouchableOpacity 
-              onPress={()=>{}}
-              style={{ flex: 1 }}>
+            <View style={{ flex: 2 }}>
+              <TouchableOpacity
+                onPress={() => { }}
+                style={{ flex: 1 }}>
                 <ImageProgress
                   style={{ flex: 1 }}
-                  source={{ uri: arr[1].linkImg }} />
+                  source={{ uri: arr[1].data.linkImg }} />
               </TouchableOpacity>
-              <TouchableOpacity 
-              onPress={()=>{}}
-              style={{ flex: 1 }}>
+              <TouchableOpacity
+                onPress={() => { }}
+                style={{ flex: 1 }}>
                 <ImageProgress
                   style={{ flex: 1 }}
-                  source={{ uri: arr[2].linkImg }} />
+                  source={{ uri: arr[2].data.linkImg }} />
               </TouchableOpacity>
             </View>
           </View>
@@ -157,56 +111,158 @@ export default class HomeScreen extends Component {
   };
 
   goBack = () => {
-    this.props.navigaton.goBack()
+    this.props.navigation.goBack()
+  }
+
+  onPress_Open_Home_Screen = () => {
+    
+      this.props.navigation.navigate("Home")
+
+  }
+
+  renderAlert = (container) => {
+    switch(this.state.showAlert)
+    {
+      case 0 :{
+        return null
+        break
+      }
+      case 1 : {
+        return(
+          <AwesomeAlert
+            show={true}
+            title="Cảnh Báo !"
+            message="Bạn có chắc muốn đăng xuất không ?"
+            confirmText=" OK "
+            closeOnTouchOutside={false}
+            onConfirmPressed={()=>
+              {
+                let check = container.clearInfo_User()
+                if(check)
+                {
+                  this.setState({showAlert:0},()=>this.onPress_Open_Home_Screen())
+
+                }
+                else{
+                  this.setState({showAlert : 3})
+                }
+              }
+            }
+            onCancelPressed={() => { this.setState({showAlert:0}) }}
+            closeOnHardwareBackPress={true}
+            showCancelButton={true}
+            showConfirmButton={true}
+          />
+          )
+        break
+      }
+      case 2: {
+        return (
+            <AwesomeAlert
+              show={true}
+              title="Thông Báo !"
+              message="Đăng xuất thành công"
+              confirmText=" OK "
+              closeOnTouchOutside={false}
+              onConfirmPressed={()=>this.setState({showAlert:0})}
+              closeOnHardwareBackPress={false}
+              showCancelButton={false}
+              showConfirmButton={true}
+            />
+        )
+        break
+      } 
+      case 3: {
+        return (
+            <AwesomeAlert
+              show={true}
+              title="Opps!"
+              message="Có lỗi xảy ra, bạn vui lòng thử lại nhé"
+              confirmText=" OK "
+              closeOnTouchOutside={false}
+              onConfirmPressed={()=>this.setState({showAlert:0})}
+              closeOnHardwareBackPress={false}
+              showCancelButton={false}
+              showConfirmButton={true}
+            />
+        )
+        break
+      }
+      default: {
+        return null
+      }
+    }
+
+
   }
 
   render() {
 
-    let rightIconHeader = <Icon name="md-log-out" size={30} color="white"    />
+    let rightIconHeader = <Icon name="md-log-out" size={30} color="white" />
 
     return (
       <View style={styles.container}>
-        <Header 
-          onPressLeftIcon = {()=> this.goBack()}
-          rightIcon = {rightIconHeader}
-          title="Tài Khoản" />
+           <Header
+              onPressLeftIcon={() => this.goBack()}
+              onPressRightIcon={() => this.setState({showAlert : 1})}
+              rightIcon={rightIconHeader}
+              title="Tài Khoản" />
+        
         <ImageBackground
-          source={{ uri: "https://i.pinimg.com/564x/e2/72/ba/e272baea3f1fada020360a80ce924989.jpg" }}
+          source={img_Background}
           style={styles.bgContainer}>
 
           <View style={styles.userContainer}>
+
             <View style={styles.userContainer01}>
-              <View style={{ flex: 1, marginHorizontal: 20, marginTop: 20, backgroundColor: 'white' }}>
-                <View style={{ flex: 5, backgroundColor: 'white', flexDirection: 'row' }}>
-                  <View style={styles.avaContainer}>
-                    <ImageProgress
-                      style={{ height: 80, width: 80 }}
-                      source={{ uri: "https://i.pinimg.com/564x/e2/72/ba/e272baea3f1fada020360a80ce924989.jpg" }}
-                    />
+              <Subscribe to={[AppContainer]}>
+                {container =>
+                  <View style={{ flex: 1, marginHorizontal: 20, marginTop: 20, backgroundColor: 'white' }}>
+
+                    <View style={{ flex: 5, backgroundColor: 'white', flexDirection: 'row' }}>
+                      <View style={styles.avaContainer}>
+                        <ImageProgress
+                          style={{ height: 80, width: 80 }}
+                          source={{ uri: container.getAppState().linkAva }}
+                        />
+                      </View>
+                      <View style={styles.nameContainer}>
+                        <Text style={styles.textName}>{container.getInfo_User().name}</Text>
+                      </View>
+                    </View>
+                    <View style={{ flex: 2, backgroundColor: 'white', padding: 5, justifyContent: 'space-evenly' }}>
+                      <Text style={{ color: 'black' }}>Các hiện vật đã đánh dấu</Text>
+                      <View style={{ height: 1, backgroundColor: 'black' }} />
+                    </View>
+
                   </View>
-                  <View style={styles.nameContainer}>
-                    <Text style={styles.textName}>Nhựt Vinh Đẹp Trai</Text>
-                  </View>
-                </View>
-                <View style={{ flex: 2, backgroundColor: 'white', padding: 5, justifyContent: 'space-evenly' }}>
-                  <Text style={{ color: 'black' }}>Các hiện vật đã đánh dấu</Text>
-                  <View style={{ height: 1, backgroundColor: 'black' }} />
-                </View>
-              </View>
+                }
+              </Subscribe>
             </View>
           </View>
-
+          <Subscribe to={[AppContainer]}>
+          {container =>
           <View style={{ flex: 3, backgroundColor: 'transparent' }}>
             <FlatList
               style={{ flex: 1 }}
-              data={data}
-              keyExtractor={(arr) => arr[0]._id.toString()}
+              data={this.state.data}
+              keyExtractor={(arr) => arr[0].key}
               renderItem={({ item, index }) => this.renderItem(item, index)}
             />
           </View>
+          }
+          </Subscribe>
+
+          <Subscribe to={[AppContainer]}>
+          {container =>
+            this.renderAlert(container)
+          }
+          </Subscribe>
 
         </ImageBackground>
       </View>
     );
   }
 }
+
+export default ProfileScreen
