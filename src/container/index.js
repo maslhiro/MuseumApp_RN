@@ -366,17 +366,18 @@ class AppContainer extends Container < AppState > {
                 })
 
                 //  Loc mang Obj 
-                let arrObj_FillName = arrObj.map((item)=>{
-                    let obj = item
-                    obj.data.nameType = arrType.find((types)=>{return (types.key == obj.data.idType)}).des
-                    obj.data.nameMuseum = arrMus.find((museums)=>{return (museums.key == obj.data.idMuseum)}).des
-                    return  obj
-                }).filter((item)=>{return(JSON.parse(item.data.isActivated))})
+                let arrObj_FillName = arrObj.filter((item)=>{return(JSON.parse(item.data.isActivated))})
+                // let arrObj_FillName = arrObj.map((item)=>{
+                //     let obj = item
+                //     obj.data.nameType = arrType.find((types)=>{return (types.key == obj.data.idType)}).des
+                //     obj.data.nameMuseum = arrMus.find((museums)=>{return (museums.key == obj.data.idMuseum)}).des
+                //     return  obj
+                // }).filter((item)=>{return(JSON.parse(item.data.isActivated))})
 
                 arrComment = arrComment.map((item)=>{
                     let obj = item
                     let profile = arrProfile.find((itm)=>{return itm.data.uid == item.data.idUser})
-                    if(profile!=-1)
+                    if(profile!=-1 && typeof(profile)=="object")
                     {
                         console.log(profile)
                         obj.data.nameUser = profile.data.name,

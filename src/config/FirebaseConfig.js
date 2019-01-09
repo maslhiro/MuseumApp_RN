@@ -2,26 +2,26 @@ import { Platform } from 'react-native';
 import firebase from 'react-native-firebase';
 
 const androidConfig = {
-    clientId: '398198628618-of6go2iv6357h8d523eifhq45lp44dmp.apps.googleusercontent.com',
-    appId: '1:398198628618:android:a85ca261c4c1d2c8',
-    apiKey: 'AIzaSyAKY3bGzasn6wrgUTKTPmHb2qdXbwGF3TI',
-    databaseURL: 'https://testfb02-e7af9.firebaseio.com',
-    storageBucket: 'testfb02-e7af9.appspot.com',
-    messagingSenderId: '398198628618',
-    projectId: 'testfb02-e7af9',
+    clientId: '389639352626-r72sfsmv3oiqdmlp2592igl61kjq8bhc.apps.googleusercontent.com',
+    appId: '1:389639352626:android:12d3585c04495dfe',
+    apiKey: 'AIzaSyAJe6VxkJnWhwO6SLqSqhH21eXxmDQcBkc',
+    databaseURL: 'https://museumapp-2f45a.firebaseio.com',
+    storageBucket: 'museumapp-2f45a.appspot.com',
+    messagingSenderId: '389639352626',
+    projectId: 'museumapp-2f45a',
 
     // enable persistence by adding the below flag
     persistence: true,
 }
 
 const iosConfig = {
-    clientId: '398198628618-of6go2iv6357h8d523eifhq45lp44dmp.apps.googleusercontent.com',
-    appId: '1:398198628618:android:a85ca261c4c1d2c8',
-    apiKey: 'AIzaSyAKY3bGzasn6wrgUTKTPmHb2qdXbwGF3TI',
-    databaseURL: 'https://testfb02-e7af9.firebaseio.com',
-    storageBucket: 'testfb02-e7af9.appspot.com',
-    messagingSenderId: '398198628618',
-    projectId: 'testfb02-e7af9',
+    clientId: '389639352626-r72sfsmv3oiqdmlp2592igl61kjq8bhc.apps.googleusercontent.com',
+    appId: '1:389639352626:android:12d3585c04495dfe',
+    apiKey: 'AIzaSyAJe6VxkJnWhwO6SLqSqhH21eXxmDQcBkc',
+    databaseURL: 'https://museumapp-2f45a.firebaseio.com',
+    storageBucket: 'museumapp-2f45a.appspot.com',
+    messagingSenderId: '389639352626',
+    projectId: 'museumapp-2f45a',
 
     // enable persistence by adding the below flag
     persistence: true,
